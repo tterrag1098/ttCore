@@ -21,11 +21,10 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = TTCore.MODID, name = TTCore.NAME)
+@Mod(modid = TTCore.NAME, name = TTCore.NAME)
 public class TTCore
 {
     public static final String NAME = "ttCore";
-    public static final String MODID = "ttcore";
     public static final String BASE_PACKAGE = "tterrag";
 
     public static final Logger logger = LogManager.getLogger(NAME);
