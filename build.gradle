@@ -18,6 +18,9 @@ version = "${minecraft_version}-${mod_version}-${System.getenv().BUILD_NUMBER}"
 minecraft {
     version = "${minecraft_version}-${forge_version}"
     runDir = 'run'
+    
+    replace "@VERSION@", project.version
+    replaceIn "TTCore.java"
 }
 
 dependencies {

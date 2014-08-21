@@ -1,4 +1,4 @@
-package tterrag.core.client;
+package tterrag.core.client.util;
 
 import static org.lwjgl.opengl.GL11.*;
 import net.minecraft.client.Minecraft;
@@ -11,6 +11,7 @@ import net.minecraftforge.client.model.obj.GroupObject;
 import net.minecraftforge.client.model.obj.TextureCoordinate;
 import net.minecraftforge.client.model.obj.Vertex;
 import net.minecraftforge.client.model.obj.WavefrontObject;
+import tterrag.core.client.handlers.ClientHandler;
 
 public class RenderingUtils
 {

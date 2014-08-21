@@ -1,11 +1,12 @@
-package tterrag.core.client;
+package tterrag.core.client.handlers;
 
-import tterrag.core.utils.Handler;
+import tterrag.core.common.Handlers.Handler;
+import tterrag.core.common.Handlers.Handler.HandlerType;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
-@Handler
+@Handler(types = HandlerType.FML)
 public class ClientHandler
 {
     private static int ticksElapsed;
