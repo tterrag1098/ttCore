@@ -3,6 +3,7 @@ package tterrag.core;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import tterrag.core.common.ExtraRecipes;
 import tterrag.core.common.Handlers;
 import tterrag.core.common.OreDict;
 import cpw.mods.fml.common.Mod;
@@ -23,5 +24,6 @@ public class TTCore
     {
         Handlers.register();
         OreDict.registerVanilla();
+        ExtraRecipes.register();
     }
 }
