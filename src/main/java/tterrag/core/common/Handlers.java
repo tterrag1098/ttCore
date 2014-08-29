@@ -12,6 +12,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import scala.actors.threadpool.Arrays;
 import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler.HandlerType;
 
@@ -26,14 +27,14 @@ public class Handlers
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Handler
     {
-        public enum HandlerType {
-            FORGE,
-            FML
+        public enum HandlerType
+        {
+            FORGE, FML
         }
-        
-        HandlerType[] types() default {HandlerType.FORGE, HandlerType.FML};
+
+        HandlerType[] types() default { HandlerType.FORGE, HandlerType.FML };
     }
-    
+
     public static void register()
     {
         ClassPath classpath;
@@ -51,33 +52,34 @@ public class Handlers
 
         for (ClassInfo info : classes)
         {
-            try
+            if (!info.getPackageName().contains("client") || FMLCommonHandler.instance().getEffectiveSide().isClient()) // if not client handler, or we are on client, continue
             {
-                Class<?> c = info.load();
-
-                Annotation a = c.getAnnotation(Handler.class);
-                if (a != null)
+                try
                 {
-                    registerHandler(c, (Handler) a);
+                    Class<?> c = info.load();
+
+                    Annotation a = c.getAnnotation(Handler.class);
+                    if (a != null)
+                    {
+                        registerHandler(c, (Handler) a);
+                    }
+                }
+                catch (Throwable t)
+                {
+                    FMLCommonHandler.instance().raiseException(t, String.format("Client class %s was not inside client package! Report this to the mod owner!", info.getName()), true);
                 }
             }
-            catch (Throwable t)
+            else
             {
-                if ((t instanceof NoClassDefFoundError || t instanceof IllegalStateException) && FMLCommonHandler.instance().getSide().isServer())
-                {
-                    TTCore.logger.info("Not registering handler " + info.getName() + " because necessary classes are missing.");
-                }
-                else
-                {
-                    TTCore.logger.fatal(String.format("Failed to register handler %s, this is a serious bug, certain functions will not be avaialble!", info.getName()));
-                    t.printStackTrace();
-                }
+                TTCore.logger.info(String.format("[Handlers] Skipping client class %s, we are on a dedicated server", info.getSimpleName()));
             }
         }
     }
 
     private static void registerHandler(Class<?> c, Handler handler) throws InstantiationException, IllegalAccessException
     {
+        TTCore.logger.info(String.format("[Handlers] Registering handler %s to busses: %s", c.getSimpleName(), Arrays.deepToString(handler.types())));
+        
         if (ArrayUtils.contains(handler.types(), HandlerType.FORGE))
             MinecraftForge.EVENT_BUS.register(c.newInstance());
 
