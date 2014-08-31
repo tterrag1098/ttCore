@@ -66,7 +66,7 @@ public class Handlers
                 }
                 catch (Throwable t)
                 {
-                    FMLCommonHandler.instance().raiseException(t, String.format("Client class %s was not inside client package! Report this to the mod owner!", info.getName()), true);
+                    FMLCommonHandler.instance().raiseException(t, String.format("[%s] [Handlers] Client class %s was not inside client package! Report this to the mod owner!", TTCore.NAME, info.getName()), true);
                 }
             }
             else
