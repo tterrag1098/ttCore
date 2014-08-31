@@ -1,6 +1,7 @@
 package tterrag.core.common.util;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -8,33 +9,35 @@ public class CreativeTabsCustom extends CreativeTabs
 {
     private ItemStack displayStack;
     
-    /**
-     * @param unloc Unlocalized name of the tab
-     * @param item Item to display
-     */
-    public CreativeTabsCustom(String unloc, Item item)
+    public CreativeTabsCustom(String unloc)
     {
-        this(unloc, item, 0);
+        super(unloc);
     }
     
     /**
-     * @param unloc Unlocalized name of the tab
+     * @param item Item to display
+     */
+    public CreativeTabsCustom setDisplay(Item item)
+    {
+        return setDisplay(item, 0);
+    }
+    
+    /**
      * @param item Item to display
      * @param damage Damage of item to display
      */
-    public CreativeTabsCustom(String unloc, Item item, int damage)
+    public CreativeTabsCustom setDisplay(Item item, int damage)
     {
-        this(unloc, new ItemStack(item, 1, damage));
+        return setDisplay(new ItemStack(item, 1, damage));
     }
     
     /**
-     * @param unloc Unlocalized name of the tab
      * @param display ItemStack to display
      */
-    public CreativeTabsCustom(String unloc, ItemStack display)
+    public CreativeTabsCustom setDisplay(ItemStack display)
     {
-        super(unloc);
         this.displayStack = display.copy();
+        return this;
     }
 
     @Override
@@ -43,6 +46,6 @@ public class CreativeTabsCustom extends CreativeTabs
     @Override
     public ItemStack getIconItemStack()
     {
-        return displayStack;
+        return displayStack == null ? new ItemStack(Items.diamond) : displayStack;
     }
 }

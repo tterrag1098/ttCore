@@ -25,7 +25,6 @@ public class TTCore
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        Handlers.register();
         CompatabilityRegistry.instance().handle(event);
         OreDict.registerVanilla();
         ExtraRecipes.register();
@@ -34,6 +33,7 @@ public class TTCore
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+        Handlers.register();
         CompatabilityRegistry.instance().handle(event);
     }
     

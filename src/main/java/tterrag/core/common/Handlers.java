@@ -6,6 +6,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +21,8 @@ import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.LoaderState;
 
 public class Handlers
 {
@@ -33,6 +36,21 @@ public class Handlers
         }
 
         HandlerType[] types() default { HandlerType.FORGE, HandlerType.FML };
+    }
+    
+    private static Set<String> packageSet = new HashSet<String>();
+    
+    static { packageSet.add(TTCore.BASE_PACKAGE); }
+    
+    public static void addPackage(String packageName)
+    {
+        if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
+        {
+            throw new RuntimeException("This method must only be called in preinit");
+        }
+        
+        TTCore.logger.info("Adding package " + packageName + " to handler search.");
+        packageSet.add(packageName);
     }
 
     public static void register()
@@ -48,30 +66,35 @@ public class Handlers
             throw new RuntimeException(e);
         }
 
-        Set<ClassInfo> classes = classpath.getTopLevelClassesRecursive(TTCore.BASE_PACKAGE);
-
-        for (ClassInfo info : classes)
+        for (String packageName : packageSet)
         {
-            if (!info.getPackageName().contains("client") || FMLCommonHandler.instance().getEffectiveSide().isClient()) // if not client handler, or we are on client, continue
-            {
-                try
-                {
-                    Class<?> c = info.load();
+            Set<ClassInfo> classes = classpath.getTopLevelClassesRecursive(packageName);
 
-                    Annotation a = c.getAnnotation(Handler.class);
-                    if (a != null)
+            for (ClassInfo info : classes)
+            {
+                if (!info.getPackageName().contains("client") || FMLCommonHandler.instance().getEffectiveSide().isClient()) // if not client handler, or we are on client, continue
+                {
+                    try
                     {
-                        registerHandler(c, (Handler) a);
+                        Class<?> c = info.load();
+
+                        Annotation a = c.getAnnotation(Handler.class);
+                        if (a != null)
+                        {
+                            registerHandler(c, (Handler) a);
+                        }
+                    }
+                    catch (Throwable t)
+                    {
+                        FMLCommonHandler.instance().raiseException(t,
+                                String.format("[%s] [Handlers] Client class %s was not inside client package! Report this to the mod owner!", TTCore.NAME, info.getName()),
+                                true);
                     }
                 }
-                catch (Throwable t)
+                else
                 {
-                    FMLCommonHandler.instance().raiseException(t, String.format("[%s] [Handlers] Client class %s was not inside client package! Report this to the mod owner!", TTCore.NAME, info.getName()), true);
+                    TTCore.logger.info(String.format("[Handlers] Skipping client class %s, we are on a dedicated server", info.getSimpleName()));
                 }
-            }
-            else
-            {
-                TTCore.logger.info(String.format("[Handlers] Skipping client class %s, we are on a dedicated server", info.getSimpleName()));
             }
         }
     }
@@ -79,7 +102,7 @@ public class Handlers
     private static void registerHandler(Class<?> c, Handler handler) throws InstantiationException, IllegalAccessException
     {
         TTCore.logger.info(String.format("[Handlers] Registering handler %s to busses: %s", c.getSimpleName(), Arrays.deepToString(handler.types())));
-        
+
         if (ArrayUtils.contains(handler.types(), HandlerType.FORGE))
             MinecraftForge.EVENT_BUS.register(c.newInstance());
 

@@ -1,6 +1,7 @@
 package tterrag.core.common.compat;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import tterrag.core.TTCore;
@@ -44,17 +45,36 @@ public class CompatabilityRegistry
         {
             if (r.time == time && Loader.isModLoaded(r.modid))
             {
-                try
-                {
-                    Class<? extends ICompatability> clazz = compatMap.get(r);
-                    TTCore.logger.info("[Compat] Loading compatability class " + compatMap.get(r).getSimpleName());
-                    clazz.getDeclaredMethod(ICompatability.METHOD_NAME).invoke(null);
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                doLoad(compatMap.get(r));
             }
+        }
+    }
+    
+    public void forceLoad(Class<? extends ICompatability> clazz)
+    {
+        Iterator<Registration> iter = compatMap.keySet().iterator();
+        while(iter.hasNext())
+        {
+            Registration r = iter.next();
+            Class<?> c = compatMap.get(r);
+            if (c == clazz) 
+            {
+                doLoad(c);
+                compatMap.remove(r);
+            }
+        }
+    }
+    
+    private void doLoad(Class<?> clazz)
+    {
+        try
+        {
+            TTCore.logger.info("[Compat] Loading compatability class " + clazz.getSimpleName());
+            clazz.getDeclaredMethod(ICompatability.METHOD_NAME).invoke(null);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }
