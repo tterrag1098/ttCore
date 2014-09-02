@@ -13,7 +13,7 @@ apply plugin: 'maven-publish'
 
 group = 'tterrag.core'
 archivesBaseName = "ttCore"
-version = "${minecraft_version}-${mod_version}-${System.getenv().BUILD_NUMBER}"
+version = "MC${minecraft_version}-${mod_version}-${System.getenv().BUILD_NUMBER}"
 
 minecraft {
     version = "${minecraft_version}-${forge_version}"

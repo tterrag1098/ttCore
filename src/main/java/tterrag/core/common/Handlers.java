@@ -37,18 +37,21 @@ public class Handlers
 
         HandlerType[] types() default { HandlerType.FORGE, HandlerType.FML };
     }
-    
+
     private static Set<String> packageSet = new HashSet<String>();
-    
-    static { packageSet.add(TTCore.BASE_PACKAGE); }
-    
+
+    static
+    {
+        packageSet.add(TTCore.BASE_PACKAGE);
+    }
+
     public static void addPackage(String packageName)
     {
         if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
         {
             throw new RuntimeException("This method must only be called in preinit");
         }
-        
+
         TTCore.logger.info("Adding package " + packageName + " to handler search.");
         packageSet.add(packageName);
     }
@@ -86,9 +89,7 @@ public class Handlers
                     }
                     catch (Throwable t)
                     {
-                        FMLCommonHandler.instance().raiseException(t,
-                                String.format("[%s] [Handlers] Client class %s was not inside client package! Report this to the mod owner!", TTCore.NAME, info.getName()),
-                                true);
+                        TTCore.logger.error(String.format("[Handlers] %s threw an error on load, skipping...", info.getName()));
                     }
                 }
                 else
