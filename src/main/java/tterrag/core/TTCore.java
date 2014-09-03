@@ -5,8 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import tterrag.core.common.ExtraRecipes;
 import tterrag.core.common.Handlers;
+import tterrag.core.common.Lang;
 import tterrag.core.common.OreDict;
 import tterrag.core.common.compat.CompatabilityRegistry;
+import tterrag.core.common.config.ConfigHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -21,22 +23,24 @@ public class TTCore
     public static final String VERSION = "@VERSION@";
 
     public static final Logger logger = LogManager.getLogger(NAME);
+    public static final Lang lang = new Lang(NAME);
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        ConfigHandler.init(event.getSuggestedConfigurationFile());
         CompatabilityRegistry.instance().handle(event);
         OreDict.registerVanilla();
         ExtraRecipes.register();
     }
-    
+
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
         Handlers.register();
         CompatabilityRegistry.instance().handle(event);
     }
-    
+
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
