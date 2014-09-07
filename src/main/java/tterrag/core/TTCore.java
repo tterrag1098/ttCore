@@ -1,5 +1,9 @@
 package tterrag.core;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,6 +36,9 @@ public class TTCore
         CompatabilityRegistry.instance().handle(event);
         OreDict.registerVanilla();
         ExtraRecipes.register();
+        
+        Blocks.bed.setStepSound(Block.soundTypeCloth); // what the heck mojang
+        Items.boat.setMaxStackSize(16); // srsly
     }
 
     @EventHandler
