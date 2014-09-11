@@ -32,7 +32,7 @@ public class RenderingUtils
             }
         }
     }
-    
+
     public static void render3DItem(EntityItem item, float partialTickTime, boolean rotate)
     {
         float rot = -(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + partialTickTime) % 360 * 2;
@@ -40,32 +40,32 @@ public class RenderingUtils
         glPushMatrix();
         glDepthMask(true);
         rotate &= Minecraft.getMinecraft().gameSettings.fancyGraphics;
-        
+
         if (rotate)
         {
             glRotatef(rot, 0, 1, 0);
         }
-        
+
         item.hoverStart = 0.0F;
         RenderManager.instance.renderEntityWithPosYaw(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
 
         glPopMatrix();
     }
-    
+
     public static float getRotation(float partialTick, float mult)
     {
         return ClientHandler.getElapsedTicks() * mult;
     }
-    
+
     public static void renderBillboardQuad(float rot, double scale)
     {
         glPushMatrix();
-        
+
         glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
         glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
 
-        glPushMatrix();        
-        
+        glPushMatrix();
+
         glRotatef(rot, 0, 0, 1);
 
         Tessellator tessellator = Tessellator.instance;
@@ -79,5 +79,11 @@ public class RenderingUtils
         tessellator.draw();
         glPopMatrix();
         glPopMatrix();
+    }
+
+    public static void rotateToPlayer()
+    {
+        glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
+        glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
     }
 }

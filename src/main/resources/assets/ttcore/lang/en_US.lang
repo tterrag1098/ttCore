@@ -1,1 +1,6 @@
 ttCore.tooltip.oreDictNames=Ore Dictionary Names:
+
+damage.train.1=%s bought a one-way ticket to the afterlife
+damage.train.2=%s was playing on the tracks
+damage.train.3=%s played chicken with a train, the train won
+damage.train.4=%s was killed by a speeding train
