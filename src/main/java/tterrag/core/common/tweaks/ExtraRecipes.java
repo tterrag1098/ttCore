@@ -2,6 +2,7 @@ package tterrag.core.common.tweaks;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -15,6 +16,7 @@ public class ExtraRecipes implements ITweak
     public void load()
     {
         registerSlabToBlock();
+        GameRegistry.addShapelessRecipe(new ItemStack(Items.paper, 2), Items.book);
     }
     
     private final String[] slabEndingsWood = { "WoodOak", "WoodSpruce", "WoodBirch", "WoodJungle", "WoodAcacia", "WoodDarkOak" };

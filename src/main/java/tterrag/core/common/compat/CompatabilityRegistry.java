@@ -13,12 +13,12 @@ public class CompatabilityRegistry
 {
     private static class Registration
     {
-        private final String modid;
+        private final String[] modids;
         private final RegisterTime time;
 
-        private Registration(String modid, RegisterTime time)
+        private Registration(RegisterTime time, String... modids)
         {
-            this.modid = modid;
+            this.modids = modids;
             this.time = time;
         }
     }
@@ -33,9 +33,9 @@ public class CompatabilityRegistry
     
     public static CompatabilityRegistry instance() { return INSTANCE; }
     
-    public void registerCompat(String modid, RegisterTime time, Class<? extends ICompatability> clazz)
+    public void registerCompat(RegisterTime time, Class<? extends ICompatability> clazz, String... modids)
     {
-        compatMap.put(new Registration(modid, time), clazz);
+        compatMap.put(new Registration(time, modids), clazz);
     }
     
     public void handle(FMLStateEvent event) 
@@ -43,11 +43,23 @@ public class CompatabilityRegistry
         RegisterTime time = RegisterTime.timeFor(event);
         for (Registration r : compatMap.keySet())
         {
-            if (r.time == time && Loader.isModLoaded(r.modid))
+            if (r.time == time && allModsLoaded(r.modids))
             {
                 doLoad(compatMap.get(r));
             }
         }
+    }
+    
+    private boolean allModsLoaded(String[] modids)
+    {
+        for (String s : modids)
+        {
+            if (!Loader.isModLoaded(s))
+            {
+                return false;
+            }
+        }
+        return true;
     }
     
     public void forceLoad(Class<? extends ICompatability> clazz)
@@ -74,6 +86,7 @@ public class CompatabilityRegistry
         }
         catch (Exception e)
         {
+            TTCore.logger.error("[Compat] ICompatability class {} did not contain static method {}!", clazz.getName(), ICompatability.METHOD_NAME);
             e.printStackTrace();
         }
     }

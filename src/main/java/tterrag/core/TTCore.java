@@ -7,9 +7,11 @@ import tterrag.core.common.Handlers;
 import tterrag.core.common.Lang;
 import tterrag.core.common.OreDict;
 import tterrag.core.common.compat.CompatabilityRegistry;
+import tterrag.core.common.compat.MCropsCompat;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.tweaks.ExtraRecipes;
 import tterrag.core.common.tweaks.VanillaTweaks;
+import tterrag.core.common.util.RegisterTime;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -18,7 +20,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION)
-public class TTCore
+public class TTCore implements IModTT
 {
     public static final String MODID = "ttCore";
     public static final String NAME = "ttCore";
@@ -27,7 +29,7 @@ public class TTCore
 
     public static final Logger logger = LogManager.getLogger(NAME);
     public static final Lang lang = new Lang(MODID);
-    
+
     @Instance
     public static TTCore instance;
 
@@ -35,6 +37,11 @@ public class TTCore
     public void preInit(FMLPreInitializationEvent event)
     {
         ConfigHandler.init(event.getSuggestedConfigurationFile());
+        if (ConfigHandler.enableMCropsWaila)
+        {
+            CompatabilityRegistry.instance().registerCompat(RegisterTime.PREINIT, MCropsCompat.class, "Waila", "magicalcrops");
+        }
+        
         CompatabilityRegistry.instance().handle(event);
         OreDict.registerVanilla();
         ExtraRecipes.INSTANCE.load();
@@ -52,5 +59,23 @@ public class TTCore
     public void postInit(FMLPostInitializationEvent event)
     {
         CompatabilityRegistry.instance().handle(event);
+    }
+
+    @Override
+    public String modid()
+    {
+        return MODID;
+    }
+
+    @Override
+    public String name()
+    {
+        return NAME;
+    }
+
+    @Override
+    public String version()
+    {
+        return VERSION;
     }
 }

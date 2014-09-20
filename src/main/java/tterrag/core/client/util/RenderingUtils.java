@@ -33,9 +33,15 @@ public class RenderingUtils
         }
     }
 
+    @Deprecated
     public static void render3DItem(EntityItem item, float partialTickTime, boolean rotate)
     {
-        float rot = -(Minecraft.getMinecraft().theWorld.getTotalWorldTime() + partialTickTime) % 360 * 2;
+        render3DItem(item, rotate);
+    }
+    
+    public static void render3DItem(EntityItem item, boolean rotate)
+    {
+        float rot = getRotation(1.0f);
 
         glPushMatrix();
         glDepthMask(true);
@@ -52,7 +58,13 @@ public class RenderingUtils
         glPopMatrix();
     }
 
+    @Deprecated
     public static float getRotation(float partialTick, float mult)
+    {
+        return getRotation(mult);
+    }
+    
+    public static float getRotation(float mult)
     {
         return ClientHandler.getElapsedTicks() * mult;
     }
