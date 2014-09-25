@@ -23,17 +23,17 @@ public class CompatabilityRegistry
         }
     }
     
-    private Map<Registration, Class<? extends ICompatability>> compatMap;
+    private Map<Registration, String> compatMap;
     private static final CompatabilityRegistry INSTANCE = new CompatabilityRegistry();
     
     private CompatabilityRegistry()
     {
-        compatMap = new HashMap<Registration, Class<? extends ICompatability>>();
+        compatMap = new HashMap<Registration, String>();
     }
     
     public static CompatabilityRegistry instance() { return INSTANCE; }
     
-    public void registerCompat(RegisterTime time, Class<? extends ICompatability> clazz, String... modids)
+    public void registerCompat(RegisterTime time, String clazz, String... modids)
     {
         compatMap.put(new Registration(time, modids), clazz);
     }
@@ -62,31 +62,32 @@ public class CompatabilityRegistry
         return true;
     }
     
-    public void forceLoad(Class<? extends ICompatability> clazz)
+    public void forceLoad(String clazz)
     {
         Iterator<Registration> iter = compatMap.keySet().iterator();
         while(iter.hasNext())
         {
             Registration r = iter.next();
-            Class<?> c = compatMap.get(r);
-            if (c == clazz) 
+            String s = compatMap.get(r);
+            if (s.equals(clazz)) 
             {
-                doLoad(c);
+                doLoad(s);
                 compatMap.remove(r);
             }
         }
     }
     
-    private void doLoad(Class<?> clazz)
+    private void doLoad(String clazz)
     {
         try
         {
-            TTCore.logger.info("[Compat] Loading compatability class " + clazz.getSimpleName());
-            clazz.getDeclaredMethod(ICompatability.METHOD_NAME).invoke(null);
+            TTCore.logger.info("[Compat] Loading compatability class " + clazz);
+            Class<?> compat = Class.forName(clazz);
+            compat.getDeclaredMethod(ICompatability.METHOD_NAME).invoke(null);
         }
         catch (Exception e)
         {
-            TTCore.logger.error("[Compat] ICompatability class {} did not contain static method {}!", clazz.getName(), ICompatability.METHOD_NAME);
+            TTCore.logger.error("[Compat] ICompatability class {} did not contain static method {}!", clazz, ICompatability.METHOD_NAME);
             e.printStackTrace();
         }
     }

@@ -7,7 +7,6 @@ import tterrag.core.common.Handlers;
 import tterrag.core.common.Lang;
 import tterrag.core.common.OreDict;
 import tterrag.core.common.compat.CompatabilityRegistry;
-import tterrag.core.common.compat.MCropsCompat;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.tweaks.ExtraRecipes;
 import tterrag.core.common.tweaks.VanillaTweaks;
@@ -39,7 +38,7 @@ public class TTCore implements IModTT
         ConfigHandler.init(event.getSuggestedConfigurationFile());
         if (ConfigHandler.enableMCropsWaila)
         {
-            CompatabilityRegistry.instance().registerCompat(RegisterTime.PREINIT, MCropsCompat.class, "Waila", "magicalcrops");
+            CompatabilityRegistry.instance().registerCompat(RegisterTime.PREINIT, "tterrag.core.common.compat.MCropsCompat", "Waila", "magicalcrops");
         }
         
         CompatabilityRegistry.instance().handle(event);
