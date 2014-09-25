@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+
 public class ResourcePackAssembler
 {
     private List<File> icons = new ArrayList<File>();
@@ -47,39 +49,63 @@ public class ResourcePackAssembler
         langs.add(lang);
     }
 
-    public ResourcePackAssembler assemble() throws IOException
+    public ResourcePackAssembler assemble()
     {
         String pathToDir = dir.getAbsolutePath();
         File mcmeta = new File(pathToDir + "/pack.mcmeta");
-        writeDefaultMcmeta(mcmeta);
 
-        if (hasPackPng)
+        try
         {
-            IOUtils.copyFromJar(jarClass, modid + "/" + "pack.png", new File(dir.getAbsolutePath() + "/pack.png"));
+            writeDefaultMcmeta(mcmeta);
+
+            if (hasPackPng)
+            {
+                IOUtils.copyFromJar(jarClass, modid + "/" + "pack.png", new File(dir.getAbsolutePath() + "/pack.png"));
+            }
+
+            String itemsDir = pathToDir + "/assets/" + modid + "/textures/items";
+            String blocksDir = pathToDir + "/assets/" + modid + "/textures/blocks";
+            String langDir = pathToDir + "/assets/" + modid + "/lang";
+
+            for (File icon : icons)
+            {
+                FileUtils.copyFile(icon, new File(itemsDir + "/" + icon.getName()));
+                FileUtils.copyFile(icon, new File(blocksDir + "/" + icon.getName()));
+            }
+
+            for (File lang : langs)
+            {
+                FileUtils.copyFile(lang, new File(langDir + "/" + lang.getName()));
+            }
         }
-
-        String itemsDir = pathToDir + "/assets/" + modid + "/textures/items";
-        String blocksDir = pathToDir + "/assets/" + modid + "/textures/blocks";
-        String langDir = pathToDir + "/assets/" + modid + "/lang";
-
-        for (File icon : icons)
+        catch (IOException e)
         {
-            FileUtils.copyFile(icon, new File(itemsDir + "/" + icon.getName()));
-            FileUtils.copyFile(icon, new File(blocksDir + "/" + icon.getName()));
-        }
-
-        for (File lang : langs)
-        {
-            FileUtils.copyFile(lang, new File(langDir + "/" + lang.getName()));
+            throw new RuntimeException(e);
         }
 
         return this;
     }
 
+    @Deprecated
     public void inject(File resourcePacksDir) throws IOException
     {
-        FileUtils.copyDirectory(dir, new File(resourcePacksDir.getAbsolutePath() + "/" + dir.getName()));
-        FileUtils.deleteDirectory(dir);
+        inject();
+    }
+
+    public void inject()
+    {
+        File dest = new File(FMLCommonHandler.instance().getSavesDirectory().getParentFile() + "/resourcepacks/" + dir.getName());
+
+        try
+        {
+            FileUtils.deleteDirectory(dest);
+            FileUtils.copyDirectory(dir, dest);
+            FileUtils.deleteDirectory(dir);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     private void writeDefaultMcmeta(File file) throws IOException
