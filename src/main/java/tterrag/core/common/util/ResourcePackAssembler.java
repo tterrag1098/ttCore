@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import tterrag.core.TTCore;
 import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ResourcePackAssembler
@@ -94,17 +95,24 @@ public class ResourcePackAssembler
 
     public void inject()
     {
-        File dest = new File(FMLCommonHandler.instance().getSavesDirectory().getParentFile() + "/resourcepacks/" + dir.getName());
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        {
+            File dest = new File(FMLCommonHandler.instance().getSavesDirectory().getParentFile() + "/resourcepacks/" + dir.getName());
 
-        try
-        {
-            FileUtils.deleteDirectory(dest);
-            FileUtils.copyDirectory(dir, dest);
-            FileUtils.deleteDirectory(dir);
+            try
+            {
+                FileUtils.deleteDirectory(dest);
+                FileUtils.copyDirectory(dir, dest);
+                FileUtils.deleteDirectory(dir);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
-        catch (IOException e)
+        else
         {
-            throw new RuntimeException(e);
+            TTCore.logger.info("Skipping resource pack, we are on a dedicated server.");
         }
     }
 
