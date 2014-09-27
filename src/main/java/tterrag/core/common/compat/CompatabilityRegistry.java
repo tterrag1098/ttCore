@@ -1,5 +1,6 @@
 package tterrag.core.common.compat;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -85,9 +86,24 @@ public class CompatabilityRegistry
             Class<?> compat = Class.forName(clazz);
             compat.getDeclaredMethod(ICompatability.METHOD_NAME).invoke(null);
         }
-        catch (Exception e)
+        catch (NoSuchMethodException e)
         {
             TTCore.logger.error("[Compat] ICompatability class {} did not contain static method {}!", clazz, ICompatability.METHOD_NAME);
+            e.printStackTrace();
+        }
+        catch (InvocationTargetException e)
+        {
+            TTCore.logger.error("[Compat] Error(s) was thrown loading class {}!", clazz);
+            Throwable[] suppressed = e.getSuppressed();
+            for (int i = 0; i < suppressed.length; i++)
+            {
+                TTCore.logger.error("[Compat] Error {}", i);
+                suppressed[i].printStackTrace();
+            }
+        }
+        catch (Exception e)
+        {
+            TTCore.logger.error("[Compat] An unknown error was thrown loading class {}.", clazz);
             e.printStackTrace();
         }
     }
