@@ -25,9 +25,18 @@ public class IOUtils
         TTCore.logger.info("Copying file " + filename + " from jar");
         URL url = jarClass.getResource("/assets/" + filename);
         
+        File from = FileUtils.toFile(url);
+        
         try
         {
-            FileUtils.copyURLToFile(url, to);
+            if (from.isDirectory())
+            {
+                FileUtils.copyDirectory(from, to);
+            }
+            else
+            {
+                FileUtils.copyFile(from, to);
+            }
         }
         catch (IOException e)
         {
