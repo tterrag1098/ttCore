@@ -1,9 +1,15 @@
 package tterrag.core.common.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -13,7 +19,7 @@ import tterrag.core.TTCore;
 public class IOUtils
 {
     public static final FileFilter pngFilter = FileFilterUtils.suffixFileFilter(".png");
-    public static final FileFilter langFilter =  FileFilterUtils.suffixFileFilter(".lang");
+    public static final FileFilter langFilter = FileFilterUtils.suffixFileFilter(".lang");
 
     /**
      * @param jarClass - A class from the jar in question
@@ -24,23 +30,96 @@ public class IOUtils
     {
         TTCore.logger.info("Copying file " + filename + " from jar");
         URL url = jarClass.getResource("/assets/" + filename);
-        
-        File from = FileUtils.toFile(url);
-        
+
         try
         {
-            if (from.isDirectory())
-            {
-                FileUtils.copyDirectory(from, to);
-            }
-            else
-            {
-                FileUtils.copyFile(from, to);
-            }
+            FileUtils.copyURLToFile(url, to);
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * @author Ilias Tsagklis
+     * <p>From <a href="http://examples.javacodegeeks.com/core-java/util/zip/extract-zip-file-with-subdirectories/">this site.</a>
+     * 
+     * @param zip - The zip file to extract
+     * 
+     * @return The folder extracted to
+     */
+    public static File extractZip(File zip)
+    {
+        String zipPath = zip.getParent() + "/extracted";
+        File temp = new File(zipPath);
+        temp.mkdir();
+
+        ZipFile zipFile = null;
+
+        try
+        {
+            zipFile = new ZipFile(zip);
+
+            // get an enumeration of the ZIP file entries
+            Enumeration<? extends ZipEntry> e = zipFile.entries();
+
+            while (e.hasMoreElements())
+            {
+                ZipEntry entry = e.nextElement();
+
+                File destinationPath = new File(zipPath, entry.getName());
+
+                // create parent directories
+                destinationPath.getParentFile().mkdirs();
+
+                // if the entry is a file extract it
+                if (entry.isDirectory())
+                {
+                    continue;
+                }
+                else
+                {
+                    System.out.println("Extracting file: " + destinationPath);
+
+                    BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
+
+                    int b;
+                    byte buffer[] = new byte[1024];
+
+                    FileOutputStream fos = new FileOutputStream(destinationPath);
+
+                    BufferedOutputStream bos = new BufferedOutputStream(fos, 1024);
+
+                    while ((b = bis.read(buffer, 0, 1024)) != -1)
+                    {
+                        bos.write(buffer, 0, b);
+                    }
+
+                    bos.close();
+                    bis.close();
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error opening zip file" + e);
+        }
+        finally
+        {
+            try
+            {
+                if (zipFile != null)
+                {
+                    zipFile.close();
+                }
+            }
+            catch (IOException e)
+            {
+                System.out.println("Error while closing zip file" + e);
+            }
+        }
+        
+        return temp;
     }
 }
