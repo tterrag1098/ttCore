@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import tterrag.core.common.Handlers;
 import tterrag.core.common.Lang;
 import tterrag.core.common.OreDict;
+import tterrag.core.common.command.CommandReloadConfigs;
 import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.tweaks.ExtraRecipes;
@@ -17,6 +18,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION)
 public class TTCore implements IModTT
@@ -58,6 +60,12 @@ public class TTCore implements IModTT
     public void postInit(FMLPostInitializationEvent event)
     {
         CompatabilityRegistry.instance().handle(event);
+    }
+    
+    @EventHandler
+    public void onServerStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandReloadConfigs());
     }
 
     @Override
