@@ -1,4 +1,4 @@
-package tterrag.core.common.util;
+package tterrag.core.common.handlers;
 
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.oredict.OreDictionary;

@@ -59,6 +59,13 @@ processResources {
     }
 }
 
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'tterrag.core.common.transform.TTCorePlugin'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'sources'
