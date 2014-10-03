@@ -14,8 +14,10 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import tterrag.core.TTCore;
 
+@MCVersion(value = "1.7.10")
 public class TTCoreTransformer implements IClassTransformer
 {
     private static final String worldTypeCLassDeobf       = "net.minecraft.world.WorldType";
@@ -54,7 +56,7 @@ public class TTCoreTransformer implements IClassTransformer
             if (m.name.equals(voidFogMethodDeobf) || m.name.equals(voidFogMethodObf))
             {
                 m.instructions.clear();
-                
+
                 m.instructions.add(new VarInsnNode(ALOAD, 0));
                 m.instructions.add(new VarInsnNode(ILOAD, 1));
                 m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "hasVoidParticles", methodSig));
