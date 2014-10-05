@@ -16,7 +16,7 @@ public class ConfigHandler
     
     public static boolean showOredictTooltips = false;
     public static boolean enableMCropsWaila = true;
-    public static boolean disableVoidFog = true;
+    public static int disableVoidFog = 1;
     
     public static void init(File file)
     {
@@ -34,7 +34,7 @@ public class ConfigHandler
     {   
         showOredictTooltips = config.get(Configuration.CATEGORY_GENERAL, "showOredictTooltips", showOredictTooltips, "Show oredictionary names of every item in its tooltip.").getBoolean();
         enableMCropsWaila = config.get(Configuration.CATEGORY_GENERAL, "enableMCropsWaila", enableMCropsWaila, "Enable the Magical Crops WAILA plugin").getBoolean();
-        disableVoidFog = config.get(Configuration.CATEGORY_GENERAL, "disableVoidFog", disableVoidFog, "Removes all void fog from DEFAULT worldtype worlds").getBoolean();
+        disableVoidFog = config.get(Configuration.CATEGORY_GENERAL, "disableVoidFog", disableVoidFog, "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types").getInt();
 
         if (config.hasChanged()) config.save();
     }

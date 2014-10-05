@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -121,5 +122,24 @@ public class IOUtils
         }
         
         return temp;
+    }
+
+    public static File writeToFile(String filepath, String json)
+    {
+        File file = new File(filepath);
+        
+        try
+        {
+            file.createNewFile();
+            FileWriter fw = new FileWriter(file);
+            fw.write(json);
+            fw.flush();
+            fw.close();
+            return file;
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

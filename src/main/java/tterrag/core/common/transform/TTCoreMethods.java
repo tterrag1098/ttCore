@@ -7,13 +7,18 @@ public class TTCoreMethods
 {
     public static boolean hasVoidParticles(WorldType type, boolean hasSky)
     {
-        if (ConfigHandler.disableVoidFog)
+        if (ConfigHandler.disableVoidFog == 0)
+        {
+            return type != WorldType.FLAT && !hasSky;
+
+        }
+        else if (ConfigHandler.disableVoidFog == 1)
         {
             return type != WorldType.FLAT && type != WorldType.DEFAULT && !hasSky;
         }
         else
         {
-            return type != WorldType.FLAT && !hasSky;
+            return false;
         }
     }
 }
