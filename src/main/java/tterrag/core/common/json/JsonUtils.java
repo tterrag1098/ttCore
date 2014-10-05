@@ -5,8 +5,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class JsonUtils
 {
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    
     public static Object parseStringIntoRecipeItem(String string)
     {
         return parseStringIntoRecipeItem(string, false);

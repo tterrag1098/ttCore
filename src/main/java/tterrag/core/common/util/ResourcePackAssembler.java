@@ -13,8 +13,21 @@ import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ResourcePackAssembler
 {
+    private class CustomFile 
+    {
+        private String ext;
+        private File file;
+
+        private CustomFile(String ext, File file)
+        {
+            this.ext = ext;
+            this.file = file;
+        }
+    }
+    
     private List<File> icons = new ArrayList<File>();
     private List<File> langs = new ArrayList<File>();
+    private List<CustomFile> customs = new ArrayList<CustomFile>();
 
     private static final String MC_META_BASE = "{\"pack\":{\"pack_format\":1,\"description\":\"%s\"}}";
 
@@ -49,6 +62,20 @@ public class ResourcePackAssembler
     {
         langs.add(lang);
     }
+    
+    public void addCustomFile(String path, File file)
+    {
+        customs.add(new CustomFile(path, file));
+    }
+    
+    /**
+     * Adds at the base dir
+     * @param file
+     */
+    public void addCustomFile(File file)
+    {
+        addCustomFile(null, file);
+    }
 
     public ResourcePackAssembler assemble()
     {
@@ -77,6 +104,13 @@ public class ResourcePackAssembler
             for (File lang : langs)
             {
                 FileUtils.copyFile(lang, new File(langDir + "/" + lang.getName()));
+            }
+            
+            for (CustomFile custom : customs)
+            {
+                File directory = new File(pathToDir + (custom.ext != null ? "/" + custom.ext : ""));
+                directory.mkdirs();
+                FileUtils.copyFile(custom.file, new File(directory.getAbsolutePath() + "/" + custom.file.getName()));
             }
         }
         catch (IOException e)
