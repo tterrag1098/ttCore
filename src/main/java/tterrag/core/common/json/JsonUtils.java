@@ -3,6 +3,7 @@ package tterrag.core.common.json;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.Gson;
@@ -60,5 +61,31 @@ public class JsonUtils
         {
             return string;
         }
+    }
+    
+    public static ItemStack parseStringIntoItemStack(String string)
+    {
+        int size = 1;
+        int idx = string.indexOf('#');
+       
+        if (idx != -1)
+        {
+            String num = string.substring(idx + 1);
+            
+            try
+            {
+                size = Integer.parseInt(num);
+            }
+            catch (NumberFormatException e)
+            {
+                throw new IllegalArgumentException(num + " is not a valid stack size");
+            }
+         
+            string = string.substring(0, idx);
+        }
+        
+        ItemStack stack = (ItemStack) parseStringIntoRecipeItem(string, true);
+        stack.stackSize = MathHelper.clamp_int(size, 1, stack.getMaxStackSize());
+        return stack;
     }
 }

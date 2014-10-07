@@ -11,7 +11,6 @@ import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.tweaks.ExtraRecipes;
 import tterrag.core.common.tweaks.VanillaTweaks;
-import tterrag.core.common.util.RegisterTime;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -38,13 +37,10 @@ public class TTCore implements IModTT
     public void preInit(FMLPreInitializationEvent event)
     {
         ConfigHandler.init(event.getSuggestedConfigurationFile());
-        if (ConfigHandler.enableMCropsWaila)
-        {
-            CompatabilityRegistry.instance().registerCompat(RegisterTime.PREINIT, "tterrag.core.common.compat.MCropsCompat", "Waila", "magicalcrops");
-        }
         
         CompatabilityRegistry.instance().handle(event);
         OreDict.registerVanilla();
+        
         ExtraRecipes.INSTANCE.load();
         VanillaTweaks.INSTANCE.load();
     }
