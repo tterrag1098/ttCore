@@ -1,0 +1,5 @@
+ttCore.tooltip.oreDictNames=Имена словаря руд:
+
+ttCore.command.config.result.success=Перезапуск конфигурации для %s успешен
+ttCore.command.config.result.fail=Перезапуск конфигурации для %s не удался
+ttCore.command.config.result.invalid=Modid %s недействителен
