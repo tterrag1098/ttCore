@@ -1,0 +1,4 @@
+ttCore.tooltip.oreDictNames=OreDictionary-Namen:
+ttCore.command.config.result.success=Config-Reload für %s war erfolgreich
+ttCore.command.config.result.fail=Config-Reload für %s fehlgeschlagen
+ttCore.command.config.result.invalid=ModID %s ist ungültig
