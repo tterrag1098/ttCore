@@ -17,6 +17,7 @@ public class ExtraRecipes implements ITweak
     {
         registerSlabToBlock();
         GameRegistry.addShapelessRecipe(new ItemStack(Items.paper, 2), Items.book);
+        GameRegistry.addShapelessRecipe(new ItemStack(Items.paper, 3), Blocks.reeds, Blocks.reeds, Blocks.reeds);
     }
     
     private final String[] slabEndingsWood = { "WoodOak", "WoodSpruce", "WoodBirch", "WoodJungle", "WoodAcacia", "WoodDarkOak" };

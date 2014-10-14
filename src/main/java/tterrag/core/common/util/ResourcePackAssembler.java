@@ -135,9 +135,9 @@ public class ResourcePackAssembler
 
             try
             {
-                FileUtils.deleteDirectory(dest);
+                IOUtils.safeDeleteDirectory(dest);
                 FileUtils.copyDirectory(dir, dest);
-                FileUtils.deleteDirectory(dir);
+                IOUtils.safeDeleteDirectory(dir);
             }
             catch (IOException e)
             {
@@ -152,7 +152,7 @@ public class ResourcePackAssembler
 
     private void writeDefaultMcmeta(File file) throws IOException
     {
-        file.delete();
+        IOUtils.safeDelete(file);
         file.getParentFile().mkdirs();
         file.createNewFile();
 

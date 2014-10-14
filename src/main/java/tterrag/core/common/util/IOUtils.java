@@ -142,4 +142,28 @@ public class IOUtils
             throw new RuntimeException(e);
         }
     }
+    
+    public static void safeDelete(File file)
+    {
+        try
+        {
+            file.delete();
+        }
+        catch (Exception e)
+        {
+            TTCore.logger.error("Deleting file " + file.getAbsolutePath() + " failed.");
+        }
+    }
+    
+    public static void safeDeleteDirectory(File file)
+    {
+        try
+        {
+            FileUtils.deleteDirectory(file);
+        }
+        catch (Exception e)
+        {
+            TTCore.logger.error("Deleting directory " + file.getAbsolutePath() + " failed.");
+        }
+    }
 }
