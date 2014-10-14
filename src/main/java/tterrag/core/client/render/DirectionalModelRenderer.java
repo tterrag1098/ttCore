@@ -18,7 +18,7 @@ import tterrag.core.api.client.model.IModelTT;
  * 
  * @author Garrett Spicer-Davis
  */
-public class DirectionalModelRenderer extends TileEntitySpecialRenderer implements IItemRenderer
+public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySpecialRenderer implements IItemRenderer
 {
     private IModelCustom model;
     private ResourceLocation texture;
@@ -39,12 +39,18 @@ public class DirectionalModelRenderer extends TileEntitySpecialRenderer implemen
         this.modelSMT = model;
         this.texture = texture;
     }
-
-    private void renderDirectionalTileEntityAt(TileEntity tile, double x, double y, double z, int metaOverride)
+    
+    private void renderDirectionalTileEntityAt(T tile, double x, double y, double z, int metaOverride)
     {
+        int meta = getMetadata(tile, metaOverride);
         setup(x, y, z, metaOverride);
         rotate(getRotation(tile, metaOverride));
-        renderModel(tile, metaOverride);
+        renderModel(tile, meta);
+    }
+    
+    protected final int getMetadata(T tile, int metaOverride)
+    {
+        return metaOverride >= 0 ? metaOverride : tile.getBlockMetadata();
     }
     
     protected void setup(double x, double y, double z, int metaOverride)
@@ -54,9 +60,9 @@ public class DirectionalModelRenderer extends TileEntitySpecialRenderer implemen
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
     
-    protected int getRotation(TileEntity tile, int metaOverride)
+    protected int getRotation(T tile, int metaOverride)
     {
-        return metaOverride >= 0 ? metaOverride : tile.getBlockMetadata();
+        return getMetadata(tile, metaOverride);
     }
     
     protected void rotate(int rotation)
@@ -86,7 +92,7 @@ public class DirectionalModelRenderer extends TileEntitySpecialRenderer implemen
         }
     }
     
-    protected void renderModel(TileEntity tile, int meta)
+    protected void renderModel(T tile, int meta)
     {
         if (model != null)
         {
@@ -102,10 +108,11 @@ public class DirectionalModelRenderer extends TileEntitySpecialRenderer implemen
         GL11.glPopMatrix();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float yaw)
     {
-        renderDirectionalTileEntityAt(tile, x, y, z, -1);
+        renderDirectionalTileEntityAt((T) tile, x, y, z, -1);
     }
 
     @Override
