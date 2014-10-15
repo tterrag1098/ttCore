@@ -7,7 +7,7 @@ ___
 ###Things this mod does on its own:
 
 * Adds a config option to enable tooltips that show all oredict registrations on an item
-* Adds a magical crops WAILA plugin
+* ~~Adds a magical crops WAILA plugin~~ (Moved to [WailaPlugins](https://github.com/tterrag1098/WAILAPlugins)!)
 * Adds a '/reloadConfigs' command to reload configs from disk of any (supported) mod
 * Adds a config to remove void fog
 * Adds recipes from 2 slabs -> full block
@@ -15,6 +15,7 @@ ___
 
 ###Things this mod does for other modders
 * Many useful rendering methods, for example rotation and ISBRH obj rendering
+* Base classes for ISBRH and TESR renderers for simple modeled blocks
 * A Compatabiltiy Registry for classes that should only load with other mods present
 * A class for simpler localization of arbitrary strings
 * Some utilities for copying files out of jars and extracting zip files
