@@ -12,6 +12,7 @@ ___
 * Adds a config to remove void fog
 * Adds recipes from 2 slabs -> full block
 * Fixes a few vanilla annoyances (boats now stack to 16, beds have the correct sounds)
+* Adds a config to change the max level on anvil repairs (no more "Too Expensive!")
 
 ###Things this mod does for other modders
 * Many useful rendering methods, for example rotation and ISBRH obj rendering
