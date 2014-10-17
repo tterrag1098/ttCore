@@ -42,13 +42,13 @@ public class TTCore implements IModTT
         OreDict.registerVanilla();
         
         ExtraRecipes.INSTANCE.load();
+        VanillaTweaks.INSTANCE.load();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
         Handlers.register();
-        VanillaTweaks.instance().load();
         CompatabilityRegistry.instance().handle(event);
     }
 
