@@ -15,8 +15,10 @@ public class ConfigHandler
     private static Configuration config;
     
     public static boolean showOredictTooltips = false;
-    public static boolean enableMCropsWaila = true;
+
     public static int disableVoidFog = 1;
+
+    public static int anvilMaxLevel = 40;
     
     public static void init(File file)
     {
@@ -33,9 +35,9 @@ public class ConfigHandler
     private static void doConfig()
     {   
         showOredictTooltips = config.get(Configuration.CATEGORY_GENERAL, "showOredictTooltips", showOredictTooltips, "Show oredictionary names of every item in its tooltip.").getBoolean();
-        enableMCropsWaila = config.get(Configuration.CATEGORY_GENERAL, "enableMCropsWaila", enableMCropsWaila, "Enable the Magical Crops WAILA plugin").getBoolean();
         disableVoidFog = config.get(Configuration.CATEGORY_GENERAL, "disableVoidFog", disableVoidFog, "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types").getInt();
-
+        anvilMaxLevel = config.getInt("anvilMaxLevel", Configuration.CATEGORY_GENERAL, anvilMaxLevel, 1, Integer.MAX_VALUE, "The max amount of XP levels an anvil recipe can use");
+        
         if (config.hasChanged()) config.save();
     }
     

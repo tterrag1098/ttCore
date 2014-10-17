@@ -21,4 +21,18 @@ public class TTCoreMethods
             return false;
         }
     }
+    
+    public static int getMaxAnvilCost()
+    {
+        return ConfigHandler.anvilMaxLevel;
+    }
+    
+    private int test = 20;
+    public void test()
+    {
+        if (this.test > getMaxAnvilCost())
+        {
+            ;
+        }
+    }
 }
