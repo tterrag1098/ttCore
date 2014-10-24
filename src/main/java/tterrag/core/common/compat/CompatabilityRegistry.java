@@ -93,15 +93,7 @@ public class CompatabilityRegistry
         }
         catch (InvocationTargetException e)
         {
-            TTCore.logger.error("[Compat] Error(s) was thrown loading class {}!", clazz);
-            Throwable[] suppressed = e.getSuppressed();
-            for (int i = 0; i < suppressed.length; i++)
-            {
-                TTCore.logger.error("[Compat] Error {}", i);
-                suppressed[i].printStackTrace();
-            }
-            
-            throw new RuntimeException("Error in compatability class " + clazz);
+            throw new RuntimeException("Error in compatability class " + clazz, e.getTargetException());
         }
         catch (Exception e)
         {
