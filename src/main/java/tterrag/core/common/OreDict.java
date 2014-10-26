@@ -2,6 +2,8 @@ package tterrag.core.common;
 
 import java.util.ArrayList;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -9,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OreDict
 {
     public static void registerVanilla()

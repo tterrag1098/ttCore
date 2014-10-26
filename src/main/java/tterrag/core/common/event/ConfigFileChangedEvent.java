@@ -1,5 +1,6 @@
 package tterrag.core.common.event;
 
+import lombok.Getter;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 
 /**
@@ -13,7 +14,8 @@ import cpw.mods.fml.client.event.ConfigChangedEvent;
  */
 public class ConfigFileChangedEvent extends ConfigChangedEvent
 {
-    private boolean successful = false;
+    @Getter
+    private boolean successful;
     
     public ConfigFileChangedEvent(String modID)
     {
@@ -23,10 +25,5 @@ public class ConfigFileChangedEvent extends ConfigChangedEvent
     public void setSuccessful()
     {
         this.successful = true;
-    }
-    
-    public boolean wasSuccessful()
-    {
-        return successful;
     }
 }

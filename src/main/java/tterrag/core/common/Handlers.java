@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -24,8 +26,15 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Handlers
 {
+    /**
+     * To be put on classes that are Forge/FML event handlers. If you are using this from another mod, be sure to call <code>Handlers.addPackage("your.base.package")</code> so that this class can
+     * search your classes
+     * <p>
+     * Class must have either a public no args constructor (or lombok {@link NoArgsConstructor}) or be a lombok compatible (have an <code>INSTANCE</code> field or {@link Singleton} annotation)
+     */
     @Target(value = ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Handler
@@ -90,6 +99,7 @@ public class Handlers
                     catch (Throwable t)
                     {
                         TTCore.logger.error(String.format("[Handlers] %s threw an error on load, skipping...", info.getName()));
+                        t.printStackTrace();
                     }
                 }
                 else
@@ -105,9 +115,28 @@ public class Handlers
         TTCore.logger.info(String.format("[Handlers] Registering handler %s to busses: %s", c.getSimpleName(), Arrays.deepToString(handler.types())));
 
         if (ArrayUtils.contains(handler.types(), HandlerType.FORGE))
-            MinecraftForge.EVENT_BUS.register(c.newInstance());
+            MinecraftForge.EVENT_BUS.register(tryInit(c));
 
         if (ArrayUtils.contains(handler.types(), HandlerType.FML))
-            FMLCommonHandler.instance().bus().register(c.newInstance());
+            FMLCommonHandler.instance().bus().register(tryInit(c));
+    }
+
+    private static Object tryInit(Class<?> c)
+    {
+        try
+        {
+            return c.newInstance();
+        }
+        catch (Exception e)
+        {
+            try
+            {
+                return c.getDeclaredField("INSTANCE").get(null);
+            }
+            catch (Exception e1)
+            {
+                throw new RuntimeException("Could not instantiate @Handler class " + c.getName() + " or access INSTANCE field.");
+            }
+        }
     }
 }

@@ -42,7 +42,7 @@ public class CommandReloadConfigs extends CommandBase
                 ConfigFileChangedEvent event = new ConfigFileChangedEvent(s);
                 FMLCommonHandler.instance().bus().post(event);
 
-                if (event.wasSuccessful())
+                if (event.isSuccessful())
                 {
                     sendResult(player, s, "success");
                 }

@@ -4,6 +4,8 @@ import static org.objectweb.asm.Opcodes.*;
 
 import java.util.Iterator;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
@@ -20,6 +22,7 @@ import tterrag.core.TTCore;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @MCVersion(value = "1.7.10")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TTCoreTransformer implements IClassTransformer
 {
     private static final String worldTypeCLassDeobf = "net.minecraft.world.WorldType";

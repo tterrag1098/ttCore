@@ -1,8 +1,11 @@
 package tterrag.core.common.transform;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.world.WorldType;
 import tterrag.core.common.config.ConfigHandler;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TTCoreMethods
 {
     public static boolean hasVoidParticles(WorldType type, boolean hasSky)

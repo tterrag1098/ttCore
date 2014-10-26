@@ -1,12 +1,16 @@
 package tterrag.core.common.util;
 
+import lombok.AutoGenMethodStub;
+import lombok.NonNull;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+@AutoGenMethodStub
 public class CreativeTabsCustom extends CreativeTabs
 {
+    @NonNull
     private ItemStack displayStack;
     
     public CreativeTabsCustom(String unloc)
@@ -39,9 +43,6 @@ public class CreativeTabsCustom extends CreativeTabs
         this.displayStack = display.copy();
         return this;
     }
-
-    @Override
-    public Item getTabIconItem() { return null; } // use getIconItemStack()
     
     @Override
     public ItemStack getIconItemStack()

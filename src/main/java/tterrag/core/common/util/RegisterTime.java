@@ -1,10 +1,12 @@
 package tterrag.core.common.util;
 
+import lombok.AllArgsConstructor;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLStateEvent;
 
+@AllArgsConstructor
 public enum RegisterTime
 {
     PREINIT(FMLPreInitializationEvent.class),
@@ -13,8 +15,6 @@ public enum RegisterTime
     
     private Class<? extends FMLStateEvent> clazz;
     
-    RegisterTime(Class<? extends FMLStateEvent> clazz) { this.clazz = clazz; }
-
     public static RegisterTime timeFor(FMLStateEvent event)
     {
         for (RegisterTime time : values())

@@ -12,11 +12,16 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
 import tterrag.core.TTCore;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class IOUtils
 {
     public static final FileFilter pngFilter = FileFilterUtils.suffixFileFilter(".png");
@@ -50,6 +55,7 @@ public class IOUtils
      * 
      * @return The folder extracted to
      */
+    @NonNull
     public static File extractZip(File zip)
     {
         String zipPath = zip.getParent() + "/extracted";
@@ -124,6 +130,7 @@ public class IOUtils
         return temp;
     }
 
+    @NonNull
     public static File writeToFile(String filepath, String json)
     {
         File file = new File(filepath);
@@ -143,6 +150,7 @@ public class IOUtils
         }
     }
     
+    @NonNull
     public static void safeDelete(File file)
     {
         try
@@ -155,6 +163,7 @@ public class IOUtils
         }
     }
     
+    @NonNull
     public static void safeDeleteDirectory(File file)
     {
         try

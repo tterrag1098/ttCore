@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+
 import org.apache.commons.io.FileUtils;
 
 import tterrag.core.TTCore;
@@ -13,16 +15,11 @@ import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ResourcePackAssembler
 {
+    @AllArgsConstructor
     private class CustomFile 
     {
         private String ext;
         private File file;
-
-        private CustomFile(String ext, File file)
-        {
-            this.ext = ext;
-            this.file = file;
-        }
     }
     
     private List<File> icons = new ArrayList<File>();

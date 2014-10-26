@@ -1,5 +1,7 @@
 package tterrag.core.client.render;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
@@ -9,17 +11,15 @@ import net.minecraftforge.client.model.obj.WavefrontObject;
 import tterrag.core.client.util.RenderingUtils;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
+@AllArgsConstructor
 public class SimpleModelRenderer implements ISimpleBlockRenderingHandler
 {
-    private final int renderId;
     private final Tessellator tes = Tessellator.instance;
-    private final WavefrontObject model;
 
-    public SimpleModelRenderer(WavefrontObject model, int renderId)
-    {
-        this.renderId = renderId;
-        this.model = model;
-    }
+    private final WavefrontObject model;
+    
+    @Getter
+    private final int renderId;
 
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
@@ -47,11 +47,5 @@ public class SimpleModelRenderer implements ISimpleBlockRenderingHandler
     public boolean shouldRender3DInInventory(int modelId)
     {
         return true;
-    }
-
-    @Override
-    public int getRenderId()
-    {
-        return renderId;
     }
 }

@@ -1,6 +1,8 @@
 package tterrag.core.client.util;
 
 import static org.lwjgl.opengl.GL11.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -13,6 +15,7 @@ import net.minecraftforge.client.model.obj.Vertex;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import tterrag.core.client.handlers.ClientHandler;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RenderingUtils
 {
     public static void renderWithIcon(WavefrontObject model, IIcon icon, Tessellator tes)
@@ -66,7 +69,7 @@ public class RenderingUtils
     
     public static float getRotation(float mult)
     {
-        return ClientHandler.getElapsedTicks() * mult;
+        return ClientHandler.getTicksElapsed() * mult;
     }
 
     public static void renderBillboardQuad(float rot, double scale)

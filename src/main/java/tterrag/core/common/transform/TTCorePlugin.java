@@ -1,41 +1,14 @@
 package tterrag.core.common.transform;
 
-import java.util.Map;
-
+import lombok.AutoGenMethodStub;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
+@AutoGenMethodStub
 public class TTCorePlugin implements IFMLLoadingPlugin
 {
     @Override
     public String[] getASMTransformerClass()
     {
-        return new String[] {
-                "tterrag.core.common.transform.TTCoreTransformer"
-        };
+        return new String[] { "tterrag.core.common.transform.TTCoreTransformer" };
     }
-
-    @Override
-    public String getModContainerClass()
-    {
-        return null;
-    }
-
-    @Override
-    public String getSetupClass()
-    {
-        return null;
-    }
-
-    @Override
-    public void injectData(Map<String, Object> data)
-    {
-        ;
-    }
-
-    @Override
-    public String getAccessTransformerClass()
-    {
-        return null;
-    }
-
 }

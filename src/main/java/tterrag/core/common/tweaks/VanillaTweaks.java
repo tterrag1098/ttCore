@@ -1,14 +1,13 @@
 package tterrag.core.common.tweaks;
 
+import lombok.Singleton;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 
+@Singleton
 public class VanillaTweaks implements ITweak
 {
-    public static final ITweak INSTANCE = new VanillaTweaks();
-    private VanillaTweaks() {}
-    
     @Override
     public void load()
     {

@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import lombok.Singleton;
 import tterrag.core.TTCore;
 import tterrag.core.common.util.RegisterTime;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLStateEvent;
 
+@Singleton
 public class CompatabilityRegistry
 {
     private static class Registration
@@ -24,14 +26,12 @@ public class CompatabilityRegistry
         }
     }
     
-    private Map<Registration, String> compatMap;
-    private static final CompatabilityRegistry INSTANCE = new CompatabilityRegistry();
-    
-    private CompatabilityRegistry()
-    {
-        compatMap = new HashMap<Registration, String>();
-    }
-    
+    private Map<Registration, String> compatMap = new HashMap<Registration, String>();
+
+    /**
+     * Directly reference <code> CompatabilityRegistry.INSTANCE </code> now!
+     */
+    @Deprecated
     public static CompatabilityRegistry instance() { return INSTANCE; }
     
     public void registerCompat(RegisterTime time, String clazz, String... modids)

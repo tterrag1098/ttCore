@@ -38,7 +38,7 @@ public class TTCore implements IModTT
     {
         ConfigHandler.init(event.getSuggestedConfigurationFile());
         
-        CompatabilityRegistry.instance().handle(event);
+        CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();
         
         ExtraRecipes.INSTANCE.load();
@@ -49,13 +49,13 @@ public class TTCore implements IModTT
     public void init(FMLInitializationEvent event)
     {
         Handlers.register();
-        CompatabilityRegistry.instance().handle(event);
+        CompatabilityRegistry.INSTANCE.handle(event);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        CompatabilityRegistry.instance().handle(event);
+        CompatabilityRegistry.INSTANCE.handle(event);
     }
     
     @EventHandler

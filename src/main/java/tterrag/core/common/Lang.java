@@ -1,14 +1,12 @@
 package tterrag.core.common;
 
+import lombok.AllArgsConstructor;
 import net.minecraft.util.StatCollector;
 
+@AllArgsConstructor
 public class Lang
 {
     private String locKey;
-    public Lang(String locKey)
-    {
-        this.locKey = locKey;
-    }
     
     public String localize(String unloc, boolean appendModid)
     {

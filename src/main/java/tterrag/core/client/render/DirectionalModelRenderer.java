@@ -23,11 +23,7 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
     private IModelCustom model;
     private ResourceLocation texture;
     private IModelTT modelSMT;
-
-    public DirectionalModelRenderer()
-    {
-    }
-
+    
     public DirectionalModelRenderer(ResourceLocation model, ResourceLocation texture)
     {
         this.model = AdvancedModelLoader.loadModel(model);
