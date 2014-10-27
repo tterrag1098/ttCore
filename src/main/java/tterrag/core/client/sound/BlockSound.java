@@ -1,12 +1,10 @@
 package tterrag.core.client.sound;
 
-import lombok.AutoGenMethodStub;
 import lombok.Getter;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.util.ResourceLocation;
 
-@AutoGenMethodStub
 public class BlockSound extends PositionedSound implements ITickableSound
 {
     @Getter
@@ -47,5 +45,11 @@ public class BlockSound extends PositionedSound implements ITickableSound
     {
         this.repeat = bool;
         return this;
+    }
+
+    @Override
+    public void update()
+    {
+       ;        
     }
 }

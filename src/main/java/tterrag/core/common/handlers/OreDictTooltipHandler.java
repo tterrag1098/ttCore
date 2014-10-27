@@ -1,6 +1,5 @@
 package tterrag.core.common.handlers;
 
-import lombok.Singleton;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import tterrag.core.TTCore;
@@ -10,7 +9,6 @@ import tterrag.core.common.config.ConfigHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Handler(types = HandlerType.FORGE)
-@Singleton
 public class OreDictTooltipHandler
 {
     @SubscribeEvent

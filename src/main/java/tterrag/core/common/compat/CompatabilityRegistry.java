@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import lombok.Singleton;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import tterrag.core.TTCore;
 import tterrag.core.common.util.RegisterTime;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLStateEvent;
 
-@Singleton
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompatabilityRegistry
 {
     private static class Registration
@@ -26,10 +27,12 @@ public class CompatabilityRegistry
         }
     }
     
+    public static final CompatabilityRegistry INSTANCE = new CompatabilityRegistry();
+    
     private Map<Registration, String> compatMap = new HashMap<Registration, String>();
 
     /**
-     * Directly reference <code> CompatabilityRegistry.INSTANCE </code> now!
+     * Directly reference <code>INSTANCE</code> now!
      */
     @Deprecated
     public static CompatabilityRegistry instance() { return INSTANCE; }

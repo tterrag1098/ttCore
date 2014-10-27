@@ -6,6 +6,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class Handlers
      * To be put on classes that are Forge/FML event handlers. If you are using this from another mod, be sure to call <code>Handlers.addPackage("your.base.package")</code> so that this class can
      * search your classes
      * <p>
-     * Class must have either a public no args constructor (or lombok {@link NoArgsConstructor}) or be a lombok compatible (have an <code>INSTANCE</code> field or {@link Singleton} annotation)
+     * Class must have either a public no args constructor (or lombok {@link NoArgsConstructor}) or a singleton object with field name <code>INSTANCE</code> (public or private).
      */
     @Target(value = ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
@@ -131,7 +132,9 @@ public class Handlers
         {
             try
             {
-                return c.getDeclaredField("INSTANCE").get(null);
+                Field inst = c.getDeclaredField("INSTANCE");
+                inst.setAccessible(true);
+                return inst.get(null);
             }
             catch (Exception e1)
             {

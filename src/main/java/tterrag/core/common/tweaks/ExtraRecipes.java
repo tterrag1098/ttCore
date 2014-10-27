@@ -1,6 +1,7 @@
 package tterrag.core.common.tweaks;
 
-import lombok.Singleton;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -8,9 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Singleton
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExtraRecipes implements ITweak
 {
+    public static final ExtraRecipes INSTANCE = new ExtraRecipes();
+    
     @Override
     public void load()
     {

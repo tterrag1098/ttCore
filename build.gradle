@@ -24,8 +24,7 @@ minecraft {
 }
 
 dependencies {
-    compile "org.projectlombok:lombok:0.11.8"
-    compile "com.github.peichhorn:lombok-pg:0.11.3"
+    compile "org.projectlombok:lombok:1.14.8"
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 

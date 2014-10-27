@@ -1,13 +1,16 @@
 package tterrag.core.common.tweaks;
 
-import lombok.Singleton;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 
-@Singleton
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class VanillaTweaks implements ITweak
 {
+    public static final VanillaTweaks INSTANCE = new VanillaTweaks();
+    
     @Override
     public void load()
     {

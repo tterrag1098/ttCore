@@ -2,7 +2,6 @@ package tterrag.core.common.config;
 
 import java.io.File;
 
-import lombok.Singleton;
 import net.minecraftforge.common.config.Configuration;
 import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler;
@@ -11,7 +10,6 @@ import tterrag.core.common.event.ConfigFileChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Handler(types = HandlerType.FML)
-@Singleton
 public class ConfigHandler
 {
     private static Configuration config;
