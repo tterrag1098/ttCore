@@ -24,3 +24,5 @@ ___
 * An annotation based handler system, no registration of event handlers needed!
 * A class to assemble your own resourcepack and inject it into the game
 * A simple CreativeTab to use for your mod
+* A BlockCoord class (yes, another one)
+* Block iterators for common use cases, such as a cubic iterator and planar iterator. These are used to iterate over the blocks in an area without using nasty nested for loops.
