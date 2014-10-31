@@ -42,12 +42,29 @@ public class Handlers
     {
         public enum HandlerType
         {
-            FORGE, FML
+            /**
+             * Represents the {@link MinecraftForge}<code>.EVENT_BUS</code>
+             */
+            FORGE,
+            
+            /**
+             * Represents the {@link FMLCommonHandler.instance().bus()}
+             */
+            FML
         }
 
+        /**
+         * Array of buses to register this handler to. Leave blank for all.
+         */
+        HandlerType[] value() default { HandlerType.FORGE, HandlerType.FML };
+        
+        /**
+         * Switching to <code>value</code> for easier usage
+         */
+        @Deprecated
         HandlerType[] types() default { HandlerType.FORGE, HandlerType.FML };
     }
-
+    
     private static Set<String> packageSet = new HashSet<String>();
 
     static
@@ -115,10 +132,12 @@ public class Handlers
     {
         TTCore.logger.info(String.format("[Handlers] Registering handler %s to busses: %s", c.getSimpleName(), Arrays.deepToString(handler.types())));
 
-        if (ArrayUtils.contains(handler.types(), HandlerType.FORGE))
+        HandlerType[] types = handler.value();
+        
+        if (ArrayUtils.contains(types, HandlerType.FORGE))
             MinecraftForge.EVENT_BUS.register(tryInit(c));
 
-        if (ArrayUtils.contains(handler.types(), HandlerType.FML))
+        if (ArrayUtils.contains(types, HandlerType.FML))
             FMLCommonHandler.instance().bus().register(tryInit(c));
     }
 

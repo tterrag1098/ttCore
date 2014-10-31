@@ -9,7 +9,7 @@ import tterrag.core.common.Handlers.Handler.HandlerType;
 import tterrag.core.common.event.ConfigFileChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-@Handler(types = HandlerType.FML)
+@Handler(HandlerType.FML)
 public class ConfigHandler
 {
     private static Configuration config;

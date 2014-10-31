@@ -7,7 +7,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
-@Handler(types = HandlerType.FML)
+@Handler(HandlerType.FML)
 public class ClientHandler
 {
     @Getter

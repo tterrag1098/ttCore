@@ -8,7 +8,7 @@ import tterrag.core.common.Handlers.Handler.HandlerType;
 import tterrag.core.common.config.ConfigHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-@Handler(types = HandlerType.FORGE)
+@Handler(HandlerType.FORGE)
 public class OreDictTooltipHandler
 {
     @SubscribeEvent
