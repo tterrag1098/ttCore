@@ -1,6 +1,5 @@
 package tterrag.core.common.util.blockiterators;
 
-import net.minecraft.world.World;
 import tterrag.core.common.util.BlockCoord;
 
 public class PlanarBlockIterator extends CubicBlockIterator
@@ -12,9 +11,9 @@ public class PlanarBlockIterator extends CubicBlockIterator
  
     private Orientation orientation;
     
-    public PlanarBlockIterator(World world, BlockCoord base, Orientation orientation, int radius)
+    public PlanarBlockIterator(BlockCoord base, Orientation orientation, int radius)
     {
-        super(world, base, radius);
+        super(base, radius);
         
         this.orientation = orientation;
     }

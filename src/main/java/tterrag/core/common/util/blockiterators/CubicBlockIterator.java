@@ -1,6 +1,5 @@
 package tterrag.core.common.util.blockiterators;
 
-import net.minecraft.world.World;
 import tterrag.core.common.util.BlockCoord;
 
 public class CubicBlockIterator extends AbstractBlockIterator
@@ -10,9 +9,9 @@ public class CubicBlockIterator extends AbstractBlockIterator
     protected int curX, curY, curZ;
     protected int maxX, maxY, maxZ;
     
-    public CubicBlockIterator(World world, BlockCoord base, int radius)
+    public CubicBlockIterator(BlockCoord base, int radius)
     {
-        super(world, base);
+        super(base);
         this.radius = radius;
         
         curX = minX = base.x - radius;
