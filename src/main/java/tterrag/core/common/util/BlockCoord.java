@@ -1,7 +1,10 @@
 package tterrag.core.common.util;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class BlockCoord
@@ -13,6 +16,21 @@ public class BlockCoord
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+    
+    public BlockCoord(Entity e)
+    {
+        this(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ));
+    }
+    
+    public BlockCoord(TileEntity te)
+    {
+        this(te.xCoord, te.yCoord, te.zCoord);
+    }
+    
+    public BlockCoord(BlockCoord other)
+    {
+        this(other.x, other.y, other.z);
     }
 
     @Override
