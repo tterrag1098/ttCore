@@ -1,5 +1,7 @@
 package tterrag.core.common.handlers;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.Item;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import tterrag.core.TTCore;
@@ -14,6 +16,11 @@ public class OreDictTooltipHandler
     @SubscribeEvent
     public void onItemTooltip(ItemTooltipEvent event)
     {
+        if (ConfigHandler.extraDebugStuff && Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
+        {
+            event.toolTip.add(Item.itemRegistry.getNameForObject(event.itemStack.getItem()));
+        }
+     
         if (ConfigHandler.showOredictTooltips)
         {
             int[] ids = OreDictionary.getOreIDs(event.itemStack);
