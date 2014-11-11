@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION)
+@Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION, guiFactory = "tterrag.core.common.config.BaseConfigFactory")
 public class TTCore implements IModTT
 {
     public static final String MODID = "ttCore";
@@ -36,7 +36,7 @@ public class TTCore implements IModTT
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        ConfigHandler.init(event.getSuggestedConfigurationFile());
+        ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
         
         CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();

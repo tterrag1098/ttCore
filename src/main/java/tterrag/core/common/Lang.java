@@ -40,4 +40,9 @@ public class Lang
     {
         return splitList(list, "\\|");
     }
+
+    public String getPrefix()
+    {
+        return locKey;
+    }
 }
