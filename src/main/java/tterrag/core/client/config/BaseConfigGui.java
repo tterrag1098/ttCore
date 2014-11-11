@@ -30,7 +30,7 @@ public class BaseConfigGui extends GuiConfig
             modID.setAccessible(true);
             configElements.setAccessible(true);
             
-            modID.set(this, getModid());
+            modID.set(this, getConfigHandler().getModID());
             configElements.set(this, getConfigElements());
         }
         catch (Exception e)
@@ -39,11 +39,6 @@ public class BaseConfigGui extends GuiConfig
         }
 
         this.title = getTitle();
-    }
-
-    protected String getModid()
-    {
-        return TTCore.MODID;
     }
 
     protected String getTitle()
