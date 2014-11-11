@@ -41,11 +41,17 @@ public class BaseConfigGui extends GuiConfig
         this.title = getTitle();
     }
 
+    /**
+     * The <b>localized</b> title of this config screen
+     */
     protected String getTitle()
     {
         return TTCore.lang.localize("config.title");
     }
 
+    /**
+     * The {@link IConfigHandler} to refer to when generating this config screen
+     */
     protected IConfigHandler getConfigHandler()
     {
         return ConfigHandler.INSTANCE;

@@ -147,7 +147,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
     }
 
-    protected void activateSection(String sectionName)
+    protected void activateSection(@NonNull String sectionName)
     {
         activateSection(getSectionByName(sectionName));
     }
@@ -160,11 +160,6 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     @Nullable
     protected Section getSectionByName(@NonNull String sectionName)
     {
-        if (sectionName == null)
-        {
-            return null;
-        }
-
         for (Section s : sections)
         {
             if (s.name.equalsIgnoreCase(sectionName))
@@ -266,20 +261,22 @@ public abstract class AbstractConfigHandler implements IConfigHandler
 
     /* IConfigHandler impl */
 
+    // no need to override these, they are merely utilities, and reference private fields anyways
+    
     @Override
-    public List<Section> getSections()
+    public final List<Section> getSections()
     {
         return ImmutableList.copyOf(sections);
     }
 
     @Override
-    public ConfigCategory getCategory(String name)
+    public final ConfigCategory getCategory(String name)
     {
         return config.getCategory(name);
     }
 
     @Override
-    public String getModID()
+    public final String getModID()
     {
         return modid;
     }
