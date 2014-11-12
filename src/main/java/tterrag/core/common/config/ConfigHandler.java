@@ -34,7 +34,7 @@ public class ConfigHandler extends AbstractConfigHandler
         showOredictTooltips = getValue("showOredictTooltips", "Show oredictionary names of every item in its tooltip.", showOredictTooltips);
         extraDebugStuff = getValue("extraDebugStuff", "Show item registry names and other things in debug mode (f3+h)", extraDebugStuff);
         disableVoidFog = getValue("disableVoidFog", "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types", disableVoidFog);
-        anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel, RestartReqs.REQUIRES_MC_RESTART);
+        anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel);
     }
 
     @Override
