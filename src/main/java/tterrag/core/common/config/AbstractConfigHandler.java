@@ -128,11 +128,21 @@ public abstract class AbstractConfigHandler implements IConfigHandler
 
     protected Section addSection(String sectionName, String langKey)
     {
+        return addSection(sectionName, langKey, null);
+    }
+    
+    protected Section addSection(String sectionName, String langKey, String comment)
+    {
         Section section = new Section(sectionName, langKey);
 
         if (activeSection == null && sections.isEmpty())
         {
             activeSection = section;
+        }
+        
+        if (comment != null)
+        {
+            config.addCustomCategoryComment(sectionName, comment);
         }
 
         return section.register();
