@@ -47,8 +47,8 @@ Next, you need to specify what mod to download from the maven. We do this in the
 
 ```
 dependencies {
-  compile "tterrag.core:ttCore:MC1.7.10-0.0.3-32:dev"
+  compile "tterrag.core:ttCore:MC1.7.10-0.0.3-32:deobf"
 }
 ```
 
-Add this block directly after your `repositories` block. The version (part before `:dev`) can be changed to whatever version your mod requires.
+Add this block directly after your `repositories` block. The version (part before `:deobf`) can be changed to whatever version your mod requires.
