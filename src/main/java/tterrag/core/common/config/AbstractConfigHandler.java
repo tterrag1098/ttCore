@@ -13,7 +13,6 @@ import tterrag.core.api.common.config.IConfigHandler;
 import tterrag.core.common.event.ConfigFileChangedEvent;
 
 import com.google.common.collect.ImmutableList;
-import com.sun.istack.internal.Nullable;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -157,7 +156,6 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         activeSection = section;
     }
 
-    @Nullable
     protected Section getSectionByName(@NonNull String sectionName)
     {
         for (Section s : sections)
