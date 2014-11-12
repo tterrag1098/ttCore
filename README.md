@@ -26,3 +26,29 @@ ___
 * A simple CreativeTab to use for your mod
 * A BlockCoord class (yes, another one)
 * Block iterators for common use cases, such as a cubic iterator and planar iterator. These are used to iterate over the blocks in an area without using nasty nested for loops.
+* An easy-to-use config system that automatically handles a lot of the "boring" stuff in most config handlers, such as responding to events and the config GUI. An example of how to use the system can be found [here](https://github.com/tterrag1098/WAILAPlugins/tree/master/src/main/java/tterrag/wailaplugins/config)
+
+___
+## How do I use this thing?
+
+It's quite easy. First, you will need to add my maven repository to the ones that gradle searches in. In your build.gradle, just after the `minecraft` block you should have, add this:
+```
+repositories {
+  maven { // ttCore
+    name 'tterrag Repo'
+    url "http://maven.tterrag.com/"
+  }
+}
+```
+
+If your build.gradle already has the `dependencies` section, just add the `maven` section to the existing block.
+
+Next, you need to specify what mod to download from the maven. We do this in the `dependencies` block:
+
+```
+dependencies {
+  compile "tterrag.core:ttCore:MC1.7.10-0.0.3-32:dev"
+}
+```
+
+Add this block directly after your `repositories` block. The version (part before `:dev`) can be changed to whatever version your mod requires.
