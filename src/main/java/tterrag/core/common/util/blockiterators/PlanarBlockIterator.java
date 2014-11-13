@@ -1,12 +1,31 @@
 package tterrag.core.common.util.blockiterators;
 
+import net.minecraftforge.common.util.ForgeDirection;
 import tterrag.core.common.util.BlockCoord;
 
 public class PlanarBlockIterator extends CubicBlockIterator
 {
     public static enum Orientation
     {
-        EAST_WEST, NORTH_SOUTH, HORIZONTAL
+        EAST_WEST, NORTH_SOUTH, HORIZONTAL;
+        
+        public static Orientation perpendicular(ForgeDirection dir)
+        {
+            switch(dir)
+            {
+            case DOWN:
+            case UP:
+                return HORIZONTAL;
+            case NORTH:
+            case SOUTH:
+                return EAST_WEST;
+            case EAST:
+            case WEST:
+                return NORTH_SOUTH;
+            default:
+                return null;
+            }
+        }
     }
  
     private Orientation orientation;

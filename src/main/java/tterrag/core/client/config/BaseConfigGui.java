@@ -66,7 +66,7 @@ public class BaseConfigGui extends GuiConfig
 
         for (Section s : config.getSections())
         {
-            list.add(new ConfigElement<ConfigCategory>(config.getCategory(s.name).setLanguageKey(prefix + s.lang)));
+            list.add(new ConfigElement<ConfigCategory>(config.getCategory(s.lc()).setLanguageKey(prefix + s.lang)));
         }
 
         return list;
