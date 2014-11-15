@@ -74,6 +74,22 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
     }
 
+    /**
+     * An object to represent a bounds limit on a property.
+     * 
+     * @param <T> The type of the bound. Either {@link Integer} or {@link Double}
+     */
+    public static class Bound<T>
+    {
+        private T min, max;
+
+        public Bound(T min, T max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+    }
+
     private String modid;
     private Configuration config;
     private List<Section> sections = new ArrayList<Section>();
@@ -240,6 +256,22 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     {
         return getValue(key, null, defaultVal, req);
     }
+    
+    /**
+     * Gets a value from this config handler
+     * 
+     * @param key Name of the key for this property
+     * @param defaultVal Default value so a new property can be created
+     * @param bound The bounds to set on this property
+     * @return The value of the property
+     * 
+     * @throws IllegalArgumentException If defaultVal is not a valid property type
+     * @throws IllegalStateException If there is no active section
+     */
+    protected <T> T getValue(String key, T defaultVal, Bound<T> bound)
+    {
+        return getValue(key, null, defaultVal, bound);
+    }
 
     /**
      * Gets a value from this config handler
@@ -271,10 +303,45 @@ public abstract class AbstractConfigHandler implements IConfigHandler
      */
     protected <T> T getValue(String key, String comment, T defaultVal, RestartReqs req)
     {
+        return getValue(key, comment, defaultVal, req);
+    }
+    
+    /**
+     * Gets a value from this config handler
+     * 
+     * @param key Name of the key for this property
+     * @param comment The comment to put on this property
+     * @param defaultVal Default value so a new property can be created
+     * @param bound The bounds to set on this property
+     * @return The value of the property
+     * 
+     * @throws IllegalArgumentException if defaultVal is not a valid property type
+     * @throws IllegalStateException if there is no active section
+     */
+    protected <T> T getValue(String key, String comment, T defaultVal, Bound<T> bound)
+    {
+        return getValue(key, comment, defaultVal, RestartReqs.NONE, bound);
+    }
+
+    /**
+     * Gets a value from this config handler
+     * 
+     * @param key Name of the key for this property
+     * @param comment The comment to put on this property
+     * @param defaultVal Default value so a new property can be created
+     * @param req Restart requirement of the property to be created
+     * @param bound The bounds to set on this property
+     * @return The value of the property
+     * 
+     * @throws IllegalArgumentException if defaultVal is not a valid property type
+     * @throws IllegalStateException if there is no active section
+     */
+    protected <T> T getValue(String key, String comment, T defaultVal, RestartReqs req, Bound<T> bound)
+    {
         Property prop = getProperty(key, defaultVal, req);
         prop.comment = comment;
 
-        return getValue(prop, defaultVal);
+        return getValue(prop, defaultVal, bound);
     }
 
     /**
@@ -286,11 +353,31 @@ public abstract class AbstractConfigHandler implements IConfigHandler
      * @throws IllegalArgumentException if defaultVal is not a valid property type
      * @throws IllegalStateException if there is no active section
      */
-    @SuppressWarnings("unchecked")
-    // we check type of defaultVal but compiler still complains about a cast to T
     protected <T> T getValue(Property prop, T defaultVal)
     {
+        return getValue(prop, defaultVal, null);
+    }
+
+    /**
+     * Gets a value from a property
+     * 
+     * @param prop Property to get value from
+     * @param defaultVal Default value so a new property can be created
+     * @param bound The bounds to set on this property
+     * 
+     * @throws IllegalArgumentException if defaultVal is not a valid property type
+     * @throws IllegalStateException if there is no active section
+     */
+    @SuppressWarnings("unchecked")
+    // we check type of defaultVal but compiler still complains about a cast to T
+    protected <T> T getValue(Property prop, T defaultVal, Bound<T> bound)
+    {
         checkInitialized();
+
+        if (bound != null)
+        {
+            setBounds(prop, bound);
+        }
 
         // @formatter:off
         if (defaultVal instanceof Integer) { return (T) Integer.valueOf(prop.getInt()); }
@@ -306,6 +393,24 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
 
         throw new IllegalArgumentException("default value is not a config value type.");
+    }
+
+    private void setBounds(Property prop, Bound<?> bound)
+    {
+        if (bound.min instanceof Integer)
+        {
+            prop.setMinValue((Integer) bound.min);
+            prop.setMaxValue((Integer) bound.max);
+        }
+        else if (bound.min instanceof Double)
+        {
+            prop.setMinValue((Double) bound.min);
+            prop.setMaxValue((Double) bound.max);
+        }
+        else
+        {
+            TTCore.logger.warn("A mod tried to set bounds on a property that was not either of Integer of Double type.");
+        }
     }
 
     /**
