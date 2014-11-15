@@ -1,5 +1,8 @@
 package tterrag.core.common.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -11,6 +14,24 @@ import cpw.mods.fml.common.ModContainer;
 
 public class CommandReloadConfigs extends CommandBase
 {
+    private static List<String> validModIDs = new ArrayList<String>();
+
+    static
+    {
+        TTCore.logger.info("Sending dummy event to all mods");
+
+        for (ModContainer mod : Loader.instance().getActiveModList())
+        {
+            ConfigFileChangedEvent event = new ConfigFileChangedEvent(mod.getModId());
+            FMLCommonHandler.instance().bus().post(event);
+
+            if (event.isSuccessful())
+            {
+                validModIDs.add(mod.getModId());
+            }
+        }
+    }
+
     @Override
     public String getCommandName()
     {
@@ -21,6 +42,18 @@ public class CommandReloadConfigs extends CommandBase
     public String getCommandUsage(ICommandSender p_71518_1_)
     {
         return "/reloadConfigs <modid> (<modid2> <modid3> ...)";
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public List addTabCompletionOptions(ICommandSender player, String[] args)
+    {
+        if (args.length == 1)
+        {
+            return getListOfStringsMatchingLastWord(args, validModIDs.toArray(new String[validModIDs.size()]));
+        }
+        
+        return null;
     }
 
     @Override

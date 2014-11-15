@@ -303,7 +303,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
      */
     protected <T> T getValue(String key, String comment, T defaultVal, RestartReqs req)
     {
-        return getValue(key, comment, defaultVal, req);
+        return getValue(key, comment, defaultVal, req, null);
     }
     
     /**
