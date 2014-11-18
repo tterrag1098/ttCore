@@ -48,7 +48,7 @@ public class CommandReloadConfigs extends CommandBase
     @Override
     public List addTabCompletionOptions(ICommandSender player, String[] args)
     {
-        if (args.length == 1)
+        if (args.length >= 1)
         {
             return getListOfStringsMatchingLastWord(args, validModIDs.toArray(new String[validModIDs.size()]));
         }
