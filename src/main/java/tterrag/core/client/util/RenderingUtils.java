@@ -42,6 +42,12 @@ public class RenderingUtils
         render3DItem(item, rotate);
     }
     
+    /**
+     * Renders an item entity in 3D
+     * 
+     * @param item The item to render
+     * @param rotate Whether to "spin" the item like it would if it were a real dropped entity
+     */
     public static void render3DItem(EntityItem item, boolean rotate)
     {
         float rot = getRotation(1.0f);
@@ -57,7 +63,7 @@ public class RenderingUtils
 
         item.hoverStart = 0.0F;
         RenderManager.instance.renderEntityWithPosYaw(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
-
+        
         glPopMatrix();
     }
 
