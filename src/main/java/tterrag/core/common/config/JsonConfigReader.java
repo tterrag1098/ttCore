@@ -3,6 +3,7 @@ package tterrag.core.common.config;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ import com.google.gson.reflect.TypeToken;
  * @param <T> The type of the object to be read in. If this type is generic in itself (ex.
  *            {@code HashMap}) you should use one of the TypeToken constructors.
  */
-public class JsonConfigReader<T>
+public class JsonConfigReader<T> implements Iterable<T>
 {
     /**
      * A class representing some info about your mod.
@@ -195,5 +196,11 @@ public class JsonConfigReader<T>
             }
         }
         return list;
+    }
+
+    @Override
+    public Iterator<T> iterator()
+    {
+        return getElements().iterator();
     }
 }
