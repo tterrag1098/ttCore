@@ -20,9 +20,19 @@ public class OreDict
         safeRegister("blockHopper", Blocks.hopper);
         safeRegister("blockObsidian", Blocks.obsidian);
         safeRegister("itemNetherStar", Items.nether_star);
+       
         safeRegister("itemCoal", Items.coal);
         safeRegister("itemCharcoal", new ItemStack(Items.coal, 1, 1));
-        
+        safeRegister("pearlEnder", Items.ender_pearl);
+        safeRegister("pearlEnderEye", Items.ender_eye);
+        safeRegister("itemBlazeRod", Items.blaze_rod);
+        safeRegister("itemBlazePowder", Items.blaze_powder);
+        safeRegister("itemClay", Items.clay_ball);
+        safeRegister("itemFlint", Items.flint);
+        safeRegister("itemGhastTear", Items.ghast_tear);
+        safeRegister("dustGunpowder", Items.gunpowder);
+        safeRegister("itemLeather", Items.leather);
+		
         safeRegister("slabWoodOak", new ItemStack(Blocks.wooden_slab, 1, 0));
         safeRegister("slabWoodSpruce", new ItemStack(Blocks.wooden_slab, 1, 1));
         safeRegister("slabWoodBirch", new ItemStack(Blocks.wooden_slab, 1, 2));
