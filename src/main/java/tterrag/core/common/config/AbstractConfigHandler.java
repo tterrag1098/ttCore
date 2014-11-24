@@ -83,10 +83,24 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     {
         private T min, max;
 
+        /**
+         * Use {@code Bound.of(T min, T max)} instead.
+         * @param min
+         * @param max
+         */
+        @Deprecated
         public Bound(T min, T max)
         {
             this.min = min;
             this.max = max;
+        }
+        
+        /**
+         * Static factory method that returns a {@code Bound<T>} object of the type of the params passed.
+         */
+        public static <T> Bound<T> of(T min, T max)
+        {
+            return new Bound<T>(min, max);
         }
     }
 
@@ -389,7 +403,15 @@ public abstract class AbstractConfigHandler implements IConfigHandler
 
         if (defaultVal instanceof Float || defaultVal instanceof Double) // there is no float type...yeah idk either
         {
-            return (T) Double.valueOf(prop.getDouble());
+            double d = prop.getDouble();
+            if (defaultVal instanceof Float)
+            {
+                return (T) Float.valueOf((float) d);
+            }
+            else
+            {
+                return (T) Double.valueOf(d);
+            }
         }
 
         throw new IllegalArgumentException("default value is not a config value type.");

@@ -56,14 +56,24 @@ public class BaseConfigGui extends GuiConfig
     {
         return ConfigHandler.INSTANCE;
     }
+    
+    /**
+     * The lang prefix to use before your section lang keys. Default is "config.".
+     */
+    protected String getLangPrefix() 
+    {
+        return "config.";
+    }
 
     @SuppressWarnings("rawtypes")
     private List<IConfigElement> getConfigElements()
     {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
-        String prefix = TTCore.lang.getPrefix() + ".config.";
+        String prefix = getLangPrefix();
         IConfigHandler config = getConfigHandler();
 
+        prefix = prefix.endsWith(".") ? prefix : prefix + ".";
+        
         for (Section s : config.getSections())
         {
             list.add(new ConfigElement<ConfigCategory>(config.getCategory(s.lc()).setLanguageKey(prefix + s.lang)));

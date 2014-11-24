@@ -79,7 +79,7 @@ public class JsonConfigReader<T> implements Iterable<T>
      * @param mod A {@link ModToken} object to hold data about your mod. This is used to
      *            automatically copy the file from your jar if it does not exist in the config
      *            folder
-     * @param file The file representing your JSON config.
+     * @param file The {@link File} representing your JSON config.
      * @param objClass The type of the object being deserialized. Must be of the same type as the
      *            generic type of this class.
      */
@@ -113,7 +113,7 @@ public class JsonConfigReader<T> implements Iterable<T>
      * @param mod A {@link ModToken} object to hold data about your mod. This is used to
      *            automatically copy the file from your jar if it does not exist in the config
      *            folder
-     * @param file The file representing your JSON config.
+     * @param file The {@link File} representing your JSON config.
      * @param objType A {@link TypeToken} representing the type of the object to be deserialized.
      *            Must be of the same type as the generic type of this class.
      */
