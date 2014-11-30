@@ -25,7 +25,6 @@ minecraft {
 
 dependencies {
     compile "org.projectlombok:lombok:1.14.8"
-    compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 processResources {
