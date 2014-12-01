@@ -9,24 +9,24 @@ public class BlockSound extends PositionedSound implements ITickableSound
 {
     @Getter
     private boolean donePlaying = false;
-    
+
     public BlockSound(ResourceLocation p_i45103_1_)
     {
         super(p_i45103_1_);
     }
-    
+
     public BlockSound setVolume(float vol)
     {
         this.volume = vol;
         return this;
     }
-    
+
     public BlockSound setPitch(float pitch)
     {
         this.field_147663_c = pitch;
         return this;
     }
-    
+
     public BlockSound setDonePlaying(boolean bool)
     {
         this.donePlaying = bool;
@@ -50,6 +50,6 @@ public class BlockSound extends PositionedSound implements ITickableSound
     @Override
     public void update()
     {
-       ;        
+        ;
     }
 }

@@ -10,12 +10,12 @@ public class CreativeTabsCustom extends CreativeTabs
 {
     @NonNull
     private ItemStack displayStack;
-    
+
     public CreativeTabsCustom(String unloc)
     {
         super(unloc);
     }
-    
+
     /**
      * @param item Item to display
      */
@@ -23,7 +23,7 @@ public class CreativeTabsCustom extends CreativeTabs
     {
         return setDisplay(item, 0);
     }
-    
+
     /**
      * @param item Item to display
      * @param damage Damage of item to display
@@ -32,7 +32,7 @@ public class CreativeTabsCustom extends CreativeTabs
     {
         return setDisplay(new ItemStack(item, 1, damage));
     }
-    
+
     /**
      * @param display ItemStack to display
      */
@@ -41,7 +41,7 @@ public class CreativeTabsCustom extends CreativeTabs
         this.displayStack = display.copy();
         return this;
     }
-    
+
     @Override
     public ItemStack getIconItemStack()
     {

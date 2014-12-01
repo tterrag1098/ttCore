@@ -21,13 +21,4 @@ public class ClientHandler
             ticksElapsed++;
         }
     }
-
-    /**
-     * Use lombok getter <code>getTicksElapsed()</code>
-     */
-    @Deprecated
-    public static int getElapsedTicks()
-    {
-        return ticksElapsed;
-    }
 }

@@ -20,9 +20,10 @@ import com.google.gson.reflect.TypeToken;
 /**
  * A utility to easily read in JSON config files.
  * 
- * The format of the JSON file is as follows:<p>
- * {@code {"data":[<br>
- *  <br>
+ * The format of the JSON file is as follows:
+ * <p>
+ * {@code "data":[<br>
+ * <br>
  * ]}
  * <p>
  * Where the objects go inbetween the brackets ( [] )
@@ -135,7 +136,7 @@ public class JsonConfigReader<T> implements Iterable<T>
             {
                 assetPath = assetPath + "/";
             }
-            
+
             IOUtils.copyFromJar(mod.getMainClass(), mod.getAssetPath() + file.getName(), file);
         }
 

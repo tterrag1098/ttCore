@@ -10,21 +10,22 @@ public class SlabRecipes extends Tweak
 {
     private static final String[] slabEndingsWood = { "WoodOak", "WoodSpruce", "WoodBirch", "WoodJungle", "WoodAcacia", "WoodDarkOak" };
     private static final String[] slabEndingsStone = { "Stone", "Sandstone", "Cobblestone", "Bricks", "StoneBricks", "NetherBrick", "Quartz" };
-    private static final Block[]  slabResults = { Blocks.stone, Blocks.sandstone, Blocks.cobblestone, Blocks.brick_block, Blocks.stonebrick, Blocks.nether_brick, Blocks.quartz_block };
+    private static final Block[] slabResults = { Blocks.stone, Blocks.sandstone, Blocks.cobblestone, Blocks.brick_block, Blocks.stonebrick, Blocks.nether_brick,
+            Blocks.quartz_block };
 
     public static final SlabRecipes INSTANCE = new SlabRecipes();
-    
+
     SlabRecipes()
     {
         super("slabToBlockRecipes", "Adds recipes to turn any two slabs back into a full block");
     }
-    
+
     @Override
     public void load()
     {
         registerSlabToBlock();
     }
-    
+
     private void registerSlabToBlock()
     {
         for (int i = 0; i <= 1; i++)

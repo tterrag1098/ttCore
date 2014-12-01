@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 public class JsonUtils
 {
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    
+
     public static Object parseStringIntoRecipeItem(String string)
     {
         return parseStringIntoRecipeItem(string, false);
@@ -62,16 +62,16 @@ public class JsonUtils
             return string;
         }
     }
-    
+
     public static ItemStack parseStringIntoItemStack(String string)
     {
         int size = 1;
         int idx = string.indexOf('#');
-       
+
         if (idx != -1)
         {
             String num = string.substring(idx + 1);
-            
+
             try
             {
                 size = Integer.parseInt(num);
@@ -80,10 +80,10 @@ public class JsonUtils
             {
                 throw new IllegalArgumentException(num + " is not a valid stack size");
             }
-         
+
             string = string.substring(0, idx);
         }
-        
+
         ItemStack stack = (ItemStack) parseStringIntoRecipeItem(string, true);
         stack.stackSize = MathHelper.clamp_int(size, 1, stack.getMaxStackSize());
         return stack;

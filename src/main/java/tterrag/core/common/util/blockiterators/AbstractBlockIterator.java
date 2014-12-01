@@ -18,7 +18,7 @@ public abstract class AbstractBlockIterator implements Iterable<BlockCoord>, Ite
     {
         throw new UnsupportedOperationException("You can't remove blocks silly!");
     }
-    
+
     @Override
     public Iterator<BlockCoord> iterator()
     {

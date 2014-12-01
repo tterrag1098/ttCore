@@ -9,10 +9,10 @@ import tterrag.core.common.config.AbstractConfigHandler.Section;
 public interface IConfigHandler
 {
     void initialize(File cfg);
-    
+
     List<Section> getSections();
 
     ConfigCategory getCategory(String name);
-    
+
     String getModID();
 }

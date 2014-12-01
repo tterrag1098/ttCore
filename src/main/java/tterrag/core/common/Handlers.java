@@ -31,10 +31,12 @@ import cpw.mods.fml.common.LoaderState;
 public class Handlers
 {
     /**
-     * To be put on classes that are Forge/FML event handlers. If you are using this from another mod, be sure to call <code>Handlers.addPackage("your.base.package")</code> so that this class can
-     * search your classes
+     * To be put on classes that are Forge/FML event handlers. If you are using this from another
+     * mod, be sure to call <code>Handlers.addPackage("your.base.package")</code> so that this class
+     * can search your classes
      * <p>
-     * Class must have either a public no args constructor (or lombok {@link NoArgsConstructor}) or a singleton object with field name <code>INSTANCE</code> (public or private).
+     * Class must have either a public no args constructor (or lombok {@link NoArgsConstructor}) or
+     * a singleton object with field name <code>INSTANCE</code> (public or private).
      */
     @Target(value = ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
@@ -46,7 +48,7 @@ public class Handlers
              * Represents the {@link MinecraftForge}<code>.EVENT_BUS</code>
              */
             FORGE,
-            
+
             /**
              * Represents the {@link FMLCommonHandler.instance().bus()}
              */
@@ -57,14 +59,8 @@ public class Handlers
          * Array of buses to register this handler to. Leave blank for all.
          */
         HandlerType[] value() default { HandlerType.FORGE, HandlerType.FML };
-        
-        /**
-         * Switching to <code>value</code> for easier usage
-         */
-        @Deprecated
-        HandlerType[] types() default { HandlerType.FORGE, HandlerType.FML };
     }
-    
+
     private static Set<String> packageSet = new HashSet<String>();
 
     static
@@ -102,7 +98,8 @@ public class Handlers
 
             for (ClassInfo info : classes)
             {
-                if (!info.getPackageName().contains("client") || FMLCommonHandler.instance().getEffectiveSide().isClient()) // if not client handler, or we are on client, continue
+                // if not client handler, or we are on client, continue
+                if (!info.getPackageName().contains("client") || FMLCommonHandler.instance().getEffectiveSide().isClient())
                 {
                     try
                     {
@@ -130,10 +127,10 @@ public class Handlers
 
     private static void registerHandler(Class<?> c, Handler handler) throws InstantiationException, IllegalAccessException
     {
-        TTCore.logger.info(String.format("[Handlers] Registering handler %s to busses: %s", c.getSimpleName(), Arrays.deepToString(handler.types())));
+        TTCore.logger.info(String.format("[Handlers] Registering handler %s to busses: %s", c.getSimpleName(), Arrays.deepToString(handler.value())));
 
         HandlerType[] types = handler.value();
-        
+
         if (ArrayUtils.contains(types, HandlerType.FORGE))
             MinecraftForge.EVENT_BUS.register(tryInit(c));
 

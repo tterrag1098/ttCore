@@ -9,12 +9,10 @@ import cpw.mods.fml.common.event.FMLStateEvent;
 @AllArgsConstructor
 public enum RegisterTime
 {
-    PREINIT(FMLPreInitializationEvent.class),
-    INIT(FMLInitializationEvent.class),
-    POSTINIT(FMLPostInitializationEvent.class);
-    
+    PREINIT(FMLPreInitializationEvent.class), INIT(FMLInitializationEvent.class), POSTINIT(FMLPostInitializationEvent.class);
+
     private Class<? extends FMLStateEvent> clazz;
-    
+
     public static RegisterTime timeFor(FMLStateEvent event)
     {
         for (RegisterTime time : values())

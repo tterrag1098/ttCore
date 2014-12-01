@@ -36,12 +36,6 @@ public class RenderingUtils
         }
     }
 
-    @Deprecated
-    public static void render3DItem(EntityItem item, float partialTickTime, boolean rotate)
-    {
-        render3DItem(item, rotate);
-    }
-    
     /**
      * Renders an item entity in 3D
      * 
@@ -63,16 +57,10 @@ public class RenderingUtils
 
         item.hoverStart = 0.0F;
         RenderManager.instance.renderEntityWithPosYaw(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
-        
+
         glPopMatrix();
     }
 
-    @Deprecated
-    public static float getRotation(float partialTick, float mult)
-    {
-        return getRotation(mult);
-    }
-    
     public static float getRotation(float mult)
     {
         return ClientHandler.getTicksElapsed() * mult;

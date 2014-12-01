@@ -38,7 +38,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         extraDebugStuff = getValue("extraDebugStuff", "Show item registry names and other things in debug mode (f3+h)", extraDebugStuff);
         disableVoidFog = getValue("disableVoidFog", "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types", disableVoidFog);
         anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel);
-        
+
         Tweaks.loadIngameTweaks();
     }
 
@@ -47,7 +47,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     {
         Tweaks.loadNonIngameTweaks();
     }
-    
+
     @Override
     public boolean addBooleanFor(Tweak tweak)
     {

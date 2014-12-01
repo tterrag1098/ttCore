@@ -16,12 +16,12 @@ import cpw.mods.fml.common.FMLCommonHandler;
 public class ResourcePackAssembler
 {
     @AllArgsConstructor
-    private class CustomFile 
+    private class CustomFile
     {
         private String ext;
         private File file;
     }
-    
+
     private List<File> icons = new ArrayList<File>();
     private List<File> langs = new ArrayList<File>();
     private List<CustomFile> customs = new ArrayList<CustomFile>();
@@ -59,14 +59,15 @@ public class ResourcePackAssembler
     {
         langs.add(lang);
     }
-    
+
     public void addCustomFile(String path, File file)
     {
         customs.add(new CustomFile(path, file));
     }
-    
+
     /**
      * Adds at the base dir
+     * 
      * @param file
      */
     public void addCustomFile(File file)
@@ -102,7 +103,7 @@ public class ResourcePackAssembler
             {
                 FileUtils.copyFile(lang, new File(langDir + "/" + lang.getName()));
             }
-            
+
             for (CustomFile custom : customs)
             {
                 File directory = new File(pathToDir + (custom.ext != null ? "/" + custom.ext : ""));
@@ -116,12 +117,6 @@ public class ResourcePackAssembler
         }
 
         return this;
-    }
-
-    @Deprecated
-    public void inject(File resourcePacksDir) throws IOException
-    {
-        inject();
     }
 
     public void inject()

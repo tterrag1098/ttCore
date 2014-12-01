@@ -5,11 +5,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import tterrag.core.TTCore;
 import tterrag.core.common.util.RegisterTime;
 import cpw.mods.fml.common.Loader;
@@ -26,40 +27,34 @@ public class CompatabilityRegistry
         private Registration(RegisterTime time, String... modids)
         {
             this.modids = modids;
-            this.times = new RegisterTime[]{time};
+            this.times = new RegisterTime[] { time };
         }
-        
-        private Registration(RegisterTime[] times , String... modids)
+
+        private Registration(RegisterTime[] times, String... modids)
         {
             this.modids = modids;
             this.times = times;
         }
     }
-    
+
     public static final CompatabilityRegistry INSTANCE = new CompatabilityRegistry();
-    
+
     private Map<Registration, String> compatMap = new HashMap<Registration, String>();
-    
+
     @Getter
     private RegisterTime state = null;
 
-    /**
-     * Directly reference {@code INSTANCE} now!
-     */
-    @Deprecated
-    public static CompatabilityRegistry instance() { return INSTANCE; }
-    
     public void registerCompat(RegisterTime time, String clazz, String... modids)
     {
         compatMap.put(new Registration(time, modids), clazz);
     }
-    
+
     public void registerCompat(RegisterTime[] times, String clazz, String... modids)
     {
         compatMap.put(new Registration(times, modids), clazz);
     }
-    
-    public void handle(FMLStateEvent event) 
+
+    public void handle(FMLStateEvent event)
     {
         RegisterTime time = RegisterTime.timeFor(event);
         state = time;
@@ -71,7 +66,7 @@ public class CompatabilityRegistry
             }
         }
     }
-    
+
     private boolean allModsLoaded(String[] modids)
     {
         for (String s : modids)
@@ -83,21 +78,21 @@ public class CompatabilityRegistry
         }
         return true;
     }
-    
+
     public void forceLoad(String clazz)
     {
         Iterator<Registration> iter = compatMap.keySet().iterator();
-        while(iter.hasNext())
+        while (iter.hasNext())
         {
             Registration r = iter.next();
             String s = compatMap.get(r);
-            if (s.equals(clazz)) 
+            if (s.equals(clazz))
             {
                 doLoad(s);
             }
         }
     }
-    
+
     private void doLoad(String clazz)
     {
         try

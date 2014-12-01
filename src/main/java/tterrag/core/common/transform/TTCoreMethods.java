@@ -13,7 +13,6 @@ public class TTCoreMethods
         if (ConfigHandler.disableVoidFog == 0)
         {
             return type != WorldType.FLAT && !hasSky;
-
         }
         else if (ConfigHandler.disableVoidFog == 1)
         {
@@ -24,7 +23,7 @@ public class TTCoreMethods
             return false;
         }
     }
-    
+
     public static int getMaxAnvilCost()
     {
         return ConfigHandler.anvilMaxLevel;

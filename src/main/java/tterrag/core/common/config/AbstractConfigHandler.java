@@ -82,20 +82,14 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     /**
      * An object to represent a bounds limit on a property.
      * 
-     * @param <T> The type of the bound. Either {@link Integer}, {@link Double}, or {@link Float} (will be cast to double)
+     * @param <T> The type of the bound. Either {@link Integer}, {@link Double}, or {@link Float}
+     *            (will be cast to double)
      */
     public static class Bound<T>
     {
         private T min, max;
 
-        /**
-         * Use {@code Bound.of(T min, T max)} instead.
-         * 
-         * @param min
-         * @param max
-         */
-        @Deprecated
-        public Bound(T min, T max)
+        private Bound(T min, T max)
         {
             this.min = min;
             this.max = max;
@@ -122,6 +116,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         FMLCommonHandler.instance().bus().register(this);
     }
 
+    @Override
     public final void initialize(File cfg)
     {
         config = new Configuration(cfg);
@@ -501,7 +496,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
                 min = (Double) bound.min;
                 max = (Double) bound.max;
             }
-            
+
             prop.setMinValue(min);
             prop.setMaxValue(max);
         }

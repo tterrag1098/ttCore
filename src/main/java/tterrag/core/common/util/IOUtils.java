@@ -49,7 +49,10 @@ public class IOUtils
 
     /**
      * @author Ilias Tsagklis
-     * <p>From <a href="http://examples.javacodegeeks.com/core-java/util/zip/extract-zip-file-with-subdirectories/">this site.</a>
+     *         <p>
+     *         From <a href=
+     *         "http://examples.javacodegeeks.com/core-java/util/zip/extract-zip-file-with-subdirectories/"
+     *         > this site.</a>
      * 
      * @param zip - The zip file to extract
      * 
@@ -126,7 +129,7 @@ public class IOUtils
                 System.out.println("Error while closing zip file" + e);
             }
         }
-        
+
         return temp;
     }
 
@@ -134,7 +137,7 @@ public class IOUtils
     public static File writeToFile(String filepath, String json)
     {
         File file = new File(filepath);
-        
+
         try
         {
             file.createNewFile();
@@ -149,7 +152,7 @@ public class IOUtils
             throw new RuntimeException(e);
         }
     }
-    
+
     @NonNull
     public static void safeDelete(File file)
     {
@@ -162,7 +165,7 @@ public class IOUtils
             TTCore.logger.error("Deleting file " + file.getAbsolutePath() + " failed.");
         }
     }
-    
+
     @NonNull
     public static void safeDeleteDirectory(File file)
     {

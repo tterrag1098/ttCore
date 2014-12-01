@@ -35,7 +35,7 @@ public class TTCore implements IModTT
     public void preInit(FMLPreInitializationEvent event)
     {
         ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
-        
+
         CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();
     }
@@ -52,7 +52,7 @@ public class TTCore implements IModTT
     {
         CompatabilityRegistry.INSTANCE.handle(event);
     }
-    
+
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
