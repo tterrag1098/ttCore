@@ -9,8 +9,6 @@ import tterrag.core.common.OreDict;
 import tterrag.core.common.command.CommandReloadConfigs;
 import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
-import tterrag.core.common.tweaks.ExtraRecipes;
-import tterrag.core.common.tweaks.VanillaTweaks;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -40,9 +38,6 @@ public class TTCore implements IModTT
         
         CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();
-        
-        ExtraRecipes.INSTANCE.load();
-        VanillaTweaks.INSTANCE.load();
     }
 
     @EventHandler

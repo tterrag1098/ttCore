@@ -20,6 +20,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public abstract class AbstractConfigHandler implements IConfigHandler
 {
+    /**
+     * Represents a section in a config handler.
+     */
     public class Section
     {
         public final String name;
@@ -56,7 +59,8 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         REQUIRES_WORLD_RESTART,
 
         /**
-         * This config requires the game to be restarted to take effect. {@code REQUIRES_WORLD_RESTART} is implied when using this.
+         * This config requires the game to be restarted to take effect.
+         * {@code REQUIRES_WORLD_RESTART} is implied when using this.
          */
         REQUIRES_MC_RESTART;
 
@@ -85,6 +89,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
 
         /**
          * Use {@code Bound.of(T min, T max)} instead.
+         * 
          * @param min
          * @param max
          */
@@ -94,9 +99,10 @@ public abstract class AbstractConfigHandler implements IConfigHandler
             this.min = min;
             this.max = max;
         }
-        
+
         /**
-         * Static factory method that returns a {@code Bound<T>} object of the type of the params passed.
+         * Static factory method that returns a {@code Bound<T>} object of the type of the params
+         * passed.
          */
         public static <T> Bound<T> of(T min, T max)
         {
@@ -177,22 +183,50 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     /**
      * Refresh all config values that can only be loaded when NOT in-game.
      * <p>
-     * {@code reloadIngameConfigs()} will be called after this, do not duplicate calls in this method and that one.
+     * {@code reloadIngameConfigs()} will be called after this, do not duplicate calls in this
+     * method and that one.
      */
     protected abstract void reloadNonIngameConfigs();
 
     /**
      * Refresh all config values that can only be loaded when in-game.
      * <p>
-     * This is separated from {@code reloadNonIngameConfigs()} because some values may not be able to be modified at runtime.
+     * This is separated from {@code reloadNonIngameConfigs()} because some values may not be able
+     * to be modified at runtime.
      */
     protected abstract void reloadIngameConfigs();
 
+    /**
+     * Adds a section to your config to be used later
+     * 
+     * @param sectionName The name of the section. Will also be used as language key.
+     * @return A {@link Section} representing your section in the config
+     */
+    protected Section addSection(String sectionName)
+    {
+        return addSection(sectionName, sectionName, null);
+    }
+
+    /**
+     * Adds a section to your config to be used later
+     * 
+     * @param sectionName The name of the section
+     * @param langKey The language key to use to display your section name in the Config GUI
+     * @return A {@link Section} representing your section in the config
+     */
     protected Section addSection(String sectionName, String langKey)
     {
         return addSection(sectionName, langKey, null);
     }
 
+    /**
+     * Adds a section to your config to be used later
+     * 
+     * @param sectionName The name of the section
+     * @param langKey The language key to use to display your section name in the Config GUI
+     * @param comment The section comment
+     * @return A {@link Section} representing your section in the config
+     */
     protected Section addSection(String sectionName, String langKey, String comment)
     {
         Section section = new Section(sectionName, langKey);
@@ -218,16 +252,44 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
     }
 
+    /**
+     * Activates a section
+     * 
+     * @param sectionName The name of the section
+     * 
+     * @throws NullPointerException if {@code sectionName} is null
+     * @throws IllegalArgumentException if {@code sectionName} is not valid
+     */
     protected void activateSection(@NonNull String sectionName)
     {
-        activateSection(getSectionByName(sectionName));
+        Section section = getSectionByName(sectionName);
+        if (section == null)
+        {
+            throw new IllegalArgumentException("Section " + sectionName + " does not exist!");
+        }
+        activateSection(section);
     }
 
-    protected void activateSection(Section section)
+    /**
+     * Activates a section
+     * 
+     * @param sectionName The section to activate
+     * 
+     * @throws NullPointerException if {@code section} is null
+     */
+    protected void activateSection(@NonNull Section section)
     {
         activeSection = section;
     }
 
+    /**
+     * Gets a {@link Section} for a name
+     * 
+     * @param sectionName The name of the section
+     * @return A section object representing the section in your config with this name
+     * 
+     * @throws NullPointerException if {@code sectionName} is null
+     */
     protected Section getSectionByName(@NonNull String sectionName)
     {
         for (Section s : sections)
@@ -270,7 +332,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     {
         return getValue(key, null, defaultVal, req);
     }
-    
+
     /**
      * Gets a value from this config handler
      * 
@@ -319,7 +381,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     {
         return getValue(key, comment, defaultVal, req, null);
     }
-    
+
     /**
      * Gets a value from this config handler
      * 
@@ -401,7 +463,8 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         if (defaultVal instanceof String[]){ return (T) prop.getStringList(); }
         //@formatter:on
 
-        if (defaultVal instanceof Float || defaultVal instanceof Double) // there is no float type...yeah idk either
+        if (defaultVal instanceof Float || defaultVal instanceof Double) // there is no float
+                                                                         // type...yeah idk either
         {
             double d = prop.getDouble();
             if (defaultVal instanceof Float)

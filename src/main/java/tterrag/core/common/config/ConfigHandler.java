@@ -3,9 +3,11 @@ package tterrag.core.common.config;
 import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler;
 import tterrag.core.common.Handlers.Handler.HandlerType;
+import tterrag.core.common.tweaks.Tweak;
+import tterrag.core.common.tweaks.Tweaks;
 
 @Handler(HandlerType.FML)
-public class ConfigHandler extends AbstractConfigHandler
+public class ConfigHandler extends AbstractConfigHandler implements ITweakConfigHandler
 {
     // @formatter:off
     public static boolean   showOredictTooltips = false;
@@ -24,7 +26,8 @@ public class ConfigHandler extends AbstractConfigHandler
     @Override
     public void init()
     {
-        addSection("general", "general");
+        addSection("general");
+        addSection("tweaks");
     }
 
     @Override
@@ -35,11 +38,20 @@ public class ConfigHandler extends AbstractConfigHandler
         extraDebugStuff = getValue("extraDebugStuff", "Show item registry names and other things in debug mode (f3+h)", extraDebugStuff);
         disableVoidFog = getValue("disableVoidFog", "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types", disableVoidFog);
         anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel);
+        
+        Tweaks.loadIngameTweaks();
     }
 
     @Override
     protected void reloadNonIngameConfigs()
     {
-        ;
+        Tweaks.loadNonIngameTweaks();
+    }
+    
+    @Override
+    public boolean addBooleanFor(Tweak tweak)
+    {
+        activateSection("tweaks");
+        return getValue(tweak.getName(), tweak.getComment(), true);
     }
 }
