@@ -2,6 +2,7 @@ package tterrag.core.common.config;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.NonNull;
@@ -81,7 +82,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     /**
      * An object to represent a bounds limit on a property.
      * 
-     * @param <T> The type of the bound. Either {@link Integer} or {@link Double}
+     * @param <T> The type of the bound. Either {@link Integer}, {@link Double}, or {@link Float} (will be cast to double)
      */
     public static class Bound<T>
     {
@@ -487,14 +488,27 @@ public abstract class AbstractConfigHandler implements IConfigHandler
             prop.setMinValue((Integer) bound.min);
             prop.setMaxValue((Integer) bound.max);
         }
-        else if (bound.min instanceof Double)
+        else if (bound.min instanceof Double || bound.min instanceof Float)
         {
-            prop.setMinValue((Double) bound.min);
-            prop.setMaxValue((Double) bound.max);
+            double min, max;
+            if (bound.min instanceof Float)
+            {
+                min = ((Float) bound.min).doubleValue();
+                max = ((Float) bound.max).doubleValue();
+            }
+            else
+            {
+                min = (Double) bound.min;
+                max = (Double) bound.max;
+            }
+            
+            prop.setMinValue(min);
+            prop.setMaxValue(max);
         }
         else
         {
             TTCore.logger.warn("A mod tried to set bounds on a property that was not either of Integer of Double type.");
+            TTCore.logger.warn("Trace :" + Arrays.toString(Thread.currentThread().getStackTrace()));
         }
     }
 
