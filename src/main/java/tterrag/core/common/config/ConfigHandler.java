@@ -14,6 +14,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public static boolean   extraDebugStuff     = true;
     public static int       disableVoidFog      = 1;
     public static int       anvilMaxLevel       = 40;
+    public static boolean   betterAchievements  = true;
     // @formatter:on
 
     public static final ConfigHandler INSTANCE = new ConfigHandler();
@@ -38,7 +39,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         extraDebugStuff = getValue("extraDebugStuff", "Show item registry names and other things in debug mode (f3+h)", extraDebugStuff);
         disableVoidFog = getValue("disableVoidFog", "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types", disableVoidFog);
         anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel);
-
+        betterAchievements = getValue("superDuperFunMode", "The way the game should have been made.", betterAchievements);
         Tweaks.loadIngameTweaks();
     }
 
