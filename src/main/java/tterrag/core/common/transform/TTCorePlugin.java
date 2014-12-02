@@ -3,7 +3,9 @@ package tterrag.core.common.transform;
 import java.util.Map;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
+@SuppressWarnings("unused")
 @MCVersion("1.7.10")
 public class TTCorePlugin implements IFMLLoadingPlugin
 {
