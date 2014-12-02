@@ -8,7 +8,7 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import tterrag.core.common.util.IOUtils;
+import tterrag.core.common.util.TTFileUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -137,7 +137,7 @@ public class JsonConfigReader<T> implements Iterable<T>
                 assetPath = assetPath + "/";
             }
 
-            IOUtils.copyFromJar(mod.getMainClass(), mod.getAssetPath() + file.getName(), file);
+            TTFileUtils.copyFromJar(mod.getMainClass(), mod.getAssetPath() + file.getName(), file);
         }
 
         refresh();

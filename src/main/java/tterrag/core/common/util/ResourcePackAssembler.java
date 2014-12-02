@@ -86,7 +86,7 @@ public class ResourcePackAssembler
 
             if (hasPackPng)
             {
-                IOUtils.copyFromJar(jarClass, modid + "/" + "pack.png", new File(dir.getAbsolutePath() + "/pack.png"));
+                TTFileUtils.copyFromJar(jarClass, modid + "/" + "pack.png", new File(dir.getAbsolutePath() + "/pack.png"));
             }
 
             String itemsDir = pathToDir + "/assets/" + modid + "/textures/items";
@@ -127,9 +127,9 @@ public class ResourcePackAssembler
 
             try
             {
-                IOUtils.safeDeleteDirectory(dest);
+                TTFileUtils.safeDeleteDirectory(dest);
                 FileUtils.copyDirectory(dir, dest);
-                IOUtils.safeDeleteDirectory(dir);
+                TTFileUtils.safeDeleteDirectory(dir);
             }
             catch (IOException e)
             {
@@ -144,7 +144,7 @@ public class ResourcePackAssembler
 
     private void writeDefaultMcmeta(File file) throws IOException
     {
-        IOUtils.safeDelete(file);
+        TTFileUtils.safeDelete(file);
         file.getParentFile().mkdirs();
         file.createNewFile();
 
