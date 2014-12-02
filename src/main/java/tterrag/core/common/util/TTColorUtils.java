@@ -1,8 +1,12 @@
 package tterrag.core.common.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import org.lwjgl.opengl.GL11;
 
-public class TTColorUtils
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TTColorUtils
 {
     /**
      * Turns an int into a glColor4f function

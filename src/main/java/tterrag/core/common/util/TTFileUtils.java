@@ -22,7 +22,7 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import tterrag.core.TTCore;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TTFileUtils
+public final class TTFileUtils
 {
     public static final FileFilter pngFilter = FileFilterUtils.suffixFileFilter(".png");
     public static final FileFilter langFilter = FileFilterUtils.suffixFileFilter(".lang");

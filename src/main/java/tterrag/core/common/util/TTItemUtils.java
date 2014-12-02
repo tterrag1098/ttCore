@@ -2,11 +2,14 @@ package tterrag.core.common.util;
 
 import java.util.Random;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class TTItemUtils
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TTItemUtils
 {
     private static final Random rand = new Random();
     

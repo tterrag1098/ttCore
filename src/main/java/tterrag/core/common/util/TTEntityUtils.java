@@ -1,8 +1,11 @@
 package tterrag.core.common.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.entity.Entity;
 
-public class TTEntityUtils
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TTEntityUtils
 {
     public static void setEntityVelocity(Entity entity, double velX, double velY, double velZ)
     {

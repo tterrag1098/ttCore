@@ -1,9 +1,11 @@
 package tterrag.core.common.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.util.EnumChatFormatting;
 
-
-public class TTStringUtils
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TTStringUtils
 {
     /**
      * Formats a string and number for use in GUIs and tooltips
