@@ -7,6 +7,7 @@ import tterrag.core.common.Handlers;
 import tterrag.core.common.Lang;
 import tterrag.core.common.OreDict;
 import tterrag.core.common.command.CommandReloadConfigs;
+import tterrag.core.common.command.CommandScoreboardInfo;
 import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import cpw.mods.fml.common.Mod;
@@ -57,6 +58,7 @@ public class TTCore implements IModTT
     public void onServerStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandReloadConfigs());
+        event.registerServerCommand(new CommandScoreboardInfo());
     }
 
     @Override
