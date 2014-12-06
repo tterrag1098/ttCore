@@ -41,7 +41,7 @@ public class TTCore implements IModTT
         CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();
         
-        EnchantXPBoost.INSTANCE.sendIMC();
+        EnchantXPBoost.INSTANCE.register();
     }
 
     @EventHandler

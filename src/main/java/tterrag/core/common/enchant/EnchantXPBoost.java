@@ -59,6 +59,12 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
     {
         return "enchantment.xpboost";
     }
+    
+    @Override
+    public boolean isAllowedOnBooks()
+    {
+        return ConfigHandler.allowXPBoost;
+    }
 
     @Override
     public String[] getTooltipDetails(ItemStack stack)
@@ -141,8 +147,17 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
         }
     }
 
-    public void sendIMC()
+    public void register()
     {
-        FMLInterModComms.sendMessage("EnderIO", "recipe:enchanter", "<enchantment name=\"enchantment.xpboost\" costPerLevel=\"4\">\n<itemStack modID=\"minecraft\" itemName=\"enchanted_book\" number=\"1\"/>\n</enchantment>");
+        if (ConfigHandler.allowXPBoost)
+        {
+            FMLInterModComms.sendMessage("EnderIO", "recipe:enchanter",
+                    "<enchantment name=\"enchantment.xpboost\" costPerLevel=\"4\">\n<itemStack oreDictionary=\"ingotGold\" number=\"16\"/>\n</enchantment>"
+            );
+        }
+        else
+        {
+            Enchantment.enchantmentsList[this.effectId] = null;
+        }
     }
 }

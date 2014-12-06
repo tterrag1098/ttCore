@@ -15,7 +15,9 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public static int       disableVoidFog      = 1;
     public static int       anvilMaxLevel       = 40;
     public static boolean   betterAchievements  = true;
+    
     public static int       enchantIDXPBoost    = 43;
+    public static boolean   allowXPBoost        = true;
     // @formatter:on
 
     public static final ConfigHandler INSTANCE = new ConfigHandler();
@@ -51,6 +53,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     {
         activateSection("enchants");
         enchantIDXPBoost = getValue("enchantIDXPBoost", "Enchant ID for the XP boost enchant.", enchantIDXPBoost);
+        allowXPBoost = getValue("allowXPBoost", "Allow the XP Boost enchant to be registered.", allowXPBoost);
         
         Tweaks.loadNonIngameTweaks();
     }
