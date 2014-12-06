@@ -10,6 +10,7 @@ import tterrag.core.common.command.CommandReloadConfigs;
 import tterrag.core.common.command.CommandScoreboardInfo;
 import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
+import tterrag.core.common.enchant.EnchantXPBoost;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -39,6 +40,8 @@ public class TTCore implements IModTT
 
         CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();
+        
+        EnchantXPBoost.INSTANCE.sendIMC();
     }
 
     @EventHandler

@@ -2,7 +2,9 @@ package tterrag.core.common.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
+import tterrag.core.TTCore;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TTStringUtils
@@ -100,5 +102,17 @@ public final class TTStringUtils
             return EnumChatFormatting.GOLD;
         else
             return EnumChatFormatting.GREEN;
+    }
+    
+    public static String getEffectNameWithLevel(PotionEffect effect)
+    {
+        String name = TTCore.lang.localize(effect.getEffectName(), false);
+        
+        if (effect.getAmplifier() > 0)
+        {
+            name += " " + TTCore.lang.localize("enchantment.level." + (effect.getAmplifier() + 1), false);
+        }
+        
+        return name;
     }
 }

@@ -15,6 +15,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public static int       disableVoidFog      = 1;
     public static int       anvilMaxLevel       = 40;
     public static boolean   betterAchievements  = true;
+    public static int       enchantIDXPBoost    = 43;
     // @formatter:on
 
     public static final ConfigHandler INSTANCE = new ConfigHandler();
@@ -28,6 +29,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public void init()
     {
         addSection("general");
+        addSection("enchants");
         addSection("tweaks");
     }
 
@@ -40,12 +42,16 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         disableVoidFog = getValue("disableVoidFog", "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types", disableVoidFog);
         anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel);
         betterAchievements = getValue("superDuperFunMode", "The way the game should have been made.", betterAchievements);
+
         Tweaks.loadIngameTweaks();
     }
 
     @Override
     protected void reloadNonIngameConfigs()
     {
+        activateSection("enchants");
+        enchantIDXPBoost = getValue("enchantIDXPBoost", "Enchant ID for the XP boost enchant.", enchantIDXPBoost);
+        
         Tweaks.loadNonIngameTweaks();
     }
 
