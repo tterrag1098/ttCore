@@ -46,7 +46,7 @@ public class Tweaks
         
         tweaks.add(new Tweak("shapelessPaperRecipe","Adds a shapeless recipe for paper") {
             @Override
-            public void load() { GameRegistry.addShapelessRecipe(new ItemStack(Items.paper, 3), Blocks.reeds, Blocks.reeds, Blocks.reeds); }
+            public void load() { GameRegistry.addShapelessRecipe(new ItemStack(Items.paper, 3), Items.reeds, Items.reeds, Items.reeds); }
         });
     }    
 }
