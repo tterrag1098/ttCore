@@ -18,10 +18,11 @@ public class FireworkHandler
     @SubscribeEvent
     public void onAchievement(AchievementEvent event)
     {
-        StatisticsFile file = ((EntityPlayerMP)event.entityPlayer).func_147099_x();
-        if (!event.entity.worldObj.isRemote && file.canUnlockAchievement(event.achievement) && !file.hasAchievementUnlocked(event.achievement) && ConfigHandler.betterAchievements)
+        StatisticsFile file = ((EntityPlayerMP) event.entityPlayer).func_147099_x();
+        if (!event.entity.worldObj.isRemote && file.canUnlockAchievement(event.achievement) && !file.hasAchievementUnlocked(event.achievement)
+                && ConfigHandler.betterAchievements)
         {
-            event.entityPlayer.getEntityData().setInteger("fireworksLeft", 5);
+            event.entityPlayer.getEntityData().setInteger("fireworksLeft", 9);
             event.entityPlayer.getEntityData().setBoolean("fireworkDelay", false);
         }
     }
@@ -31,22 +32,23 @@ public class FireworkHandler
     {
         EntityPlayer player = event.player;
         int fireworksLeft = player.getEntityData().getInteger("fireworksLeft");
-        if (!event.player.worldObj.isRemote && event.phase == Phase.END && fireworksLeft > 0 && (!player.getEntityData().getBoolean("fireworkDelay") || player.worldObj.getTotalWorldTime() % 20 == 0))
+        if (!event.player.worldObj.isRemote && event.phase == Phase.END && fireworksLeft > 0
+                && (!player.getEntityData().getBoolean("fireworkDelay") || player.worldObj.getTotalWorldTime() % 20 == 0))
         {
             TTEntityUtils.spawnFireworkAround(getBlockCoord(player), player.worldObj.provider.dimensionId);
             player.getEntityData().setInteger("fireworksLeft", fireworksLeft - 1);
-            player.getEntityData().setBoolean("fireworkDelay", true);
 
-            if (fireworksLeft == 1)
+            if (fireworksLeft > 5)
             {
-                for (int i = 0; i < 5; i++)
-                {
-                    TTEntityUtils.spawnFireworkAround(getBlockCoord(player), player.worldObj.provider.dimensionId);
-                }
+                player.getEntityData().setBoolean("fireworkDelay", true);
+            }
+            else
+            {
+                player.getEntityData().setBoolean("fireworkDelay", false);
             }
         }
     }
-    
+
     private BlockCoord getBlockCoord(EntityPlayer player)
     {
         return new BlockCoord((int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ));
