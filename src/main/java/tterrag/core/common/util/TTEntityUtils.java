@@ -33,8 +33,15 @@ public final class TTEntityUtils
 
         BlockCoord pos = new BlockCoord(0, 0, 0);
 
-        while (!world.isAirBlock(pos.x, pos.y, pos.z))
+        int tries = -1;
+        while (!world.isAirBlock(pos.x, pos.y, pos.z) && !world.getBlock(pos.x, pos.y, pos.z).isReplaceable(world, pos.x, pos.y, pos.z))
         {
+            tries++;
+            if (tries > 100)
+            {
+                return;
+            }
+            
             pos.setPosition(moveRandomly(block.x), block.y + 2, moveRandomly(block.z));
         }
 
