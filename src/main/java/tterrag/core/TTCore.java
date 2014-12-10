@@ -37,7 +37,8 @@ public class TTCore implements IModTT
     public void preInit(FMLPreInitializationEvent event)
     {
         ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
-
+        Handlers.findPackages();
+        
         CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();
         

@@ -17,6 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import tterrag.core.IModTT;
 import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler.HandlerType;
 
@@ -26,14 +27,16 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState;
+import cpw.mods.fml.common.ModContainer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Handlers
 {
     /**
      * To be put on classes that are Forge/FML event handlers. If you are using this from another
-     * mod, be sure to call <code>Handlers.addPackage("your.base.package")</code> so that this class
-     * can search your classes
+     * mod, be sure to implement {@link IModTT} on your {@code @Mod} class, or call
+     * <code>Handlers.addPackage("your.base.package")</code> so that this class can search your
+     * classes
      * <p>
      * Class must have either a public no args constructor (or lombok {@link NoArgsConstructor}) or
      * a singleton object with field name <code>INSTANCE</code> (public or private).
@@ -63,11 +66,23 @@ public class Handlers
 
     private static Set<String> packageSet = new HashSet<String>();
 
-    static
+    public static void findPackages()
     {
-        packageSet.add(TTCore.BASE_PACKAGE);
+        for (ModContainer mod : Loader.instance().getActiveModList())
+        {
+            if (mod.getMod() instanceof IModTT)
+            {
+                addPackage(mod.getMod().getClass().getPackage().getName());
+            }
+        }
     }
 
+    /**
+     * Registers a top level package to be searched for {@link Handler} classes. Not needed if your
+     * {@code @Mod} class implements {@link IModTT}
+     * 
+     * @param packageName
+     */
     public static void addPackage(String packageName)
     {
         if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
@@ -79,8 +94,14 @@ public class Handlers
         packageSet.add(packageName);
     }
 
+    private static boolean registered = false;
     public static void register()
     {
+        if (registered)
+        {
+            throw new IllegalStateException("Handlers cannot be registered more than once!");
+        }
+        
         ClassPath classpath;
 
         try
@@ -123,6 +144,8 @@ public class Handlers
                 }
             }
         }
+        
+        registered = true;
     }
 
     private static void registerHandler(Class<?> c, Handler handler) throws InstantiationException, IllegalAccessException
