@@ -3,12 +3,12 @@ package tterrag.core.common.handlers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler;
 import tterrag.core.common.Handlers.Handler.HandlerType;
 import tterrag.core.common.config.ConfigHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Handler(HandlerType.FORGE)
 public class OreDictTooltipHandler
@@ -18,7 +18,7 @@ public class OreDictTooltipHandler
     {
         if (ConfigHandler.extraDebugStuff && Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
         {
-            event.toolTip.add(Item.itemRegistry.getNameForObject(event.itemStack.getItem()));
+            event.toolTip.add((String) Item.itemRegistry.getNameForObject(event.itemStack.getItem()));
         }
 
         if (ConfigHandler.showOredictTooltips)

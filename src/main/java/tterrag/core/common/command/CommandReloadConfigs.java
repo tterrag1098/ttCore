@@ -5,12 +5,13 @@ import java.util.List;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import tterrag.core.TTCore;
 import tterrag.core.common.event.ConfigFileChangedEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 
 public class CommandReloadConfigs extends CommandBase
 {
@@ -46,7 +47,7 @@ public class CommandReloadConfigs extends CommandBase
 
     @SuppressWarnings("rawtypes")
     @Override
-    public List addTabCompletionOptions(ICommandSender player, String[] args)
+    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
         if (args.length >= 1)
         {

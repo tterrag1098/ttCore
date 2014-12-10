@@ -7,10 +7,10 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tterrag.core.api.common.enchant.IAdvancedEnchant;
 import tterrag.core.common.Handlers.Handler;
 import tterrag.core.common.Handlers.Handler.HandlerType;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Handler(HandlerType.FORGE)
 public class EnchantTooltipHandler
@@ -19,13 +19,13 @@ public class EnchantTooltipHandler
     @SubscribeEvent
     public void handleTooltip(ItemTooltipEvent event)
     {
-        if (event.itemStack.stackTagCompound != null)
+        if (event.itemStack.getTagCompound() != null)
         {
             Map<Integer, Integer> enchantments = EnchantmentHelper.getEnchantments(event.itemStack);
 
             for (Integer integer : enchantments.keySet())
             {
-                Enchantment enchant = Enchantment.enchantmentsList[integer];
+                Enchantment enchant = Enchantment.func_180306_c(integer);
                 
                 if (enchant instanceof IAdvancedEnchant)
                 {

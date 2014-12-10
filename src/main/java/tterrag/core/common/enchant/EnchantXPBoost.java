@@ -15,16 +15,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.enchant.IAdvancedEnchant;
 import tterrag.core.common.Handlers.Handler;
 import tterrag.core.common.config.ConfigHandler;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 @Handler
 public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
@@ -33,7 +34,7 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
     
     private EnchantXPBoost(int id)
     {
-        super(id, 2, EnumEnchantmentType.weapon);
+        super(id, new ResourceLocation("xpboost"), 2, EnumEnchantmentType.WEAPON);
     }
 
     @Override
@@ -154,6 +155,7 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
             FMLInterModComms.sendMessage("EnderIO", "recipe:enchanter",
                     "<enchantment name=\"enchantment.xpboost\" costPerLevel=\"4\">\n<itemStack oreDictionary=\"ingotGold\" number=\"16\"/>\n</enchantment>"
             );
+            Enchantment.addToBookList(this);
         }
         else
         {

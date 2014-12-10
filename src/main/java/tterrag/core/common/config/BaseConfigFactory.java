@@ -4,8 +4,8 @@ import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.IModGuiFactory;
 import tterrag.core.client.config.BaseConfigGui;
-import cpw.mods.fml.client.IModGuiFactory;
 
 public class BaseConfigFactory implements IModGuiFactory
 {

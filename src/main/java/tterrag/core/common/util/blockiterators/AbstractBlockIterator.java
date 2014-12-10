@@ -2,13 +2,13 @@ package tterrag.core.common.util.blockiterators;
 
 import java.util.Iterator;
 
-import tterrag.core.common.util.BlockCoord;
+import net.minecraft.util.BlockPos;
 
-public abstract class AbstractBlockIterator implements Iterable<BlockCoord>, Iterator<BlockCoord>
+public abstract class AbstractBlockIterator implements Iterable<BlockPos>, Iterator<BlockPos>
 {
-    protected BlockCoord base;
+    protected BlockPos base;
 
-    protected AbstractBlockIterator(BlockCoord base)
+    protected AbstractBlockIterator(BlockPos base)
     {
         this.base = base;
     }
@@ -20,7 +20,7 @@ public abstract class AbstractBlockIterator implements Iterable<BlockCoord>, Ite
     }
 
     @Override
-    public Iterator<BlockCoord> iterator()
+    public Iterator<BlockPos> iterator()
     {
         return this;
     }

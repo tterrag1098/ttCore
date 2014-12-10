@@ -8,13 +8,13 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLStateEvent;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import tterrag.core.TTCore;
 import tterrag.core.common.util.RegisterTime;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.event.FMLStateEvent;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompatabilityRegistry

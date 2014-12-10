@@ -11,6 +11,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
@@ -27,14 +28,14 @@ public final class TTEntityUtils
     }
     
     // I don't really expect this to be very readable...but it works
-    public static void spawnFireworkAround(BlockCoord block, int dimID)
+    public static void spawnFireworkAround(BlockPos block, int dimID)
     {
         World world = DimensionManager.getWorld(dimID);
 
-        BlockCoord pos = new BlockCoord(0, 0, 0);
+        BlockPos pos = new BlockPos(0, 0, 0);
 
         int tries = -1;
-        while (!world.isAirBlock(pos.x, pos.y, pos.z) && !world.getBlock(pos.x, pos.y, pos.z).isReplaceable(world, pos.x, pos.y, pos.z))
+        while (!world.isAirBlock(pos) && !world.getBlockState(pos).getBlock().isReplaceable(world, pos))
         {
             tries++;
             if (tries > 100)
@@ -42,11 +43,11 @@ public final class TTEntityUtils
                 return;
             }
             
-            pos.setPosition(moveRandomly(block.x), block.y + 2, moveRandomly(block.z));
+            pos = new BlockPos(moveRandomly(block.getX()), block.getY() + 2, moveRandomly(block.getZ()));
         }
 
         ItemStack firework = new ItemStack(Items.fireworks);
-        firework.stackTagCompound = new NBTTagCompound();
+        firework.setTagCompound(new NBTTagCompound());
         NBTTagCompound expl = new NBTTagCompound();
         expl.setBoolean("Flicker", true);
         expl.setBoolean("Trail", true);
@@ -54,7 +55,7 @@ public final class TTEntityUtils
         int[] colors = new int[rand.nextInt(8) + 1];
         for (int i = 0; i < colors.length; i++)
         {
-            colors[i] = ItemDye.field_150922_c[rand.nextInt(16)];
+            colors[i] = ItemDye.dyeColors[rand.nextInt(16)];
         }
         expl.setIntArray("Colors", colors);
         byte type = (byte) (rand.nextInt(3) + 1);
@@ -67,9 +68,9 @@ public final class TTEntityUtils
         NBTTagCompound fireworkTag = new NBTTagCompound();
         fireworkTag.setTag("Explosions", explosions);
         fireworkTag.setByte("Flight", (byte) 1);
-        firework.stackTagCompound.setTag("Fireworks", fireworkTag);
+        firework.getTagCompound().setTag("Fireworks", fireworkTag);
 
-        EntityFireworkRocket e = new EntityFireworkRocket(world, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, firework);
+        EntityFireworkRocket e = new EntityFireworkRocket(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, firework);
         world.spawnEntityInWorld(e);
     }
 

@@ -1,6 +1,6 @@
 package tterrag.core.common.util.blockiterators;
 
-import tterrag.core.common.util.BlockCoord;
+import net.minecraft.util.BlockPos;
 
 public class CubicBlockIterator extends AbstractBlockIterator
 {
@@ -9,24 +9,24 @@ public class CubicBlockIterator extends AbstractBlockIterator
     protected int curX, curY, curZ;
     protected int maxX, maxY, maxZ;
 
-    public CubicBlockIterator(BlockCoord base, int radius)
+    public CubicBlockIterator(BlockPos base, int radius)
     {
         super(base);
         this.radius = radius;
 
-        curX = minX = base.x - radius;
-        curY = minY = base.y - radius;
-        curZ = minZ = base.z - radius;
+        curX = minX = base.getX() - radius;
+        curY = minY = base.getY() - radius;
+        curZ = minZ = base.getZ() - radius;
 
-        maxX = base.x + radius;
-        maxY = base.y + radius;
-        maxZ = base.z + radius;
+        maxX = base.getX() + radius;
+        maxY = base.getY() + radius;
+        maxZ = base.getZ() + radius;
     }
 
     @Override
-    public BlockCoord next()
+    public BlockPos next()
     {
-        BlockCoord ret = new BlockCoord(curX, curY, curZ);
+    	BlockPos ret = new BlockPos(curX, curY, curZ);
         curX = curX == maxX ? minX : curX + 1;
         curY = curX == minX ? curY == maxY ? minY : curY + 1 : curY;
         curZ = curY == minY && curX == minX ? curZ + 1 : curZ;

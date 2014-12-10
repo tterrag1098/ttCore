@@ -1,7 +1,7 @@
 package tterrag.core.common.event;
 
 import lombok.Getter;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 
 /**
  * This event is posted when the /reloadConfigs command is run, and should be used to reload your

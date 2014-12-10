@@ -9,15 +9,14 @@ import lombok.NonNull;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.config.IConfigHandler;
 import tterrag.core.common.event.ConfigFileChangedEvent;
 
 import com.google.common.collect.ImmutableList;
-
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public abstract class AbstractConfigHandler implements IConfigHandler
 {

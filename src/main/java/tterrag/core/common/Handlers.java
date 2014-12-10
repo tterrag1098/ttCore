@@ -14,6 +14,10 @@ import java.util.Set;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.LoaderState;
+import net.minecraftforge.fml.common.ModContainer;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -23,11 +27,6 @@ import tterrag.core.common.Handlers.Handler.HandlerType;
 
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.LoaderState;
-import cpw.mods.fml.common.ModContainer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Handlers

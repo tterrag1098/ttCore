@@ -5,12 +5,14 @@ import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
 public class CommandScoreboardInfo extends CommandBase
@@ -29,7 +31,7 @@ public class CommandScoreboardInfo extends CommandBase
 
     @SuppressWarnings("unchecked")
     @Override
-    public void processCommand(ICommandSender player, String[] args)
+    public void processCommand(ICommandSender player, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
@@ -45,7 +47,7 @@ public class CommandScoreboardInfo extends CommandBase
             player.addChatMessage(new ChatComponentText("No such board " + args[0]));
         }
 
-        Collection<Score> collection = board.func_96534_i(obj);
+        Collection<Score> collection = board.func_96528_e();
 
         for (Score score : collection)
         {
@@ -61,7 +63,7 @@ public class CommandScoreboardInfo extends CommandBase
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public List addTabCompletionOptions(ICommandSender player, String[] args)
+    public List addTabCompletionOptions(ICommandSender player, String[] args, BlockPos pos)
     {
         if (args.length == 1)
         {
@@ -71,7 +73,7 @@ public class CommandScoreboardInfo extends CommandBase
                 boards.add(obj.getName());
             }
             
-            return getListOfStringsFromIterableMatchingLastWord(args, boards);
+            return func_175762_a(args, boards);
         }
 
         if (args.length == 2)
@@ -79,10 +81,10 @@ public class CommandScoreboardInfo extends CommandBase
             List<String> players = new ArrayList<String>();
             for (EntityPlayer p : (List<EntityPlayer>) player.getEntityWorld().playerEntities)
             {
-                players.add(p.getCommandSenderName());
+                players.add(p.getName());
             }
             
-            return getListOfStringsFromIterableMatchingLastWord(args, players);
+            return func_175762_a(args, players);
         }
         
         return null;

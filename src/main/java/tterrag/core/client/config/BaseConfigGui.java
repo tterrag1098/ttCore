@@ -5,18 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.fml.client.config.GuiConfig;
+import net.minecraftforge.fml.client.config.IConfigElement;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.config.IConfigHandler;
 import tterrag.core.common.config.AbstractConfigHandler.Section;
 import tterrag.core.common.config.ConfigHandler;
-import cpw.mods.fml.client.config.GuiConfig;
-import cpw.mods.fml.client.config.IConfigElement;
 
 public class BaseConfigGui extends GuiConfig
 {
-    @SuppressWarnings("rawtypes")
     public BaseConfigGui(GuiScreen parentScreen)
     {
         // dummy super so we can call instance methods
@@ -66,7 +64,6 @@ public class BaseConfigGui extends GuiConfig
         return "config.";
     }
 
-    @SuppressWarnings("rawtypes")
     private List<IConfigElement> getConfigElements()
     {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
@@ -77,7 +74,7 @@ public class BaseConfigGui extends GuiConfig
 
         for (Section s : config.getSections())
         {
-            list.add(new ConfigElement<ConfigCategory>(config.getCategory(s.lc()).setLanguageKey(prefix + s.lang)));
+            list.add(new ConfigElement(config.getCategory(s.lc()).setLanguageKey(prefix + s.lang)));
         }
 
         return list;

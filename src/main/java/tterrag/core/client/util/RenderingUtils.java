@@ -1,41 +1,23 @@
 package tterrag.core.client.util;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDepthMask;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.model.obj.Face;
-import net.minecraftforge.client.model.obj.GroupObject;
-import net.minecraftforge.client.model.obj.TextureCoordinate;
-import net.minecraftforge.client.model.obj.Vertex;
-import net.minecraftforge.client.model.obj.WavefrontObject;
+import sun.security.provider.certpath.Vertex;
 import tterrag.core.client.handlers.ClientHandler;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RenderingUtils
 {
-    public static void renderWithIcon(WavefrontObject model, IIcon icon, Tessellator tes)
-    {
-        for (GroupObject go : model.groupObjects)
-        {
-            for (Face f : go.faces)
-            {
-                Vertex n = f.faceNormal;
-                tes.setNormal(n.x, n.y, n.z);
-                for (int i = 0; i < f.vertices.length; i++)
-                {
-                    Vertex v = f.vertices[i];
-                    TextureCoordinate t = f.textureCoordinates[i];
-                    tes.addVertexWithUV(v.x, v.y, v.z, icon.getInterpolatedU(t.u * 16), icon.getInterpolatedV(t.v * 16));
-                }
-            }
-        }
-    }
-
     /**
      * Renders an item entity in 3D
      * 
@@ -56,7 +38,7 @@ public class RenderingUtils
         }
 
         item.hoverStart = 0.0F;
-        RenderManager.instance.renderEntityWithPosYaw(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
+        Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
 
         glPopMatrix();
     }
@@ -70,17 +52,18 @@ public class RenderingUtils
     {
         glPushMatrix();
 
-        glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
-        glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
+        RenderManager render = Minecraft.getMinecraft().getRenderManager();
+        glRotatef(-render.playerViewY, 0.0F, 1.0F, 0.0F);
+        glRotatef(render.playerViewX, 1.0F, 0.0F, 0.0F);
 
         glPushMatrix();
 
         glRotatef(rot, 0, 0, 1);
 
-        Tessellator tessellator = Tessellator.instance;
+        WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
         tessellator.startDrawingQuads();
         glColor3f(1, 1, 1);
-        tessellator.setColorRGBA(255, 255, 255, 255);
+        tessellator.func_178961_b(255, 255, 255, 255);
         tessellator.addVertexWithUV(-scale, -scale, 0, 0, 0);
         tessellator.addVertexWithUV(-scale, scale, 0, 0, 1);
         tessellator.addVertexWithUV(scale, scale, 0, 1, 1);
@@ -90,9 +73,9 @@ public class RenderingUtils
         glPopMatrix();
     }
 
-    public static void rotateToPlayer()
+    public static void rotateToPlayer(RenderManager render)
     {
-        glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
-        glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
+        glRotatef(-render.playerViewY, 0.0F, 1.0F, 0.0F);
+        glRotatef(render.playerViewX, 1.0F, 0.0F, 0.0F);
     }
 }

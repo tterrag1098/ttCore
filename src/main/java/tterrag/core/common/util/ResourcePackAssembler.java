@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import org.apache.commons.io.FileUtils;
 
 import tterrag.core.TTCore;
-import cpw.mods.fml.common.FMLCommonHandler;
 
 public class ResourcePackAssembler
 {

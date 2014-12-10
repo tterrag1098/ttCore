@@ -1,7 +1,7 @@
 package tterrag.core.common.util.blockiterators;
 
-import net.minecraftforge.common.util.ForgeDirection;
-import tterrag.core.common.util.BlockCoord;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 public class PlanarBlockIterator extends CubicBlockIterator
 {
@@ -9,7 +9,7 @@ public class PlanarBlockIterator extends CubicBlockIterator
     {
         EAST_WEST, NORTH_SOUTH, HORIZONTAL;
 
-        public static Orientation perpendicular(ForgeDirection dir)
+        public static Orientation perpendicular(EnumFacing dir)
         {
             switch (dir)
             {
@@ -30,7 +30,7 @@ public class PlanarBlockIterator extends CubicBlockIterator
 
     private Orientation orientation;
 
-    public PlanarBlockIterator(BlockCoord base, Orientation orientation, int radius)
+    public PlanarBlockIterator(BlockPos base, Orientation orientation, int radius)
     {
         super(base, radius);
 
@@ -38,9 +38,9 @@ public class PlanarBlockIterator extends CubicBlockIterator
     }
 
     @Override
-    public BlockCoord next()
+    public BlockPos next()
     {
-        BlockCoord coord = new BlockCoord(curX, curY, curZ);
+    	BlockPos coord = new BlockPos(curX, curY, curZ);
         switch (orientation)
         {
         case EAST_WEST:

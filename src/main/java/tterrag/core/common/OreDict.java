@@ -1,6 +1,6 @@
 package tterrag.core.common;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -65,7 +65,7 @@ public class OreDict
             OreDictionary.registerOre(name, stack);
     }
 
-    private static boolean isRegistered(ItemStack stack, ArrayList<ItemStack> toCheck)
+    private static boolean isRegistered(ItemStack stack, List<ItemStack> toCheck)
     {
         for (ItemStack check : toCheck)
         {

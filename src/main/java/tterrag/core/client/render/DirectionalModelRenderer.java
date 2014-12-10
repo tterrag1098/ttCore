@@ -6,8 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
@@ -16,19 +14,14 @@ import tterrag.core.api.client.model.IModelTT;
 /**
  * Renders a model with directional placement
  * 
+ * Currently mostly useless thanks to lex removing obj loading. Yay.
+ * 
  * @author Garrett Spicer-Davis
  */
 public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySpecialRenderer implements IItemRenderer
 {
-    private IModelCustom model;
     private ResourceLocation texture;
     private IModelTT modelSMT;
-
-    public DirectionalModelRenderer(ResourceLocation model, ResourceLocation texture)
-    {
-        this.model = AdvancedModelLoader.loadModel(model);
-        this.texture = texture;
-    }
 
     public DirectionalModelRenderer(IModelTT model, ResourceLocation texture)
     {
@@ -88,25 +81,17 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
         }
     }
 
-    protected void renderModel(T tile, int meta)
-    {
-        if (model != null)
-        {
-            GL11.glScalef(0.5f, 0.5f, 0.5f);
-            model.renderAll();
-        }
-        else
-        {
-            GL11.glTranslated(0, -0.5, 0);
-            modelSMT.render(0.0625f);
-        }
+	protected void renderModel(T tile, int meta) 
+	{
+		GL11.glTranslated(0, -0.5, 0);
+		modelSMT.render(0.0625f);
 
-        GL11.glPopMatrix();
-    }
+		GL11.glPopMatrix();
+	}
 
     @SuppressWarnings("unchecked")
     @Override
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float yaw)
+    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float yaw, int num)
     {
         renderDirectionalTileEntityAt((T) tile, x, y, z, -1);
     }
@@ -150,7 +135,7 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
             break;
         }
 
-        renderDirectionalTileEntityAt(null, 0, 0, 0, item.stackTagCompound == null ? 0 : item.stackTagCompound.getInteger("storedMetaData"));
+        renderDirectionalTileEntityAt(null, 0, 0, 0, item.getTagCompound() == null ? 0 : item.getTagCompound().getInteger("storedMetaData"));
 
         GL11.glPopMatrix();
     }
