@@ -93,10 +93,10 @@ publishing {
 curse {
     dependsOn 'reobf'
     mustRunAfter 'publish'
-    onlyIf { return project.ext.hasProperty('curseforge_key') }
+    onlyIf { return project.hasProperty('curseforge_key') }
 
-    if (project.hasProperty('curseforge_key')) apiKey = project.ext.curseforge_key
+    if (project.hasProperty('curseforge_key')) apiKey = project.curseforge_key
     projectId = project.curse_projectId
-    changelog = project.ext.changelog
+    changelog = project.changelog
     releaseType = 'beta'
 }
