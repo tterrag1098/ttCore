@@ -9,7 +9,7 @@ buildscript {
 
 apply plugin: 'forge'
 apply plugin: 'maven-publish'
-
+apply plugin: 'curseforge'
 
 group = 'tterrag.core'
 archivesBaseName = "ttCore"
