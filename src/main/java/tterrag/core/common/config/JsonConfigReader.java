@@ -137,7 +137,7 @@ public class JsonConfigReader<T> implements Iterable<T>
                 assetPath = assetPath + "/";
             }
 
-            TTFileUtils.copyFromJar(mod.getMainClass(), mod.getAssetPath() + file.getName(), file);
+            TTFileUtils.copyFromJar(mod.getMainClass(), assetPath + file.getName(), file);
         }
 
         refresh();
