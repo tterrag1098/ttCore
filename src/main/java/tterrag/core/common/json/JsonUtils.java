@@ -43,7 +43,8 @@ public class JsonUtils
             }
             else if (temp instanceof ItemStack)
             {
-                ((ItemStack) temp).setItemDamage(damage);
+                stack = ((ItemStack) temp).copy();
+                stack.setItemDamage(damage);
             }
             else
             {
@@ -55,7 +56,7 @@ public class JsonUtils
         }
         else if (forceItemStack)
         {
-            return OreDictionary.getOres(string).get(0);
+            return OreDictionary.getOres(string).get(0).copy();
         }
         else
         {
