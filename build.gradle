@@ -89,3 +89,14 @@ publishing {
         }
     }
 }
+
+curse {
+    dependsOn 'reobf'
+    mustRunAfter 'publish'
+    onlyIf { return project.ext.hasProperty('curseforge_key') }
+
+    if (project.hasProperty('curseforge_key')) apiKey = project.ext.curseforge_key
+    projectId = project.curse_projectId
+    changelog = project.ext.changelog
+    releaseType = 'beta'
+}
