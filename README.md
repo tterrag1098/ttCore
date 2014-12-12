@@ -1,5 +1,5 @@
 #ttCore [![Build Status](http://ci.tterrag.com/job/ttCore/badge/icon)](http://ci.tterrag.com/job/ttCore/)
-####[Download](http://ci.tterrag.com/job/ttCore/)
+####[Download](http://minecraft.curseforge.com/mc-mods/226082-ttcore)
 ======
 
 WIP core lib for my other mods. Name also WIP...

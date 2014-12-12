@@ -3,6 +3,7 @@ package tterrag.core;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import tterrag.core.common.CommonProxy;
 import tterrag.core.common.Handlers;
 import tterrag.core.common.Lang;
 import tterrag.core.common.OreDict;
@@ -12,6 +13,7 @@ import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.enchant.EnchantXPBoost;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -32,6 +34,9 @@ public class TTCore implements IModTT
 
     @Instance
     public static TTCore instance;
+    
+    @SidedProxy(serverSide = "tterrag.core.common.CommonProxy", clientSide = "tterrag.core.client.ClientProxy")
+    public static CommonProxy proxy;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)

@@ -1,9 +1,6 @@
 package tterrag.core.common.enchant;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import lombok.SneakyThrows;
@@ -19,14 +16,14 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.enchant.IAdvancedEnchant;
 import tterrag.core.common.Handlers.Handler;
+import tterrag.core.common.Handlers.Handler.HandlerType;
 import tterrag.core.common.config.ConfigHandler;
+import tterrag.core.common.util.Scheduler;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-@Handler
+@Handler(HandlerType.FORGE)
 public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
 {
     public static final EnchantXPBoost INSTANCE = new EnchantXPBoost(ConfigHandler.enchantIDXPBoost);
@@ -77,9 +74,9 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
     @SuppressWarnings("unchecked")
     @SubscribeEvent
     @SneakyThrows
-    public void onLivingDeath(LivingDeathEvent event)
+    public void onLivingDeath(final LivingDeathEvent event)
     {
-        EntityLivingBase entity = event.entityLiving;
+        final EntityLivingBase entity = event.entityLiving;
         Entity possiblePlayer = event.source.getSourceOfDamage();
         
         if (!entity.worldObj.isRemote && possiblePlayer != null && possiblePlayer instanceof EntityPlayer)
@@ -99,10 +96,17 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
                     {
                         int xp = (Integer) getExperiencePoints.invoke(entity, player);
 
-                        int boost = Math.round(xp * ((float) Math.log10(level + 1) * 2));
-                        
-                        xpToDrop.add(new XPQueue(new EntityXPOrb(entity.worldObj, entity.posX, entity.posY, entity.posZ, boost)));
-                        
+                        final int boost = Math.round(xp * ((float) Math.log10(level + 1) * 2));
+
+                        Scheduler.instance().schedule(20, new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                entity.worldObj.spawnEntityInWorld(new EntityXPOrb(entity.worldObj, entity.posX, entity.posY, entity.posZ, boost));
+                            }
+                        });
+
                         break; // save a bit of processing, not needed
                     }
                 }
@@ -110,43 +114,6 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
         }
     }
     
-    private static class XPQueue
-    {
-        private int delay;
-        private EntityXPOrb entity;
-        
-        private XPQueue(EntityXPOrb entity)
-        {
-            this.delay = 20;
-            this.entity = entity;
-        }
-        
-        private boolean tick()
-        {
-            return delay-- == 0;
-        }
-    }
-    
-    private List<XPQueue> xpToDrop = new ArrayList<XPQueue>();
-    
-    @SubscribeEvent
-    public void onServerTick(ServerTickEvent event)
-    {
-        if (event.phase == Phase.END && !xpToDrop.isEmpty())
-        {
-            Iterator<XPQueue> iter = xpToDrop.iterator();
-            while (iter.hasNext())
-            {
-                XPQueue q;
-                if ((q = iter.next()).tick() && q.entity.worldObj != null)
-                {
-                    q.entity.worldObj.spawnEntityInWorld(q.entity);
-                    iter.remove();
-                }
-            }
-        }
-    }
-
     public void register()
     {
         if (ConfigHandler.allowXPBoost)
