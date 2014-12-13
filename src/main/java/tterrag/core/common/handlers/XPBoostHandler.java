@@ -73,13 +73,16 @@ public class XPBoostHandler
     public void handleBlockBreak(BreakEvent event)
     {
         ItemStack held = event.getPlayer().getCurrentEquippedItem();
-        int level = getXPBoostLevel(held);
-        int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, held);
-        
-        if (level >= 0)
+        if (held != null)
         {
-            int xp = event.block.getExpDrop(event.world, event.blockMetadata, fortune);
-            event.world.spawnEntityInWorld(new EntityXPOrb(event.world, event.x + 0.5, event.y + 0.5, event.z + 0.5, getXPBoost(xp, level)));
+            int level = getXPBoostLevel(held);
+            int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, held);
+
+            if (level >= 0)
+            {
+                int xp = event.block.getExpDrop(event.world, event.blockMetadata, fortune);
+                event.world.spawnEntityInWorld(new EntityXPOrb(event.world, event.x + 0.5, event.y + 0.5, event.z + 0.5, getXPBoost(xp, level)));
+            }
         }
     }
 
