@@ -62,29 +62,30 @@ public class Handlers
              */
             FML
         }
-        
+
         public enum Inst
         {
             /**
-             * The default, will try all three methods, in the order {@link Inst#CONSTRUCTOR}, {@link Inst#FIELD}, {@link Inst#METHOD}
+             * The default, will try all three methods, in the order {@link Inst#CONSTRUCTOR},
+             * {@link Inst#FIELD}, {@link Inst#METHOD}
              */
             AUTO,
-            
+
             /**
              * The handler should be constructed from the default constructor of the class
              */
             CONSTRUCTOR,
-            
+
             /**
              * The handler should be grabbed from the static {@code INSTANCE} field of the class
              */
             FIELD,
-            
+
             /**
              * The handler should be grabbed from the static {@code instance()} method of the class
              */
             METHOD;
-            
+
             boolean matches(Inst other)
             {
                 return this == AUTO || other == AUTO || other == this;
@@ -95,7 +96,7 @@ public class Handlers
          * Array of buses to register this handler to. Leave blank for all.
          */
         HandlerType[] value() default { HandlerType.FORGE, HandlerType.FML };
-        
+
         /**
          * The method of getting your handler's instance. Defaults to {@link Inst#AUTO}
          */
@@ -133,13 +134,17 @@ public class Handlers
     }
 
     private static boolean registered = false;
+
+    /**
+     * For internal use only. Do not call. Callers will be sacked.
+     */
     public static void register()
     {
         if (registered)
         {
-            throw new IllegalStateException("Handlers cannot be registered more than once!");
+            throw new IllegalStateException("I warned you!");
         }
-        
+
         ClassPath classpath;
 
         try
@@ -182,7 +187,7 @@ public class Handlers
                 }
             }
         }
-        
+
         registered = true;
     }
 
@@ -204,7 +209,8 @@ public class Handlers
     {
         Inst pref = annot.getInstFrom();
 
-        // silence all exceptions to trickle down to next if statement. If all three fail, RuntimeException is thrown
+        // Silence all exceptions to trickle down to next if statement. 
+        // If all three fail, RuntimeException is thrown.
         if (pref.matches(CONSTRUCTOR))
         {
             try
