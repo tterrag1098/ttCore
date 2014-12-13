@@ -30,9 +30,7 @@ import tterrag.core.common.config.ConfigHandler;
 @Handler
 public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
 {
-    public static final EnchantXPBoost INSTANCE = new EnchantXPBoost(ConfigHandler.enchantIDXPBoost);
-    
-    private EnchantXPBoost(int id)
+	EnchantXPBoost(int id)
     {
         super(id, new ResourceLocation("xpboost"), 2, EnumEnchantmentType.WEAPON);
     }
@@ -93,10 +91,10 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
                 Map<Integer, Integer> enchants = EnchantmentHelper.getEnchantments(held);
                 for (int i : enchants.keySet())
                 {
-                    Enchantment enchant = Enchantment.enchantmentsList[i];
+                    Enchantment enchant = Enchantment.getEnchantmentById(i);
                     int level = enchants.get(i);
                     
-                    if (enchant == EnchantXPBoost.INSTANCE)
+                    if (enchant == Enchants.XP_BOOST)
                     {
                         int xp = (Integer) getExperiencePoints.invoke(entity, player);
 
@@ -156,10 +154,6 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
                     "<enchantment name=\"enchantment.xpboost\" costPerLevel=\"4\">\n<itemStack oreDictionary=\"ingotGold\" number=\"16\"/>\n</enchantment>"
             );
             Enchantment.addToBookList(this);
-        }
-        else
-        {
-            Enchantment.enchantmentsList[this.effectId] = null;
         }
     }
 }

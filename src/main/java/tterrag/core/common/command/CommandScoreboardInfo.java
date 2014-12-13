@@ -18,7 +18,7 @@ import net.minecraft.util.ChatComponentText;
 public class CommandScoreboardInfo extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "scoreboardinfo";
     }
@@ -31,7 +31,7 @@ public class CommandScoreboardInfo extends CommandBase
 
     @SuppressWarnings("unchecked")
     @Override
-    public void processCommand(ICommandSender player, String[] args) throws CommandException
+    public void execute(ICommandSender player, String[] args) throws CommandException
     {
         if (args.length < 2)
         {
@@ -47,7 +47,7 @@ public class CommandScoreboardInfo extends CommandBase
             player.addChatMessage(new ChatComponentText("No such board " + args[0]));
         }
 
-        Collection<Score> collection = board.func_96528_e();
+        Collection<Score> collection = board.getScores();
 
         for (Score score : collection)
         {
@@ -73,7 +73,7 @@ public class CommandScoreboardInfo extends CommandBase
                 boards.add(obj.getName());
             }
             
-            return func_175762_a(args, boards);
+            return getListOfStringsMatchingLastWord(args, boards);
         }
 
         if (args.length == 2)
@@ -84,7 +84,7 @@ public class CommandScoreboardInfo extends CommandBase
                 players.add(p.getName());
             }
             
-            return func_175762_a(args, players);
+            return getListOfStringsMatchingLastWord(args, players);
         }
         
         return null;

@@ -25,7 +25,7 @@ public class EnchantTooltipHandler
 
             for (Integer integer : enchantments.keySet())
             {
-                Enchantment enchant = Enchantment.func_180306_c(integer);
+                Enchantment enchant = Enchantment.getEnchantmentById(integer);
                 
                 if (enchant instanceof IAdvancedEnchant)
                 {

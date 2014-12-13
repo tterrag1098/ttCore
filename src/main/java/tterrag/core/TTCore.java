@@ -19,6 +19,7 @@ import tterrag.core.common.command.CommandScoreboardInfo;
 import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.enchant.EnchantXPBoost;
+import tterrag.core.common.enchant.Enchants;
 
 @Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION, guiFactory = "tterrag.core.common.config.BaseConfigFactory")
 public class TTCore implements IModTT
@@ -43,7 +44,7 @@ public class TTCore implements IModTT
         CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();
         
-        EnchantXPBoost.INSTANCE.register();
+        Enchants.init();
     }
 
     @EventHandler

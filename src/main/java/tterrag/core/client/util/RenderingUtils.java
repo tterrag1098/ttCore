@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
-import sun.security.provider.certpath.Vertex;
 import tterrag.core.client.handlers.ClientHandler;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -60,16 +59,15 @@ public class RenderingUtils
 
         glRotatef(rot, 0, 0, 1);
 
-        WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
-        tessellator.startDrawingQuads();
+        WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
+        worldRenderer.startDrawingQuads();
         glColor3f(1, 1, 1);
-        tessellator.func_178961_b(255, 255, 255, 255);
-        tessellator.addVertexWithUV(-scale, -scale, 0, 0, 0);
-        tessellator.addVertexWithUV(-scale, scale, 0, 0, 1);
-        tessellator.addVertexWithUV(scale, scale, 0, 1, 1);
-        tessellator.addVertexWithUV(scale, -scale, 0, 1, 0);
-        tessellator.draw();
-        glPopMatrix();
+        worldRenderer.setColorRGBA(255, 255, 255, 255);
+        worldRenderer.addVertexWithUV(-scale, -scale, 0, 0, 0);
+        worldRenderer.addVertexWithUV(-scale, scale, 0, 0, 1);
+        worldRenderer.addVertexWithUV(scale, scale, 0, 1, 1);
+        worldRenderer.addVertexWithUV(scale, -scale, 0, 1, 0);
+        Tessellator.getInstance().draw();
         glPopMatrix();
     }
 

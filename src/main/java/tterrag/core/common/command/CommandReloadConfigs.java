@@ -34,7 +34,7 @@ public class CommandReloadConfigs extends CommandBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "reloadConfigs";
     }
@@ -58,7 +58,7 @@ public class CommandReloadConfigs extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender player, String[] args)
+    public void execute(ICommandSender sender, String[] args)
     {
         for (String s : args)
         {
@@ -78,16 +78,16 @@ public class CommandReloadConfigs extends CommandBase
 
                 if (event.isSuccessful())
                 {
-                    sendResult(player, s, "success");
+                    sendResult(sender, s, "success");
                 }
                 else
                 {
-                    sendResult(player, s, "fail");
+                    sendResult(sender, s, "fail");
                 }
             }
             else
             {
-                sendResult(player, s, "invalid");
+                sendResult(sender, s, "invalid");
             }
         }
     }

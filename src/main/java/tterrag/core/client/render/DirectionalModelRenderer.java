@@ -1,29 +1,33 @@
 package tterrag.core.client.render;
 
+import java.util.List;
+
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.client.model.ISmartItemModel;
 
 import org.lwjgl.opengl.GL11;
 
 import tterrag.core.api.client.model.IModelTT;
 
 /**
- * Renders a model with directional placement
- * 
- * Currently mostly useless thanks to lex removing obj loading. Yay.
- * 
- * @author Garrett Spicer-Davis
+ * Renders an {@link IModelTT} with directional placement
  */
-public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySpecialRenderer implements IItemRenderer
+public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySpecialRenderer implements ISmartItemModel
 {
-    private ResourceLocation texture;
+    private TextureAtlasSprite texture;
     private IModelTT modelSMT;
 
-    public DirectionalModelRenderer(IModelTT model, ResourceLocation texture)
+    public DirectionalModelRenderer(IModelTT model, TextureAtlasSprite texture)
     {
         this.modelSMT = model;
         this.texture = texture;
@@ -46,7 +50,6 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
     {
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5f, (float) y - (metaOverride >= 0 ? 0.1f : 0), (float) z + 0.5f);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
 
     protected int getRotation(T tile, int metaOverride)
@@ -80,14 +83,14 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
             break;
         }
     }
-
-	protected void renderModel(T tile, int meta) 
-	{
-		GL11.glTranslated(0, -0.5, 0);
-		modelSMT.render(0.0625f);
-
-		GL11.glPopMatrix();
-	}
+    
+    protected void renderModel(T tile, int meta)
+    {
+    	GL11.glTranslated(0, -0.5, 0);
+    	IBlockState state = tile.getWorld().getBlockState(tile.getPos());
+    	Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModel(tile.getWorld(), this, state, tile.getPos(), Tessellator.getInstance().getWorldRenderer());
+        GL11.glPopMatrix();
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -96,47 +99,43 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
         renderDirectionalTileEntityAt((T) tile, x, y, z, -1);
     }
 
-    @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type)
-    {
-        return true;
-    }
+	@Override
+	public List<BakedQuad> getFaceQuads(EnumFacing side) {
+		return modelSMT.getFaceQuads(side);
+	}
 
-    @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
-    {
-        return helper == ItemRendererHelper.INVENTORY_BLOCK || helper == ItemRendererHelper.ENTITY_BOBBING || helper == ItemRendererHelper.ENTITY_ROTATION;
-    }
+	@Override
+	public List<BakedQuad> getGeneralQuads() {
+		return modelSMT.getGeneralQuads();
+	}
 
-    @Override
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data)
-    {
-        GL11.glPushMatrix();
+	@Override
+	public boolean isAmbientOcclusion() {
+		return true;
+	}
 
-        switch (type)
-        {
-        case ENTITY:
-            GL11.glTranslatef(-0.4f, 0.1f, -0.4f);
-            GL11.glScalef(0.75f, 0.75f, 0.75f);
-            break;
-        case EQUIPPED:
-            GL11.glScalef(0.75f, 0.75f, 0.75f);
-            GL11.glTranslatef(-0.1f, 0.2f, 0.5f);
-            GL11.glRotatef(-40, 1, 0, 0);
-            GL11.glRotatef(45, 0, 1, 0);
-            GL11.glRotatef(20, 0, 0, 1);
-            break;
-        case EQUIPPED_FIRST_PERSON:
-            GL11.glScalef(0.75f, 0.75f, 0.75f);
-            break;
-        case FIRST_PERSON_MAP:
-            break;
-        case INVENTORY:
-            break;
-        }
+	@Override
+	public boolean isGui3d() {
+		return true;
+	}
 
-        renderDirectionalTileEntityAt(null, 0, 0, 0, item.getTagCompound() == null ? 0 : item.getTagCompound().getInteger("storedMetaData"));
+	@Override
+	public boolean isBuiltInRenderer() {
+		return false;
+	}
 
-        GL11.glPopMatrix();
-    }
+	@Override
+	public TextureAtlasSprite getTexture() {
+		return texture;
+	}
+
+	@Override
+	public ItemCameraTransforms getItemCameraTransforms() {
+		return ItemCameraTransforms.DEFAULT;
+	}
+
+	@Override
+	public IBakedModel handleItemState(ItemStack stack) {
+		return this;
+	}
 }

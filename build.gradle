@@ -18,6 +18,7 @@ version = "MC${minecraft_version}-${mod_version}-${System.getenv().BUILD_NUMBER}
 minecraft {
     version = "${minecraft_version}-${forge_version}"
     runDir = 'run'
+    mappings = 'snapshot_20141212'
     
     replace "@VERSION@", project.version
     replaceIn "TTCore.java"
