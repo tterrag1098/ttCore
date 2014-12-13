@@ -12,6 +12,7 @@ import tterrag.core.common.Handlers.Handler.Inst;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -90,7 +91,10 @@ public class Scheduler
     @SubscribeEvent
     public void onServerTick(ServerTickEvent event)
     {
-        runTasks(Side.SERVER);
+        if (event.phase == Phase.END)
+        {
+            runTasks(Side.SERVER);
+        }
     }
 
     /**
@@ -100,7 +104,10 @@ public class Scheduler
     @SubscribeEvent
     public void onClientTick(ClientTickEvent event)
     {
-        runTasks(Side.CLIENT);
+        if (event.phase == Phase.END)
+        {
+            runTasks(Side.CLIENT);
+        }
     }
 
     private void runTasks(Side side)
