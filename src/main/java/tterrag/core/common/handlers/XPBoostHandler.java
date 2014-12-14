@@ -115,6 +115,11 @@ public class XPBoostHandler
     @SuppressWarnings("unchecked")
     private int getXPBoostLevel(ItemStack weapon)
     {
+        if (weapon == null)
+        {
+            return -1;
+        }
+        
         Map<Integer, Integer> enchants = EnchantmentHelper.getEnchantments(weapon);
         for (int i : enchants.keySet())
         {
