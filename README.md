@@ -17,8 +17,10 @@ ___
 * Adds a command to query a scoreboard score for a player
 * Adds an "XP Boost" enchant that increases XP dropped from killed entities and broken blocks
 * Adds a *special something* for achievements
+* Adds the ability to right click crops to harvest them. You can edit the supported blocks and change whether it's enabled at all in the config.
 
-###Things this mod does for other modders
+###Things this mod does for other modders:
+
 * Many useful rendering methods, for example rotation and ISBRH obj rendering
 * Base classes for ISBRH and TESR renderers for simple modeled blocks
 * A Compatabiltiy Registry for classes that should only load with other mods present

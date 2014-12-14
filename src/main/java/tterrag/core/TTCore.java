@@ -1,5 +1,9 @@
 package tterrag.core;
 
+import net.minecraft.command.CommandHandler;
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.client.ClientCommandHandler;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,9 +17,9 @@ import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.enchant.EnchantXPBoost;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -55,18 +59,23 @@ public class TTCore implements IModTT
     {
         Handlers.register();
         CompatabilityRegistry.INSTANCE.handle(event);
+        ClientCommandHandler.instance.registerCommand(CommandReloadConfigs.CLIENT);
+        if (event.getSide().isServer())
+        {
+            ((CommandHandler) MinecraftServer.getServer().getCommandManager()).registerCommand(CommandReloadConfigs.SERVER);
+        }
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         CompatabilityRegistry.INSTANCE.handle(event);
+        ConfigHandler.INSTANCE.loadRightClickCrops();
     }
 
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
-        event.registerServerCommand(new CommandReloadConfigs());
         event.registerServerCommand(new CommandScoreboardInfo());
     }
 

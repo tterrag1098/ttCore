@@ -41,6 +41,8 @@ public final class TTItemUtils
 
     public static void spawnItemInWorldWithRandomMotion(EntityItem entity)
     {
+        entity.delayBeforeCanPickup = 10;
+        
         float f = (rand.nextFloat() * 0.1f) - 0.05f;
         float f1 = (rand.nextFloat() * 0.1f) - 0.05f;
         float f2 = (rand.nextFloat() * 0.1f) - 0.05f;
