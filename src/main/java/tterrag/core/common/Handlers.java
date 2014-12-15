@@ -1,7 +1,5 @@
 package tterrag.core.common;
 
-import static tterrag.core.common.Handlers.Handler.Inst.*;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -33,6 +31,8 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState;
 import cpw.mods.fml.common.ModContainer;
 
+import static tterrag.core.common.Handlers.Handler.Inst.*;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Handlers
 {
@@ -46,7 +46,7 @@ public class Handlers
      * A static singleton object with field name {@code INSTANCE} (public or private). <b>OR</b><br>
      * A static method with name <code>instance()</code> (public or private)
      */
-    @Target(value = ElementType.TYPE)
+    @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Handler
     {
