@@ -1,9 +1,15 @@
 package tterrag.core.common.handlers;
 
+import java.util.Calendar;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsFile;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.AchievementEvent;
+import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.util.BlockCoord;
@@ -11,6 +17,8 @@ import tterrag.core.common.util.TTEntityUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+
+import static java.util.Calendar.*;
 
 @Handler
 public class FireworkHandler
@@ -31,20 +39,37 @@ public class FireworkHandler
     public void onPlayerTick(PlayerTickEvent event)
     {
         EntityPlayer player = event.player;
-        int fireworksLeft = player.getEntityData().getInteger("fireworksLeft");
-        if (!event.player.worldObj.isRemote && event.phase == Phase.END && fireworksLeft > 0
-                && (!player.getEntityData().getBoolean("fireworkDelay") || player.worldObj.getTotalWorldTime() % 20 == 0))
-        {
-            TTEntityUtils.spawnFireworkAround(getBlockCoord(player), player.worldObj.provider.dimensionId);
-            player.getEntityData().setInteger("fireworksLeft", fireworksLeft - 1);
 
-            if (fireworksLeft > 5)
+        if (!player.worldObj.isRemote && event.phase == Phase.END)
+        {
+            if (player.worldObj.getTotalWorldTime() % 100 == 0)
             {
-                player.getEntityData().setBoolean("fireworkDelay", true);
+                Calendar cal = Calendar.getInstance();
+                if (cal.get(DAY_OF_MONTH) == 1 && cal.get(MONTH) == JANUARY && !player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("celebrated"))
+                {
+                    player.getEntityData().setInteger("fireworksLeft", 15);
+                    player.getEntityData().setBoolean("fireworkDelay", false);
+                    NBTTagCompound tag = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+                    tag.setBoolean("celebrated", true);
+                    player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, tag);
+                    player.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + TTCore.lang.localize("celebrate")));
+                }
             }
-            else
+
+            int fireworksLeft = player.getEntityData().getInteger("fireworksLeft");
+            if (fireworksLeft > 0 && (!player.getEntityData().getBoolean("fireworkDelay") || player.worldObj.getTotalWorldTime() % 20 == 0))
             {
-                player.getEntityData().setBoolean("fireworkDelay", false);
+                TTEntityUtils.spawnFireworkAround(getBlockCoord(player), player.worldObj.provider.dimensionId);
+                player.getEntityData().setInteger("fireworksLeft", fireworksLeft - 1);
+
+                if (fireworksLeft > 5)
+                {
+                    player.getEntityData().setBoolean("fireworkDelay", true);
+                }
+                else
+                {
+                    player.getEntityData().setBoolean("fireworkDelay", false);
+                }
             }
         }
     }

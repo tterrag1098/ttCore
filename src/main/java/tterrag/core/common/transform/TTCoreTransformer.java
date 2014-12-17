@@ -33,7 +33,6 @@ public class TTCoreTransformer implements IClassTransformer
         
         private String getName() 
         {
-            System.out.println("NAME REQUESTED. RUNTIME DEOBF: " + TTCorePlugin.runtimeDeobfEnabled + " RETURNING: " + (TTCorePlugin.runtimeDeobfEnabled ? srg : mcp));
             return TTCorePlugin.runtimeDeobfEnabled ? srg : mcp;
         }
         

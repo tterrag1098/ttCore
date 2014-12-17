@@ -90,7 +90,7 @@ public final class TTFileUtils
                 }
                 else
                 {
-                    System.out.println("Extracting file: " + destinationPath);
+                    TTCore.logger.info("Extracting file: " + destinationPath);
 
                     BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
 
@@ -113,7 +113,7 @@ public final class TTFileUtils
         }
         catch (IOException e)
         {
-            System.out.println("Error opening zip file" + e);
+            TTCore.logger.error("Error opening zip file" + e);
         }
         finally
         {
@@ -126,7 +126,7 @@ public final class TTFileUtils
             }
             catch (IOException e)
             {
-                System.out.println("Error while closing zip file" + e);
+                TTCore.logger.error("Error while closing zip file" + e);
             }
         }
 

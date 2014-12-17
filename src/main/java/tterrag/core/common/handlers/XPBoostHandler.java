@@ -103,7 +103,6 @@ public class XPBoostHandler
             return getXPBoost(xp, level);
         }
 
-        System.out.println(boost);
         return boost;
     }
     

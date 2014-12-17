@@ -6,3 +6,5 @@ ttCore.command.config.result.invalid=Modid %s is not valid
 
 enchantment.xpboost=XP Boost
 enchantment.xpboost.tooltip=Extra XP from mob kills
+
+ttCore.celebrate=Happy New Year!
