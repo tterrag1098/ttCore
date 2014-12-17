@@ -7,9 +7,11 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @SuppressWarnings("unused")
 @MCVersion("1.7.10")
-@IFMLLoadingPlugin.SortingIndex(10001)
+@IFMLLoadingPlugin.SortingIndex(Integer.MAX_VALUE) // we want deobf no matter what
 public class TTCorePlugin implements IFMLLoadingPlugin
 {
+    public static boolean runtimeDeobfEnabled = false;
+
     @Override
     public String[] getASMTransformerClass()
     {
@@ -31,7 +33,7 @@ public class TTCorePlugin implements IFMLLoadingPlugin
     @Override
     public void injectData(Map<String, Object> data)
     {
-        ;
+        runtimeDeobfEnabled = (Boolean) data.get("runtimeDeobfuscationEnabled");
     }
 
     @Override

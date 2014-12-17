@@ -7,7 +7,6 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.common.MinecraftForge;
-import tterrag.core.TTCore;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.event.ArrowUpdateEvent;
 import tterrag.core.common.event.ItemStackEvent.ItemEnchantabilityEvent;
@@ -39,7 +38,6 @@ public class TTCoreMethods
 
     public static int getItemEnchantability(ItemStack stack, int base)
     {
-        System.out.println("[TESTING] ItemEnchantabilityEvent Posting... [Base: " + base + "]");
         ItemEnchantabilityEvent event = new ItemEnchantabilityEvent(stack, base);
         MinecraftForge.EVENT_BUS.post(event);
         return event.enchantability;
@@ -47,7 +45,6 @@ public class TTCoreMethods
 
     public static EnumRarity getItemRarity(ItemStack stack)
     {
-        System.out.println("[TESTING] ItemRarityEvent Posting...");
         ItemRarityEvent event = new ItemRarityEvent(stack, stack.getItem().getRarity(stack));
         MinecraftForge.EVENT_BUS.post(event);
         return event.rarity;
@@ -55,7 +52,6 @@ public class TTCoreMethods
 
     public static void onArrowUpdate(EntityArrow entity)
     {
-        System.out.println("[TESTING] ArrowUpdateEvent Posting...");
         MinecraftForge.EVENT_BUS.post(new ArrowUpdateEvent(entity));
     }
 }

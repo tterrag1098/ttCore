@@ -1,9 +1,10 @@
 package tterrag.core.common.transform;
 
-import static org.objectweb.asm.Opcodes.*;
-
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import lombok.AllArgsConstructor;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
@@ -20,273 +21,242 @@ import org.objectweb.asm.tree.VarInsnNode;
 import tterrag.core.TTCore;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
+import static org.objectweb.asm.Opcodes.*;
+
 @MCVersion(value = "1.7.10")
 public class TTCoreTransformer implements IClassTransformer
 {
-    private static final String worldTypeCLassDeobf = "net.minecraft.world.WorldType";
-    private static final String worldTypeClassObf = "ahm";
-    private static final String voidFogMethodDeobf = "hasVoidParticles";
-    private static final String voidFogMethodObf = "func_76564_j";
-    private static final String voidFogMethodSigDeobf = "(Lnet/minecraft/world/WorldType;Z)Z";
-    private static final String voidFogMethodSigObf = "(Lahm;Z)Z";
+    @AllArgsConstructor
+    private static class ObfSafeName 
+    {
+        private String mcp, srg;
+        
+        private String getName() 
+        {
+            System.out.println("NAME REQUESTED. RUNTIME DEOBF: " + TTCorePlugin.runtimeDeobfEnabled + " RETURNING: " + (TTCorePlugin.runtimeDeobfEnabled ? srg : mcp));
+            return TTCorePlugin.runtimeDeobfEnabled ? srg : mcp;
+        }
+        
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof String)
+            {
+                return obj.equals(mcp) || obj.equals(srg);
+            }
+            else
+            {
+                return ((ObfSafeName)obj).mcp.equals(mcp) && ((ObfSafeName)obj).srg.equals(srg);
+            }
+        }
+        
+        // no hashcode because I'm naughty
+    }
+    
+    private static abstract class Transform
+    {
+        abstract void transform(Iterator<MethodNode> methods);
+    }
+    
+    private static final String worldTypeClass     = "net.minecraft.world.WorldType";
+    private static final ObfSafeName voidFogMethod      = new ObfSafeName("hasVoidParticles", "func_76564_j");
+    private static final String voidFogMethodSig   = "(Lnet/minecraft/world/WorldType;Z)Z";
 
-    private static final String anvilContainerClassDeobf = "net.minecraft.inventory.ContainerRepair";
-    private static final String anvilContainerClassObf = "zu";
-    private static final String anvilContainerMethodDeobf = "updateRepairOutput";
-    private static final String anvilContainerMethodObf = "func_82848_d";
+    private static final String anvilContainerClass    = "net.minecraft.inventory.ContainerRepair";
+    private static final ObfSafeName anvilContainerMethod   = new ObfSafeName("updateRepairOutput", "func_82848_d");
 
-    private static final String anvilGuiClassDeobf = "net.minecraft.client.gui.GuiRepair";
-    private static final String anvilGuiClassObf = "bey";
-    private static final String anvilGuiMethodDeobf = "drawGuiContainerForegroundLayer";
-    private static final String anvilGuiMethodObf = "func_146979_b";
+    private static final String anvilGuiClass  = "net.minecraft.client.gui.GuiRepair";
+    private static final ObfSafeName anvilGuiMethod = new ObfSafeName("drawGuiContainerForegroundLayer", "func_146979_b");
 
-    private static final String itemStackClassDeobf = "net.minecraft.item.ItemStack";
-    private static final String itemStackClassObf = "add";
-    private static final String itemStackMethodDeobf = "getRarity";
-    private static final String itemStackMethodObf = "func_77953_t";
-    private static final String itemStackMethodSigDeobf = "(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/EnumRarity;";
-    private static final String itemStackMethodSigObf = "(Ladd;)Ladq;";
+    private static final String enchantHelperClass = "net.minecraft.enchantment.EnchantmentHelper";
+    private static final String enchantHelperMethodSig = "(Lnet/minecraft/item/ItemStack;I)I";
+    private static final ObfSafeName buildEnchantListMethod = new ObfSafeName("buildEnchantmentList", "func_77513_b");
+    private static final ObfSafeName calcEnchantabilityMethod = new ObfSafeName("calcItemStackEnchantability", "func_77514_a");
 
-    private static final String enchantHelperClassDeobf = "net.minecraft.enchantment.EnchantmentHelper";
-    private static final String enchantHelperClassObf = "afv";
-    private static final String enchantHelperMethodSigDeobf = "(Lnet/minecraft/item/ItemStack;I)I";
-    private static final String enchantHelperMethodSigObf = "(Ladd;I)I";
-    private static final String buildEnchantListMethodDeobf = "buildEnchantmentList";
-    private static final String buildEnchantListMethodObf = "func_77513_b";
-    private static final String calcEnchantabilityMethodDeobf = "calcItemStackEnchantability";
-    private static final String calcEnchantabilityMethodObf = "func_77514_a";
+    private static final String itemStackClass = "net.minecraft.item.ItemStack";
+    private static final ObfSafeName itemStackMethod = new ObfSafeName("getRarity", "func_77953_t");
+    private static final String itemStackMethodSig = "(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/EnumRarity;";
 
-    private static final String entityArrowClassDeobf = "net.minecraft.entity.projectile.EntityArrow";
-    private static final String entityArrowClassObf = "zc";
-    private static final String entityArrowMethodDeobf = "onUpdate";
-    private static final String entityArrowMethodObf = "func_70071_h_";
-    private static final String entityArrowMethodSigDeobf = "(Lnet/minecraft/entity/projectile/EntityArrow;)V";
-    private static final String entityArrowMethodSigObf = "(Lzc;)V";
+    private static final String entityArrowClass = "net.minecraft.entity.projectile.EntityArrow";
+    private static final ObfSafeName entityArrowMethod = new ObfSafeName("onUpdate", "func_70071_h_");
+    private static final String entityArrowMethodSig = "(Lnet/minecraft/entity/projectile/EntityArrow;)V";
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
     {
-        if (name.equals(worldTypeCLassDeobf) || name.equals(worldTypeClassObf))
+        // Void fog removal
+        if (transformedName.equals(worldTypeClass))
         {
-            basicClass = transformWorldType(name, basicClass);
-        }
-        else if (name.equals(anvilContainerClassDeobf) || name.equals(anvilContainerClassObf))
-        {
-            boolean obf = name.equals(anvilContainerClassObf);
-            basicClass = transformAnvil(name, basicClass, obf ? anvilContainerMethodObf : anvilContainerMethodDeobf);
-        }
-        else if (name.equals(anvilGuiClassDeobf) || name.equals(anvilGuiClassObf))
-        {
-            boolean obf = name.equals(anvilGuiClassObf);
-            basicClass = transformAnvil(name, basicClass, obf ? anvilGuiMethodObf : anvilGuiMethodDeobf);
-        }
-        // Item Enchantability
-        else if (name.equals(enchantHelperClassDeobf) || name.equals(enchantHelperClassObf))
-        {
-            TTCore.logger.info("Transforming EnchantmentHelper - Class [" + name + "]...");
-            boolean obf = name.equals(enchantHelperClassObf);
-            basicClass = transformEnchantHelper(name, basicClass, obf ? buildEnchantListMethodObf : buildEnchantListMethodDeobf, 1, 4);
-            basicClass = transformEnchantHelper(name, basicClass, obf ? calcEnchantabilityMethodObf : calcEnchantabilityMethodDeobf, 3, 5);
-            TTCore.logger.info("Transforming EnchantmentHelper - Finished.");
-        }
-        // ItemRarity
-        else if (name.equals(itemStackClassDeobf) || name.equals(itemStackClassObf))
-        {
-            boolean obf = name.equals(itemStackClassObf);
-            basicClass = transformItemStack(name, basicClass, obf ? itemStackMethodObf : itemStackMethodDeobf);
-        }
-        // ArrowUpdate
-        else if (name.equals(entityArrowClassDeobf) || name.equals(entityArrowClassObf))
-        {
-            boolean obf = name.equals(entityArrowClassObf);
-            basicClass = transformArrow(name, basicClass, obf ? entityArrowMethodObf : entityArrowMethodDeobf);
-        }
-
-        return basicClass;
-    }
-
-    private byte[] transformWorldType(String name, byte[] basicClass)
-    {
-        TTCore.logger.info("Transforming WorldType - Class [" + name + "]...");
-
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(basicClass);
-        classReader.accept(classNode, 0);
-
-        boolean obf = name.equals(worldTypeClassObf);
-        String methodSig = obf ? voidFogMethodSigObf : voidFogMethodSigDeobf;
-
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while (methods.hasNext())
-        {
-            MethodNode m = methods.next();
-            if (m.name.equals(voidFogMethodDeobf) || m.name.equals(voidFogMethodObf))
+            basicClass = transform(basicClass, worldTypeClass, voidFogMethod, new Transform()
             {
-                m.instructions.clear();
-
-                m.instructions.add(new VarInsnNode(ALOAD, 0));
-                m.instructions.add(new VarInsnNode(ILOAD, 1));
-                m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "hasVoidParticles", methodSig));
-                m.instructions.add(new InsnNode(IRETURN));
-
-                break;
-            }
-        }
-
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        classNode.accept(cw);
-        TTCore.logger.info("Transforming WorldType - Finished.");
-        return cw.toByteArray();
-    }
-
-    private byte[] transformAnvil(String name, byte[] basicClass, String methodName)
-    {
-        TTCore.logger.info("Transforming Anvil XP Cap - Class [" + name + "]...");
-
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(basicClass);
-        classReader.accept(classNode, 0);
-
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while (methods.hasNext())
-        {
-            MethodNode m = methods.next();
-            if (m.name.equals(methodName))
-            {
-                for (int i = 0; i < m.instructions.size(); i++)
+                @Override
+                void transform(Iterator<MethodNode> methods)
                 {
-                    AbstractInsnNode next = m.instructions.get(i);
-
-                    next = m.instructions.get(i);
-                    if (next instanceof IntInsnNode && ((IntInsnNode) next).operand == 40)
+                    while (methods.hasNext())
                     {
-                        m.instructions.set(next, new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getMaxAnvilCost", "()I"));
-                    }
-                }
-            }
-        }
-
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        classNode.accept(cw);
-        TTCore.logger.info("Transforming Anvil XP Cap - Finished.");
-        return cw.toByteArray();
-    }
-
-    private byte[] transformEnchantHelper(String name, byte[] basicClass, String methodName, int stackIndex, int enchantabilityIndex)
-    {
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(basicClass);
-        classReader.accept(classNode, 0);
-
-        boolean obf = name.equals(enchantHelperClassObf);
-        String methodSig = obf ? enchantHelperMethodSigObf : enchantHelperMethodSigDeobf;
-
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while (methods.hasNext())
-        {
-            MethodNode m = methods.next();
-            if (m.name.equals(methodName))
-            {
-                for (int i = 0; i < m.instructions.size(); i++)
-                {
-                    AbstractInsnNode next = m.instructions.get(i);
-                    if (next instanceof VarInsnNode)
-                    {
-                        VarInsnNode varNode = (VarInsnNode)next;
-                        if (varNode.getOpcode() == ISTORE && varNode.var == enchantabilityIndex)
+                        MethodNode m = methods.next();
+                        if (voidFogMethod.equals(m.name))
                         {
-                            InsnList toAdd = new InsnList();
-                            toAdd.add(new VarInsnNode(ALOAD, stackIndex));
-                            toAdd.add(new VarInsnNode(ILOAD, enchantabilityIndex));
-                            toAdd.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getItemEnchantability", methodSig));
-                            toAdd.add(new VarInsnNode(ISTORE, enchantabilityIndex));
-                            m.instructions.insert(next, toAdd);
+                            m.instructions.clear();
+
+                            m.instructions.add(new VarInsnNode(ALOAD, 0));
+                            m.instructions.add(new VarInsnNode(ILOAD, 1));
+                            m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "hasVoidParticles", voidFogMethodSig));
+                            m.instructions.add(new InsnNode(IRETURN));
+
                             break;
                         }
                     }
                 }
-
-                break;
-            }
+            });
         }
-
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        classNode.accept(cw);
-        return cw.toByteArray();
-    }
-
-    private byte[] transformItemStack(String name, byte[] basicClass, String methodName)
-    {
-        TTCore.logger.info("Transforming ItemStack - Class [" + name + "]...");
-
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(basicClass);
-        classReader.accept(classNode, 0);
-
-        boolean obf = name.equals(itemStackClassObf);
-        String methodSig = obf ? itemStackMethodSigObf : itemStackMethodSigDeobf;
-
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while (methods.hasNext())
+        // Anvil max level
+        else if (transformedName.equals(anvilContainerClass) || transformedName.equals(anvilGuiClass))
         {
-            MethodNode m = methods.next();
-            if (m.name.equals(methodName) && m.desc.equals("()Ladq;"))
+            basicClass = transform(basicClass, anvilContainerClass, anvilContainerMethod, new Transform()
             {
-                m.instructions.clear();
-
-                m.instructions.add(new VarInsnNode(ALOAD, 0));
-                m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getItemRarity", methodSig));
-                m.instructions.add(new InsnNode(ARETURN));
-
-                break;
-            }
-        }
-
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-        classNode.accept(cw);
-
-        TTCore.logger.info("Transforming ItemStack - Finished.");
-        return cw.toByteArray();
-    }
-
-    private byte[] transformArrow(String name, byte[] basicClass, String methodName)
-    {
-        TTCore.logger.info("Transforming EntityArrow - Class [" + name + "]...");
-
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(basicClass);
-        classReader.accept(classNode, 0);
-
-        boolean obf = name.equals(entityArrowClassObf);
-        String methodSig = obf ? entityArrowMethodSigObf : entityArrowMethodSigDeobf;
-
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while (methods.hasNext())
-        {
-            MethodNode m = methods.next();
-            if (m.name.equals(methodName) && m.desc.equals("()V"))
-            {
-                for (int i = 0; i < m.instructions.size(); i++)
+                @Override
+                void transform(Iterator<MethodNode> methods)
                 {
-                    AbstractInsnNode next = m.instructions.get(i);
-                    if (next instanceof MethodInsnNode)
+                    while (methods.hasNext())
                     {
-                        InsnList toAdd = new InsnList();
-                        toAdd.add(new VarInsnNode(ALOAD, 0));
-                        toAdd.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "onArrowUpdate", methodSig));
-                        m.instructions.insert(next, toAdd);
-                        break;
+                        MethodNode m = methods.next();
+                        if (anvilContainerMethod.equals(m.name) || anvilGuiMethod.equals(m.name))
+                        {
+                            for (int i = 0; i < m.instructions.size(); i++)
+                            {
+                                AbstractInsnNode next = m.instructions.get(i);
+
+                                next = m.instructions.get(i);
+                                if (next instanceof IntInsnNode && ((IntInsnNode) next).operand == 40)
+                                {
+                                    m.instructions.set(next, new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getMaxAnvilCost", "()I"));
+                                }
+                            }
+                        }
+                    }                    
+                }
+            });
+        }
+        // Item Enchantability Event
+        else if (transformedName.equals(enchantHelperClass))
+        {
+            final Map<String, int[]> data = new HashMap<String, int[]>();
+            data.put(buildEnchantListMethod.getName(), new int[] {1, 4});
+            data.put(calcEnchantabilityMethod.getName(), new int[] {3, 5});
+            Transform transformer = new Transform()
+            {
+                @Override
+                void transform(Iterator<MethodNode> methods)
+                {
+                    while (methods.hasNext())
+                    {
+                        MethodNode m = methods.next();
+                        if (data.keySet().contains(m.name))
+                        {
+                            int[] indeces = data.get(m.name);
+                            for (int i = 0; i < m.instructions.size(); i++)
+                            {
+                                AbstractInsnNode next = m.instructions.get(i);
+                                if (next instanceof VarInsnNode)
+                                {
+                                    VarInsnNode varNode = (VarInsnNode)next;
+                                    if (varNode.getOpcode() == ISTORE && varNode.var == indeces[1])
+                                    {
+                                        InsnList toAdd = new InsnList();
+                                        toAdd.add(new VarInsnNode(ALOAD, indeces[0]));
+                                        toAdd.add(new VarInsnNode(ILOAD, indeces[1]));
+                                        toAdd.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getItemEnchantability", enchantHelperMethodSig));
+                                        toAdd.add(new VarInsnNode(ISTORE, indeces[1]));
+                                        m.instructions.insert(next, toAdd);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            break;
+                        }
                     }
                 }
+            };
+            
+            basicClass = transform(basicClass, enchantHelperClass, buildEnchantListMethod, transformer);
+        }
+        // ItemRarity Event
+        else if (transformedName.equals(itemStackClass))
+        {
+            basicClass = transform(basicClass, itemStackClass, itemStackMethod, new Transform()
+            {
+                @Override
+                void transform(Iterator<MethodNode> methods)
+                {
+                    while (methods.hasNext())
+                    {
+                        MethodNode m = methods.next();
+                        if (itemStackMethod.equals(m.name))
+                        {
+                            m.instructions.clear();
 
-                break;
-            }
+                            m.instructions.add(new VarInsnNode(ALOAD, 0));
+                            m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getItemRarity", itemStackMethodSig));
+                            m.instructions.add(new InsnNode(ARETURN));
+
+                            break;
+                        }
+                    }
+                }
+            });
+        }
+        // ArrowUpdate Event
+        else if (transformedName.equals(entityArrowClass))
+        {
+            basicClass = transform(basicClass, entityArrowClass, entityArrowMethod, new Transform()
+            {
+                @Override
+                void transform(Iterator<MethodNode> methods)
+                {
+                    while (methods.hasNext())
+                    {
+                        MethodNode m = methods.next();
+                        if (entityArrowMethod.equals(m.name))
+                        {
+                            for (int i = 0; i < m.instructions.size(); i++)
+                            {
+                                AbstractInsnNode next = m.instructions.get(i);
+                                if (next instanceof MethodInsnNode)
+                                {
+                                    InsnList toAdd = new InsnList();
+                                    toAdd.add(new VarInsnNode(ALOAD, 0));
+                                    toAdd.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "onArrowUpdate", entityArrowMethodSig));
+                                    m.instructions.insert(next, toAdd);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }       
+                }
+            });
         }
 
+        return basicClass;
+    }
+    
+    private byte[] transform(byte[] classBytes, String className, ObfSafeName methodName, Transform transformer)
+    {
+        TTCore.logger.info("Transforming Class [" + className + "], Method [" + methodName.getName() + "]");
+       
+        ClassNode classNode = new ClassNode();
+        ClassReader classReader = new ClassReader(classBytes);
+        classReader.accept(classNode, 0);
+
+        Iterator<MethodNode> methods = classNode.methods.iterator();
+
+        transformer.transform(methods);
+        
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         classNode.accept(cw);
-
-        TTCore.logger.info("Transforming EntityArrow - Finished.");
+        TTCore.logger.info("Transforming " + className + " Finished.");
         return cw.toByteArray();
     }
 }
