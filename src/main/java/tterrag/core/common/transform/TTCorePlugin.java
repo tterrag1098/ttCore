@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @SuppressWarnings("unused")
 @MCVersion("1.7.10")
+@IFMLLoadingPlugin.SortingIndex(10001)
 public class TTCorePlugin implements IFMLLoadingPlugin
 {
     @Override
