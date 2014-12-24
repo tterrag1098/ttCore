@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +16,8 @@ import java.util.zip.ZipFile;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.SneakyThrows;
+import net.minecraft.util.StringTranslate;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -176,6 +179,16 @@ public final class TTFileUtils
         catch (Exception e)
         {
             TTCore.logger.error("Deleting directory " + file.getAbsolutePath() + " failed.");
+        }
+    }
+    
+    @SneakyThrows
+    @NonNull
+    public static void loadLangFiles(File directory)
+    {
+        for (File file : directory.listFiles(langFilter))
+        {
+            StringTranslate.inject(new FileInputStream(file));
         }
     }
 }

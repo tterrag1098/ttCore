@@ -43,10 +43,11 @@ public class TTCoreTransformer implements IClassTransformer
             {
                 return obj.equals(mcp) || obj.equals(srg);
             }
-            else
+            else if (obj instanceof ObfSafeName)
             {
                 return ((ObfSafeName)obj).mcp.equals(mcp) && ((ObfSafeName)obj).srg.equals(srg);
             }
+            return false;
         }
         
         // no hashcode because I'm naughty

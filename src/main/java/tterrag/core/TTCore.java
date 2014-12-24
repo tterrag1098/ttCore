@@ -1,5 +1,7 @@
 package tterrag.core;
 
+import java.util.List;
+
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -7,6 +9,7 @@ import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import tterrag.core.api.common.load.ILoadEventReceiver;
 import tterrag.core.common.CommonProxy;
 import tterrag.core.common.Handlers;
 import tterrag.core.common.Lang;
@@ -16,6 +19,9 @@ import tterrag.core.common.command.CommandScoreboardInfo;
 import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.enchant.EnchantXPBoost;
+
+import com.google.common.collect.Lists;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -24,6 +30,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLStateEvent;
 
 @Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION, guiFactory = "tterrag.core.common.config.BaseConfigFactory")
 public class TTCore implements IModTT
@@ -41,10 +48,12 @@ public class TTCore implements IModTT
     
     @SidedProxy(serverSide = "tterrag.core.common.CommonProxy", clientSide = "tterrag.core.client.ClientProxy")
     public static CommonProxy proxy;
+    
+    private List<ILoadEventReceiver<?>> eventReceivers = Lists.newArrayList();
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
-    {
+    {        
         ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
         Handlers.findPackages();
         
@@ -56,7 +65,7 @@ public class TTCore implements IModTT
 
     @EventHandler
     public void init(FMLInitializationEvent event)
-    {
+    {        
         Handlers.register();
         CompatabilityRegistry.INSTANCE.handle(event);
         ClientCommandHandler.instance.registerCommand(CommandReloadConfigs.CLIENT);
@@ -68,15 +77,33 @@ public class TTCore implements IModTT
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
-    {
+    {        
         CompatabilityRegistry.INSTANCE.handle(event);
         ConfigHandler.INSTANCE.loadRightClickCrops();
     }
 
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
-    {
+    {        
         event.registerServerCommand(new CommandScoreboardInfo());
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @EventHandler
+    public void onServerClosing(FMLStateEvent event)
+    {
+        for (ILoadEventReceiver receiver : eventReceivers)
+        {
+            if (receiver.getEventClass() == event.getClass())
+            {
+                receiver.onEvent(event);
+            }
+        }
+    }
+
+    public void registerLoadEventReceiver(ILoadEventReceiver<?> receiver)
+    {
+        eventReceivers.add(receiver);
     }
 
     @Override
