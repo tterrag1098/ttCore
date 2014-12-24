@@ -90,7 +90,7 @@ public class TTCore implements IModTT
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @EventHandler
-    public void onServerClosing(FMLStateEvent event)
+    public void onGenericEvent(FMLStateEvent event)
     {
         for (ILoadEventReceiver receiver : eventReceivers)
         {
