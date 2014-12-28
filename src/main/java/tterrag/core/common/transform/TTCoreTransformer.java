@@ -101,7 +101,7 @@ public class TTCoreTransformer implements IClassTransformer
 
                             m.instructions.add(new VarInsnNode(ALOAD, 0));
                             m.instructions.add(new VarInsnNode(ILOAD, 1));
-                            m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "hasVoidParticles", voidFogMethodSig));
+                            m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "hasVoidParticles", voidFogMethodSig, false));
                             m.instructions.add(new InsnNode(IRETURN));
 
                             break;
@@ -130,7 +130,7 @@ public class TTCoreTransformer implements IClassTransformer
                                 next = m.instructions.get(i);
                                 if (next instanceof IntInsnNode && ((IntInsnNode) next).operand == 40)
                                 {
-                                    m.instructions.set(next, new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getMaxAnvilCost", "()I"));
+                                    m.instructions.set(next, new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getMaxAnvilCost", "()I", false));
                                 }
                             }
                         }
@@ -166,7 +166,7 @@ public class TTCoreTransformer implements IClassTransformer
                                         InsnList toAdd = new InsnList();
                                         toAdd.add(new VarInsnNode(ALOAD, indeces[0]));
                                         toAdd.add(new VarInsnNode(ILOAD, indeces[1]));
-                                        toAdd.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getItemEnchantability", enchantHelperMethodSig));
+                                        toAdd.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getItemEnchantability", enchantHelperMethodSig, false));
                                         toAdd.add(new VarInsnNode(ISTORE, indeces[1]));
                                         m.instructions.insert(next, toAdd);
                                         break;
@@ -198,7 +198,7 @@ public class TTCoreTransformer implements IClassTransformer
                             m.instructions.clear();
 
                             m.instructions.add(new VarInsnNode(ALOAD, 0));
-                            m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getItemRarity", itemStackMethodSig));
+                            m.instructions.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "getItemRarity", itemStackMethodSig, false));
                             m.instructions.add(new InsnNode(ARETURN));
 
                             break;
@@ -227,7 +227,7 @@ public class TTCoreTransformer implements IClassTransformer
                                 {
                                     InsnList toAdd = new InsnList();
                                     toAdd.add(new VarInsnNode(ALOAD, 0));
-                                    toAdd.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "onArrowUpdate", entityArrowMethodSig));
+                                    toAdd.add(new MethodInsnNode(INVOKESTATIC, "tterrag/core/common/transform/TTCoreMethods", "onArrowUpdate", entityArrowMethodSig, false));
                                     m.instructions.insert(next, toAdd);
                                     break;
                                 }

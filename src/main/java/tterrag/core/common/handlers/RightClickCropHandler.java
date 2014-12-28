@@ -30,7 +30,6 @@ public class RightClickCropHandler
             }
             else
             {
-                ItemStack held = event.entityPlayer.getCurrentEquippedItem();
                 List<ItemStack> drops = block.getDrops(event.world, x, y, z, meta, 0);
                 boolean seedRemoved = false;
                 for (ItemStack stack : drops)
