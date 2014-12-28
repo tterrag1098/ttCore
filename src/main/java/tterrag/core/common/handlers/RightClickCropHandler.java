@@ -3,8 +3,6 @@ package tterrag.core.common.handlers;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -33,8 +31,7 @@ public class RightClickCropHandler
             else
             {
                 ItemStack held = event.entityPlayer.getCurrentEquippedItem();
-                int fortune = held == null ? 0 : EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, held);
-                List<ItemStack> drops = block.getDrops(event.world, x, y, z, meta, fortune);
+                List<ItemStack> drops = block.getDrops(event.world, x, y, z, meta, 0);
                 boolean seedRemoved = false;
                 for (ItemStack stack : drops)
                 {
