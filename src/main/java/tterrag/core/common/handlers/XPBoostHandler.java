@@ -81,7 +81,10 @@ public class XPBoostHandler
             if (level >= 0)
             {
                 int xp = event.block.getExpDrop(event.world, event.blockMetadata, fortune);
-                event.world.spawnEntityInWorld(new EntityXPOrb(event.world, event.x + 0.5, event.y + 0.5, event.z + 0.5, getXPBoost(xp, level)));
+                if (xp > 0)
+                {
+                    event.world.spawnEntityInWorld(new EntityXPOrb(event.world, event.x + 0.5, event.y + 0.5, event.z + 0.5, getXPBoost(xp, level)));
+                }
             }
         }
     }
@@ -138,6 +141,11 @@ public class XPBoostHandler
 
     private void scheduleXP(final World world, final double x, final double y, final double z, final int boost)
     {
+        if (boost <= 0)
+        {
+            return;
+        }
+        
         Scheduler.instance().schedule(20, new Runnable()
         {
             @Override

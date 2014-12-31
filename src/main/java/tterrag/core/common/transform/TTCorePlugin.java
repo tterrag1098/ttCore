@@ -5,6 +5,7 @@ import java.util.Map;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
+@SuppressWarnings("unused")
 @MCVersion("1.7.10")
 @IFMLLoadingPlugin.SortingIndex(Integer.MAX_VALUE) // we want deobf no matter what
 public class TTCorePlugin implements IFMLLoadingPlugin
