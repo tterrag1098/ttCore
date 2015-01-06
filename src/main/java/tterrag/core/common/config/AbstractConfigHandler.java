@@ -11,20 +11,15 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.config.IConfigHandler;
-import tterrag.core.api.common.load.ILoadEventReceiver;
 import tterrag.core.common.event.ConfigFileChangedEvent;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLStateEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public abstract class AbstractConfigHandler implements IConfigHandler, ILoadEventReceiver
+public abstract class AbstractConfigHandler implements IConfigHandler
 {
     /**
      * Represents a section in a config handler.
@@ -119,7 +114,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler, ILoadEven
     {
         this.modid = modid;
         FMLCommonHandler.instance().bus().register(this);
-        TTCore.instance.registerLoadEventReceiver(this);
+        TTCore.instance.configs.add(this);
     }
 
     @Override
@@ -579,21 +574,15 @@ public abstract class AbstractConfigHandler implements IConfigHandler, ILoadEven
         return true;
     }
 
-    /**
-     * A hook for the {@link FMLInitializationEvent}, also called during config reloads depending on
-     * {@link #shouldHookOnReload()}
-     */
-    protected void initHook()
-    {}
-
-    /**
-     * A hook for the {@link FMLPostInitializationEvent}, also called during config reloads
-     * depending on {@link #shouldHookOnReload()}
-     */
-    protected void postInitHook()
-    {}
-
     /* IConfigHandler impl */
+
+    @Override
+    public void initHook()
+    {}
+
+    @Override
+    public void postInitHook()
+    {}
 
     // no need to override these, they are merely utilities, and reference private fields anyways
 
@@ -613,28 +602,5 @@ public abstract class AbstractConfigHandler implements IConfigHandler, ILoadEven
     public final String getModID()
     {
         return modid;
-    }
-
-    /* ILoadEventReceiver */
-
-    @Override
-    public void onEvent(FMLStateEvent event)
-    {
-        if (event instanceof FMLInitializationEvent)
-        {
-            initHook();
-        }
-
-        if (event instanceof FMLPostInitializationEvent)
-        {
-            postInitHook();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Class<? extends FMLStateEvent>> getEventClasses()
-    {
-        return Lists.newArrayList(FMLInitializationEvent.class, FMLPostInitializationEvent.class);
     }
 }
