@@ -2,6 +2,7 @@ package tterrag.core.common.enchant;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.enchant.IAdvancedEnchant;
@@ -33,6 +34,12 @@ public class EnchantXPBoost extends Enchantment implements IAdvancedEnchant
     public int getMaxLevel()
     {
         return 3;
+    }
+
+    @Override
+    public boolean canApply(ItemStack stack)
+    {
+        return type.canEnchantItem(stack.getItem()) && !(stack.getItem() instanceof ItemArmor);
     }
 
     @Override
