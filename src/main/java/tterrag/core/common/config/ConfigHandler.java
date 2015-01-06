@@ -1,5 +1,6 @@
 package tterrag.core.common.config;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     private static List<Block> rightClickCrops = ImmutableList.of();
     
     public static final ConfigHandler INSTANCE = new ConfigHandler();
+    public static File configFolder;
 
     protected ConfigHandler()
     {

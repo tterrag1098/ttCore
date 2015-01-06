@@ -59,7 +59,9 @@ public class FireworkHandler
             int fireworksLeft = player.getEntityData().getInteger("fireworksLeft");
             if (fireworksLeft > 0 && (!player.getEntityData().getBoolean("fireworkDelay") || player.worldObj.getTotalWorldTime() % 20 == 0))
             {
-                TTEntityUtils.spawnFireworkAround(getBlockCoord(player), player.worldObj.provider.dimensionId);
+                BlockCoord pos = getBlockCoord(player);
+                pos.y += 2;
+                TTEntityUtils.spawnFirework(pos, player.worldObj.provider.dimensionId, 12);
                 player.getEntityData().setInteger("fireworksLeft", fireworksLeft - 1);
 
                 if (fireworksLeft > 5)

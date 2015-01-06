@@ -49,11 +49,12 @@ public class TTCore implements IModTT
     @SidedProxy(serverSide = "tterrag.core.common.CommonProxy", clientSide = "tterrag.core.client.ClientProxy")
     public static CommonProxy proxy;
     
-    private List<ILoadEventReceiver<?>> eventReceivers = Lists.newArrayList();
+    private List<ILoadEventReceiver> eventReceivers = Lists.newArrayList();
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {        
+        ConfigHandler.configFolder = event.getModConfigurationDirectory();
         ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
         Handlers.findPackages();
         
@@ -88,20 +89,19 @@ public class TTCore implements IModTT
         event.registerServerCommand(new CommandScoreboardInfo());
     }
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @EventHandler
     public void onGenericEvent(FMLStateEvent event)
     {
         for (ILoadEventReceiver receiver : eventReceivers)
         {
-            if (receiver.getEventClass() == event.getClass())
+            if (receiver.getEventClasses().contains(event.getClass()))
             {
                 receiver.onEvent(event);
             }
         }
     }
 
-    public void registerLoadEventReceiver(ILoadEventReceiver<?> receiver)
+    public void registerLoadEventReceiver(ILoadEventReceiver receiver)
     {
         eventReceivers.add(receiver);
     }

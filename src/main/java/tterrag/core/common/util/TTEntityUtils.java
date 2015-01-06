@@ -18,33 +18,21 @@ import net.minecraftforge.common.DimensionManager;
 public final class TTEntityUtils
 {
     private static final Random rand = new Random();
-    
+
     public static void setEntityVelocity(Entity entity, double velX, double velY, double velZ)
     {
         entity.motionX = velX;
         entity.motionY = velY;
         entity.motionZ = velZ;
     }
-    
-    // I don't really expect this to be very readable...but it works
-    public static void spawnFireworkAround(BlockCoord block, int dimID)
+
+    public static EntityFireworkRocket getRandomFirework(World world)
     {
-        World world = DimensionManager.getWorld(dimID);
-
-        BlockCoord pos = new BlockCoord(0, 0, 0);
-
-        int tries = -1;
-        while (!world.isAirBlock(pos.x, pos.y, pos.z) && !world.getBlock(pos.x, pos.y, pos.z).isReplaceable(world, pos.x, pos.y, pos.z))
-        {
-            tries++;
-            if (tries > 100)
-            {
-                return;
-            }
-            
-            pos.setPosition(moveRandomly(block.x), block.y + 2, moveRandomly(block.z));
-        }
-
+        return getRandomFirework(world, new BlockCoord(0, 0, 0));
+    }
+    
+    public static EntityFireworkRocket getRandomFirework(World world, BlockCoord pos)
+    {
         ItemStack firework = new ItemStack(Items.fireworks);
         firework.stackTagCompound = new NBTTagCompound();
         NBTTagCompound expl = new NBTTagCompound();
@@ -70,13 +58,42 @@ public final class TTEntityUtils
         firework.stackTagCompound.setTag("Fireworks", fireworkTag);
 
         EntityFireworkRocket e = new EntityFireworkRocket(world, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, firework);
-        world.spawnEntityInWorld(e);
+        return e;
+    }
+    
+    public static void spawnFirework(BlockCoord block, int dimID)
+    {
+        spawnFirework(block, dimID, 0);
     }
 
-    private static final double distMult = 12d;
-
-    private static double moveRandomly(double base)
+    public static void spawnFirework(BlockCoord block, int dimID, int range)
     {
-        return base + 0.5 + rand.nextDouble() * distMult - (distMult / 2);
+        World world = DimensionManager.getWorld(dimID);
+
+        BlockCoord pos = new BlockCoord(0, 0, 0);
+        pos.setPosition(block.x, block.y, block.z);
+        
+        // don't bother if there's no randomness at all
+        if (range > 0)
+        {
+            pos.setPosition(moveRandomly(block.x, range), block.y, moveRandomly(block.z, range));
+
+            int tries = -1;
+            while (!world.isAirBlock(pos.x, pos.y, pos.z) && !world.getBlock(pos.x, pos.y, pos.z).isReplaceable(world, pos.x, pos.y, pos.z))
+            {
+                tries++;
+                if (tries > 100)
+                {
+                    return;
+                }
+            }
+        }
+
+        world.spawnEntityInWorld(getRandomFirework(world, pos));
+    }
+
+    private static double moveRandomly(double base, double range)
+    {
+        return base + 0.5 + rand.nextDouble() * range - (range / 2);
     }
 }
