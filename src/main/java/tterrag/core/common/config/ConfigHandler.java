@@ -74,7 +74,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     
     public void loadRightClickCrops()
     {
-        JsonConfigReader<PlantInfo> reader = new JsonConfigReader<PlantInfo>(new ModToken(TTCore.class, TTCore.MODID + "/config"), configFolder.getAbsolutePath()
+        JsonConfigReader<PlantInfo> reader = new JsonConfigReader<PlantInfo>(new ModToken(TTCore.class, TTCore.MODID.toLowerCase() + "/config"), configFolder.getAbsolutePath()
                 + "/ttCore/cropConfig.json", PlantInfo.class);
         for (PlantInfo i : reader)
         {
