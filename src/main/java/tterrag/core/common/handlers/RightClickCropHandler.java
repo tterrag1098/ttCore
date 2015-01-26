@@ -2,6 +2,7 @@ package tterrag.core.common.handlers;
 
 import java.util.List;
 
+import lombok.NoArgsConstructor;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -21,6 +22,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 @Handler(HandlerType.FORGE)
 public class RightClickCropHandler
 {
+    @NoArgsConstructor
     public static class PlantInfo
     {
         public String seed;
@@ -29,7 +31,14 @@ public class RightClickCropHandler
         
         private transient ItemStack seedStack;
         private transient Block blockInst;
-        
+
+        public PlantInfo(String seed, String block, int meta)
+        {
+            this.seed = seed;
+            this.block = block;
+            this.meta = meta;
+        }
+
         public void init()
         {
             seedStack = JsonUtils.parseStringIntoItemStack(seed);

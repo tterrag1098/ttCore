@@ -19,6 +19,7 @@ import tterrag.core.common.command.CommandScoreboardInfo;
 import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.enchant.EnchantXPBoost;
+import tterrag.core.common.imc.IMCRegistry;
 
 import com.google.common.collect.Lists;
 
@@ -30,6 +31,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
 
 @Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION, guiFactory = "tterrag.core.common.config.BaseConfigFactory")
 public class TTCore implements IModTT
@@ -78,6 +80,8 @@ public class TTCore implements IModTT
         {
             ((CommandHandler) MinecraftServer.getServer().getCommandManager()).registerCommand(CommandReloadConfigs.SERVER);
         }
+        
+        IMCRegistry.INSTANCE.init();
     }
 
     @EventHandler
@@ -96,6 +100,12 @@ public class TTCore implements IModTT
     public void onServerStarting(FMLServerStartingEvent event)
     {        
         event.registerServerCommand(new CommandScoreboardInfo());
+    }
+    
+    @EventHandler
+    public void onIMCEvent(IMCEvent event)
+    {
+        IMCRegistry.INSTANCE.handleEvent(event);
     }
 
     @Override
