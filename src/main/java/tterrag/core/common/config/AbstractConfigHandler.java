@@ -541,11 +541,11 @@ public abstract class AbstractConfigHandler implements IConfigHandler
 
         // @formatter:off
         // same logic as above method, mostly
-        if (defaultVal instanceof Integer) { prop = config.get(section.name, key, (Integer)  defaultVal); }
-        if (defaultVal instanceof Boolean) { prop = config.get(section.name, key, (Boolean)  defaultVal); }
-        if (defaultVal instanceof int[])   { prop = config.get(section.name, key, (int[])    defaultVal); }
-        if (defaultVal instanceof String)  { prop = config.get(section.name, key, (String )  defaultVal); }
-        if (defaultVal instanceof String[]){ prop = config.get(section.name, key, (String[]) defaultVal); }
+        if (defaultVal instanceof Integer)  { prop = config.get(section.name, key, (Integer)  defaultVal); }
+        if (defaultVal instanceof Boolean)  { prop = config.get(section.name, key, (Boolean)  defaultVal); }
+        if (defaultVal instanceof int[])    { prop = config.get(section.name, key, (int[])    defaultVal); }
+        if (defaultVal instanceof String)   { prop = config.get(section.name, key, (String )  defaultVal); }
+        if (defaultVal instanceof String[]) { prop = config.get(section.name, key, (String[]) defaultVal); }
         // @formatter:on
 
         if (defaultVal instanceof Float || defaultVal instanceof Double)

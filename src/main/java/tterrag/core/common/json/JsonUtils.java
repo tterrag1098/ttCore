@@ -20,7 +20,11 @@ public class JsonUtils
 
     public static Object parseStringIntoRecipeItem(String string, boolean forceItemStack)
     {
-        if (OreDictionary.getOres(string).isEmpty())
+        if ("null".equals(string))
+        {
+            return null;
+        }
+        else if (OreDictionary.getOres(string).isEmpty())
         {
             ItemStack stack = null;
 
@@ -88,5 +92,38 @@ public class JsonUtils
         ItemStack stack = (ItemStack) parseStringIntoRecipeItem(string, true);
         stack.stackSize = MathHelper.clamp_int(size, 1, stack.getMaxStackSize());
         return stack;
+    }
+
+    /**
+     * Returns the appropriate config string for the given {@link ItemStack}
+     * <p>
+     * This does not take into account ore dict.
+     * 
+     * @param stack The {@link ItemStack} to serialize
+     * @param damage If damage should be taken into account
+     * @param size If stack size should be taken into account
+     * @return A string that will be the equivalent of if {@link ItemStack stack} was constructed
+     *         from it using {@link #parseStringIntoItemStack(String)}
+     */
+    public static String getStringForItemStack(ItemStack stack, boolean damage, boolean size)
+    {
+        if (stack == null)
+        {
+            return null;
+        }
+
+        String base = Item.itemRegistry.getNameForObject(stack.getItem());
+
+        if (damage)
+        {
+            base += ";" + stack.getItemDamage();
+        }
+
+        if (size)
+        {
+            base += "#" + stack.stackSize;
+        }
+
+        return base;
     }
 }

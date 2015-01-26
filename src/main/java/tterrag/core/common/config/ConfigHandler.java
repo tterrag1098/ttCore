@@ -1,18 +1,15 @@
 package tterrag.core.common.config;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-import lombok.Getter;
-import net.minecraft.block.Block;
 import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler;
 import tterrag.core.common.Handlers.Handler.HandlerType;
+import tterrag.core.common.config.JsonConfigReader.ModToken;
+import tterrag.core.common.handlers.RightClickCropHandler;
+import tterrag.core.common.handlers.RightClickCropHandler.PlantInfo;
 import tterrag.core.common.tweaks.Tweak;
 import tterrag.core.common.tweaks.Tweaks;
-
-import com.google.common.collect.ImmutableList;
 
 @Handler(HandlerType.FML)
 public class ConfigHandler extends AbstractConfigHandler implements ITweakConfigHandler
@@ -24,14 +21,10 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public static int       anvilMaxLevel       = 40;
     public static boolean   betterAchievements  = true;
     public static boolean   allowCropRC         = true;
-    private static String[] supportedCrops      = {"minecraft:wheat", "minecraft:potatoes", "minecraft:carrots"};
     
     public static int       enchantIDXPBoost    = 43;
     public static boolean   allowXPBoost        = true;
     // @formatter:on
-
-    @Getter
-    private static List<Block> rightClickCrops = ImmutableList.of();
     
     public static final ConfigHandler INSTANCE = new ConfigHandler();
     public static File configFolder;
@@ -58,9 +51,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         disableVoidFog = getValue("disableVoidFog", "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types", disableVoidFog);
         anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel);
         betterAchievements = getValue("superDuperFunMode", "The way the game should have been made.", betterAchievements);
-        supportedCrops = getValue("supportedCrops",
-                "Crop blocks to attempt to enable right-click harvesting on. This may or may not work for mod crops, depending on their implementation.", supportedCrops);
-                
+
         Tweaks.loadIngameTweaks();
     }
 
@@ -83,19 +74,12 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     
     public void loadRightClickCrops()
     {
-        List<Block> baking = new ArrayList<Block>();
-        for (String s : supportedCrops)
+        JsonConfigReader<PlantInfo> reader = new JsonConfigReader<PlantInfo>(new ModToken(TTCore.class, TTCore.MODID + "/config"), configFolder.getAbsolutePath()
+                + "/ttCore/cropConfig.json", PlantInfo.class);
+        for (PlantInfo i : reader)
         {
-            Block block = (Block) Block.blockRegistry.getObject(s);
-            if (block == null)
-            {
-                TTCore.logger.error("Block %s not found for right clickable crops.", s);
-            }
-            else
-            {
-                baking.add(block);
-            }
+            i.init();
+            RightClickCropHandler.INSTANCE.addCrop(i);
         }
-        rightClickCrops = ImmutableList.copyOf(baking);
     }
 }
