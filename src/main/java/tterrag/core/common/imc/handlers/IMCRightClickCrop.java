@@ -28,7 +28,7 @@ public class IMCRightClickCrop extends IMCBase
             return;
         }
 
-        PlantInfo plantinfo = new PlantInfo(data[0], data[1], Integer.parseInt(data[2]));
+        PlantInfo plantinfo = new PlantInfo(data[0], data[1], Integer.parseInt(data[2]), Integer.parseInt(data[3]));
         plantinfo.init();
         RightClickCropHandler.INSTANCE.addCrop(plantinfo);
     }

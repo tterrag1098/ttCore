@@ -28,15 +28,17 @@ public class RightClickCropHandler
         public String seed;
         public String block;
         public int meta = 7;
+        public int resetMeta = 0;
         
         private transient ItemStack seedStack;
         private transient Block blockInst;
 
-        public PlantInfo(String seed, String block, int meta)
+        public PlantInfo(String seed, String block, int meta, int resetMeta)
         {
             this.seed = seed;
             this.block = block;
             this.meta = meta;
+            this.resetMeta = resetMeta;
         }
 
         public void init()
@@ -82,7 +84,7 @@ public class RightClickCropHandler
                         currentPlant = info;
                         block.dropBlockAsItem(event.world, x, y, z, meta, 0);
                         currentPlant = null;
-                        event.world.setBlockMetadataWithNotify(x, y, z, 0, 3);
+                        event.world.setBlockMetadataWithNotify(x, y, z, info.resetMeta, 3);
                         event.setCanceled(true);
                     }
                     break;

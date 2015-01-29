@@ -28,10 +28,10 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
 
 @Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION, guiFactory = "tterrag.core.common.config.BaseConfigFactory")
 public class TTCore implements IModTT
@@ -54,14 +54,14 @@ public class TTCore implements IModTT
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
-    {        
+    {
         ConfigHandler.configFolder = event.getModConfigurationDirectory();
         ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
         Handlers.findPackages();
-        
+
         CompatabilityRegistry.INSTANCE.handle(event);
         OreDict.registerVanilla();
-        
+
         EnchantXPBoost.INSTANCE.register();
     }
 
