@@ -23,6 +23,7 @@ import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler.HandlerType;
 import tterrag.core.common.Handlers.Handler.Inst;
 
+import com.google.common.base.Strings;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 
@@ -30,7 +31,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState;
 import cpw.mods.fml.common.ModContainer;
-
 import static tterrag.core.common.Handlers.Handler.Inst.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -111,9 +111,29 @@ public class Handlers
         {
             if (mod.getMod() instanceof IModTT)
             {
-                addPackage(mod.getMod().getClass().getPackage().getName());
+                addPackage(getEnclosingPackage(mod.getMod()));
             }
         }
+    }
+
+    private static String getEnclosingPackage(Object obj)
+    {
+        Class<?> modClass = obj.getClass();
+
+        while (modClass.getComponentType() != null)
+        {
+            modClass = modClass.getComponentType();
+        }
+
+        while (modClass.getEnclosingClass() != null)
+        {
+            modClass = modClass.getEnclosingClass();
+        }
+
+        String name = modClass.getName();
+        int lastDot = name.lastIndexOf('.');
+        
+        return lastDot == -1 ? name : name.substring(0, lastDot);
     }
 
     /**
