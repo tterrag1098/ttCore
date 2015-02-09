@@ -20,6 +20,7 @@ import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.enchant.EnchantXPBoost;
 import tterrag.core.common.imc.IMCRegistry;
+import tterrag.core.common.util.TextureErrorRemover;
 
 import com.google.common.collect.Lists;
 
@@ -46,15 +47,17 @@ public class TTCore implements IModTT
 
     @Instance
     public static TTCore instance;
-    
+
     @SidedProxy(serverSide = "tterrag.core.common.CommonProxy", clientSide = "tterrag.core.client.ClientProxy")
     public static CommonProxy proxy;
-    
+
     public List<IConfigHandler> configs = Lists.newArrayList();
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        TextureErrorRemover.beginIntercepting();
+
         ConfigHandler.configFolder = event.getModConfigurationDirectory();
         ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
         Handlers.findPackages();
@@ -67,12 +70,12 @@ public class TTCore implements IModTT
 
     @EventHandler
     public void init(FMLInitializationEvent event)
-    {        
+    {
         for (IConfigHandler c : configs)
         {
             c.initHook();
         }
-        
+
         Handlers.register();
         CompatabilityRegistry.INSTANCE.handle(event);
         ClientCommandHandler.instance.registerCommand(CommandReloadConfigs.CLIENT);
@@ -80,28 +83,28 @@ public class TTCore implements IModTT
         {
             ((CommandHandler) MinecraftServer.getServer().getCommandManager()).registerCommand(CommandReloadConfigs.SERVER);
         }
-        
+
         IMCRegistry.INSTANCE.init();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
-    {        
+    {
         for (IConfigHandler c : configs)
         {
             c.postInitHook();
         }
-        
+
         CompatabilityRegistry.INSTANCE.handle(event);
         ConfigHandler.INSTANCE.loadRightClickCrops();
     }
 
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
-    {        
+    {
         event.registerServerCommand(new CommandScoreboardInfo());
     }
-    
+
     @EventHandler
     public void onIMCEvent(IMCEvent event)
     {

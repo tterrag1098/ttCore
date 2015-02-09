@@ -21,6 +21,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public static int       anvilMaxLevel       = 40;
     public static boolean   betterAchievements  = true;
     public static boolean   allowCropRC         = true;
+    public static int       textureErrorRemover = 1;
     
     public static int       enchantIDXPBoost    = 43;
     public static boolean   allowXPBoost        = true;
@@ -51,6 +52,8 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         disableVoidFog = getValue("disableVoidFog", "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types", disableVoidFog);
         anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel);
         betterAchievements = getValue("superDuperFunMode", "The way the game should have been made.", betterAchievements);
+        allowCropRC = getValue("allowCropRC", "Disabling this option will prevent any crops added to the config json from being right clickable.", allowCropRC);
+        textureErrorRemover = getValue("textureErrorRemover", "0 - Do nothing\n1 - Remove stacktraces, leave 1-line missing texture errors\n2 - Remove all missing texture errors completely", textureErrorRemover);
 
         Tweaks.loadIngameTweaks();
     }

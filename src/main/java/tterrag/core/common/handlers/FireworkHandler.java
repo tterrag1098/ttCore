@@ -55,7 +55,7 @@ public class FireworkHandler
                     player.addChatMessage(new ChatComponentText(EnumChatFormatting.AQUA + TTCore.lang.localize("celebrate")));
                 }
             }
-
+ 
             int fireworksLeft = player.getEntityData().getInteger("fireworksLeft");
             if (fireworksLeft > 0 && (!player.getEntityData().getBoolean("fireworkDelay") || player.worldObj.getTotalWorldTime() % 20 == 0))
             {
