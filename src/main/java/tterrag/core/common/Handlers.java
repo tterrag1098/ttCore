@@ -1,10 +1,5 @@
 package tterrag.core.common;
 
-import static tterrag.core.common.Handlers.Handler.Inst.AUTO;
-import static tterrag.core.common.Handlers.Handler.Inst.CONSTRUCTOR;
-import static tterrag.core.common.Handlers.Handler.Inst.FIELD;
-import static tterrag.core.common.Handlers.Handler.Inst.METHOD;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -35,6 +30,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderState;
 import cpw.mods.fml.common.ModContainer;
+
+import static tterrag.core.common.Handlers.Handler.Inst.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Handlers

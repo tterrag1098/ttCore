@@ -3,10 +3,10 @@ package tterrag.core.api.common.config;
 import java.io.File;
 import java.util.List;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.common.config.ConfigCategory;
 import tterrag.core.common.config.AbstractConfigHandler.Section;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 
 public interface IConfigHandler
 {

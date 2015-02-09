@@ -12,9 +12,9 @@ import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 import org.apache.logging.log4j.message.Message;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import tterrag.core.TTCore;
 import tterrag.core.common.config.ConfigHandler;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class TextureErrorRemover extends Logger
 {
