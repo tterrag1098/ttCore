@@ -56,7 +56,10 @@ public class TTCore implements IModTT
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        TextureErrorRemover.beginIntercepting();
+        if (event.getSide().isClient())
+        {
+            TextureErrorRemover.beginIntercepting();
+        }
 
         ConfigHandler.configFolder = event.getModConfigurationDirectory();
         ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
