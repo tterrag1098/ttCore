@@ -84,30 +84,35 @@ public class TTCoreMethods
             else if (p_82846_2_ != 1 && p_82846_2_ != 0)
             {
                 // this clause used to be after the next one
+                boolean done = false;
                 if (TileEntityFurnace.isItemFuel(itemstack1))
                 {
                     if (!mergeItemStack(inv, itemstack1, 1, 2, false))
                     {
                         return null;
                     }
+                    done = true;
                 }
-                else if (FurnaceRecipes.smelting().getSmeltingResult(itemstack1) != null)
+                if (!done)
                 {
-                    if (!mergeItemStack(inv, itemstack1, 0, 1, false))
+                    if (FurnaceRecipes.smelting().getSmeltingResult(itemstack1) != null)
+                    {
+                        if (!mergeItemStack(inv, itemstack1, 0, 1, false))
+                        {
+                            return null;
+                        }
+                    }
+                    else if (p_82846_2_ >= 3 && p_82846_2_ < 30)
+                    {
+                        if (!mergeItemStack(inv, itemstack1, 30, 39, false))
+                        {
+                            return null;
+                        }
+                    }
+                    else if (p_82846_2_ >= 30 && p_82846_2_ < 39 && !mergeItemStack(inv, itemstack1, 3, 30, false))
                     {
                         return null;
                     }
-                }
-                else if (p_82846_2_ >= 3 && p_82846_2_ < 30)
-                {
-                    if (!mergeItemStack(inv, itemstack1, 30, 39, false))
-                    {
-                        return null;
-                    }
-                }
-                else if (p_82846_2_ >= 30 && p_82846_2_ < 39 && !mergeItemStack(inv, itemstack1, 3, 30, false))
-                {
-                    return null;
                 }
             }
             else if (!mergeItemStack(inv, itemstack1, 3, 39, false))
