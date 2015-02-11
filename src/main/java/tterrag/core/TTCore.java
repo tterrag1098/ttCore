@@ -3,6 +3,8 @@ package tterrag.core;
 import java.util.List;
 
 import net.minecraft.command.CommandHandler;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.ClientCommandHandler;
 
@@ -33,6 +35,7 @@ import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = TTCore.MODID, name = TTCore.NAME, version = TTCore.VERSION, guiFactory = "tterrag.core.common.config.BaseConfigFactory")
 public class TTCore implements IModTT
@@ -88,6 +91,8 @@ public class TTCore implements IModTT
         }
 
         IMCRegistry.INSTANCE.init();
+
+        GameRegistry.addSmelting(new ItemStack(Items.coal, 1, 1), new ItemStack(Items.coal), 5f);
     }
 
     @EventHandler

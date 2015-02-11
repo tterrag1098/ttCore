@@ -61,7 +61,7 @@ public class TTCoreMethods
         MinecraftForge.EVENT_BUS.post(new ArrowUpdateEvent(entity));
     }
 
-    // copied from ContainerFurnace
+    // mostly copied from ContainerFurnace
     public static ItemStack transferStackInSlot(ContainerFurnace inv, EntityPlayer p_82846_1_, int p_82846_2_)
     {
         ItemStack itemstack = null;
@@ -83,36 +83,39 @@ public class TTCoreMethods
             }
             else if (p_82846_2_ != 1 && p_82846_2_ != 0)
             {
-                // this clause used to be after the next one
-                boolean done = false;
+                // I have moved this check to the beginning
                 if (TileEntityFurnace.isItemFuel(itemstack1))
                 {
                     if (!mergeItemStack(inv, itemstack1, 1, 2, false))
                     {
-                        return null;
+                        // Nest this inside so that if the above fails it will
+                        // attempt to do the input slot
+                        if (FurnaceRecipes.smelting().getSmeltingResult(itemstack1) != null)
+                        {
+                            if (!mergeItemStack(inv, itemstack1, 0, 1, false))
+                            {
+                                return null;
+                            }
+                        }
                     }
-                    done = true;
                 }
-                if (!done)
+                else if (FurnaceRecipes.smelting().getSmeltingResult(itemstack1) != null)
                 {
-                    if (FurnaceRecipes.smelting().getSmeltingResult(itemstack1) != null)
-                    {
-                        if (!mergeItemStack(inv, itemstack1, 0, 1, false))
-                        {
-                            return null;
-                        }
-                    }
-                    else if (p_82846_2_ >= 3 && p_82846_2_ < 30)
-                    {
-                        if (!mergeItemStack(inv, itemstack1, 30, 39, false))
-                        {
-                            return null;
-                        }
-                    }
-                    else if (p_82846_2_ >= 30 && p_82846_2_ < 39 && !mergeItemStack(inv, itemstack1, 3, 30, false))
+                    if (!mergeItemStack(inv, itemstack1, 0, 1, false))
                     {
                         return null;
                     }
+                }
+                else if (p_82846_2_ >= 3 && p_82846_2_ < 30)
+                {
+                    if (!mergeItemStack(inv, itemstack1, 30, 39, false))
+                    {
+                        return null;
+                    }
+                }
+                else if (p_82846_2_ >= 30 && p_82846_2_ < 39 && !mergeItemStack(inv, itemstack1, 3, 30, false))
+                {
+                    return null;
                 }
             }
             else if (!mergeItemStack(inv, itemstack1, 3, 39, false))
