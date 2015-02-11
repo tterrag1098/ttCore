@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -12,12 +13,18 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -38,9 +45,13 @@ public final class TTFileUtils
     public static final FileFilter langFilter = FileFilterUtils.suffixFileFilter(".lang");
 
     /**
-     * @param jarClass - A class from the jar in question
-     * @param filename - Name of the file to copy, automatically prepended with "/assets/"
-     * @param to - File to copy to
+     * @param jarClass
+     *            - A class from the jar in question
+     * @param filename
+     *            - Name of the file to copy, automatically prepended with
+     *            "/assets/"
+     * @param to
+     *            - File to copy to
      */
     public static void copyFromJar(Class<?> jarClass, String filename, File to)
     {
@@ -64,7 +75,8 @@ public final class TTFileUtils
      *         "http://examples.javacodegeeks.com/core-java/util/zip/extract-zip-file-with-subdirectories/"
      *         > this site.</a>
      * 
-     * @param zip - The zip file to extract
+     * @param zip
+     *            - The zip file to extract
      * 
      * @return The folder extracted to
      */
@@ -143,6 +155,86 @@ public final class TTFileUtils
         return temp;
     }
 
+    /**
+     * @author McDowell -
+     *         http://stackoverflow.com/questions/1399126/java-util-zip
+     *         -recreating-directory-structure
+     * 
+     * @param directory
+     *            The directory to zip the contents of. Content structure will
+     *            be preserved.
+     * @param zipfile
+     *            The zip file to output to.
+     * @throws IOException
+     */
+    @SuppressWarnings("resource")
+    public static void zipFolderContents(File directory, File zipfile) throws IOException
+    {
+        URI base = directory.toURI();
+        Deque<File> queue = new LinkedList<File>();
+        queue.push(directory);
+        OutputStream out = new FileOutputStream(zipfile);
+        Closeable res = out;
+        try
+        {
+            ZipOutputStream zout = new ZipOutputStream(out);
+            res = zout;
+            while (!queue.isEmpty())
+            {
+                directory = queue.pop();
+                for (File child : directory.listFiles())
+                {
+                    String name = base.relativize(child.toURI()).getPath();
+                    if (child.isDirectory())
+                    {
+                        queue.push(child);
+                        name = name.endsWith("/") ? name : name + "/";
+                        zout.putNextEntry(new ZipEntry(name));
+                    }
+                    else
+                    {
+                        zout.putNextEntry(new ZipEntry(name));
+                        copy(child, zout);
+                        zout.closeEntry();
+                    }
+                }
+            }
+        }
+        finally
+        {
+            res.close();
+        }
+    }
+
+    /** @see #zipFolderContents(File, File) */
+    private static void copy(InputStream in, OutputStream out) throws IOException
+    {
+        byte[] buffer = new byte[1024];
+        while (true)
+        {
+            int readCount = in.read(buffer);
+            if (readCount < 0)
+            {
+                break;
+            }
+            out.write(buffer, 0, readCount);
+        }
+    }
+
+    /** @see #zipFolderContents(File, File) */
+    private static void copy(File file, OutputStream out) throws IOException
+    {
+        InputStream in = new FileInputStream(file);
+        try
+        {
+            copy(in, out);
+        }
+        finally
+        {
+            in.close();
+        }
+    }
+
     @NonNull
     public static File writeToFile(String filepath, String json)
     {
@@ -188,7 +280,7 @@ public final class TTFileUtils
             TTCore.logger.error("Deleting directory " + file.getAbsolutePath() + " failed.");
         }
     }
-    
+
     @SneakyThrows
     @NonNull
     public static void loadLangFiles(File directory)
@@ -298,7 +390,7 @@ public final class TTFileUtils
                 return s.substring(s.indexOf("=") + 1, s.length());
             }
         }
-        
+
         scan.close();
         return "";
     }

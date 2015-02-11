@@ -7,11 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.FileResourcePack;
+import net.minecraft.client.resources.IResourcePack;
 
 import org.apache.commons.io.FileUtils;
 
 import tterrag.core.TTCore;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class ResourcePackAssembler
 {
@@ -21,14 +25,17 @@ public class ResourcePackAssembler
         private String ext;
         private File file;
     }
-
+    
     private List<File> icons = new ArrayList<File>();
     private List<File> langs = new ArrayList<File>();
     private List<CustomFile> customs = new ArrayList<CustomFile>();
+    
+    private static List<IResourcePack> defaultResourcePacks;
 
     private static final String MC_META_BASE = "{\"pack\":{\"pack_format\":1,\"description\":\"%s\"}}";
 
     private File dir;
+    private File zip;
     private String name;
     private String mcmeta;
     private String modid;
@@ -38,6 +45,7 @@ public class ResourcePackAssembler
     public ResourcePackAssembler(File directory, String packName, String modid)
     {
         this.dir = directory;
+        this.zip = new File(dir.getAbsolutePath() + ".zip");
         this.name = packName;
         this.modid = modid.toLowerCase();
         this.mcmeta = String.format(MC_META_BASE, this.name);
@@ -77,12 +85,15 @@ public class ResourcePackAssembler
 
     public ResourcePackAssembler assemble()
     {
+        TTFileUtils.safeDeleteDirectory(dir);
+        dir.mkdirs();
+        
         String pathToDir = dir.getAbsolutePath();
-        File mcmeta = new File(pathToDir + "/pack.mcmeta");
+        File metaFile = new File(pathToDir + "/pack.mcmeta");
 
         try
         {
-            writeDefaultMcmeta(mcmeta);
+            writeNewFile(metaFile, mcmeta);
 
             if (hasPackPng)
             {
@@ -110,6 +121,9 @@ public class ResourcePackAssembler
                 directory.mkdirs();
                 FileUtils.copyFile(custom.file, new File(directory.getAbsolutePath() + "/" + custom.file.getName()));
             }
+
+            TTFileUtils.zipFolderContents(dir, zip);
+            TTFileUtils.safeDeleteDirectory(dir);
         }
         catch (IOException e)
         {
@@ -123,17 +137,25 @@ public class ResourcePackAssembler
     {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient())
         {
-            File dest = new File(FMLCommonHandler.instance().getSavesDirectory().getParentFile() + "/resourcepacks/" + dir.getName());
-
             try
             {
-                TTFileUtils.safeDeleteDirectory(dest);
-                FileUtils.copyDirectory(dir, dest);
-                TTFileUtils.safeDeleteDirectory(dir);
+                if (defaultResourcePacks == null)
+                {
+                    defaultResourcePacks = ReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks",
+                            "field_110449_ao", "ap");
+                }
+
+                File dest = new File(dir.getParent() + "/resourcepack/" + zip.getName());
+                TTFileUtils.safeDelete(dest);
+                FileUtils.copyFile(zip, dest);
+                TTFileUtils.safeDelete(zip);
+                writeNewFile(new File(dest.getParent() + "/readme.txt"),
+                        TTCore.lang.localize("resourcepack.readme") + "\n\n" + TTCore.lang.localize("resourcepack.readme2"));
+                defaultResourcePacks.add(new FileResourcePack(dest));
             }
-            catch (IOException e)
+            catch (Exception e)
             {
-                throw new RuntimeException(e);
+                TTCore.logger.error("Failed to inject resource pack for mod {}", modid, e);
             }
         }
         else
@@ -142,14 +164,15 @@ public class ResourcePackAssembler
         }
     }
 
-    private void writeDefaultMcmeta(File file) throws IOException
+    private void writeNewFile(File file, String defaultText) throws IOException
     {
         TTFileUtils.safeDelete(file);
+        file.delete();
         file.getParentFile().mkdirs();
         file.createNewFile();
 
         FileWriter fw = new FileWriter(file);
-        fw.write(mcmeta);
+        fw.write(defaultText);
         fw.flush();
         fw.close();
     }
