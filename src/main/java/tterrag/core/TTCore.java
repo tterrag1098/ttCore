@@ -91,8 +91,6 @@ public class TTCore implements IModTT
         }
 
         IMCRegistry.INSTANCE.init();
-
-        GameRegistry.addSmelting(new ItemStack(Items.coal, 1, 1), new ItemStack(Items.coal), 5f);
     }
 
     @EventHandler
