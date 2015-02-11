@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TTItemUtils
@@ -52,5 +53,19 @@ public final class TTItemUtils
         entity.motionZ += f2;
 
         entity.worldObj.spawnEntityInWorld(entity);
+    }
+
+    public static boolean itemStackMatchesOredict(ItemStack stack, String oredict)
+    {
+        int[] ids = OreDictionary.getOreIDs(stack);
+        for (int i : ids)
+        {
+            String name = OreDictionary.getOreName(i);
+            if (name.equals(oredict))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
