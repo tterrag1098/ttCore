@@ -35,6 +35,11 @@ public class BlockCoord
         return world.getBlock(x, y, z);
     }
 
+    public int getMetadata(World world)
+    {
+        return world.getBlockMetadata(x, y, z);
+    }
+
     public TileEntity getTileEntity(World world)
     {
         return world.getTileEntity(x, y, z);
