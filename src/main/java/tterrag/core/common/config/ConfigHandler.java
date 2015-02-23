@@ -8,6 +8,7 @@ import tterrag.core.common.Handlers.Handler.HandlerType;
 import tterrag.core.common.config.JsonConfigReader.ModToken;
 import tterrag.core.common.handlers.RightClickCropHandler;
 import tterrag.core.common.handlers.RightClickCropHandler.PlantInfo;
+import tterrag.core.common.transform.TTCorePlugin;
 import tterrag.core.common.tweaks.Tweak;
 import tterrag.core.common.tweaks.Tweaks;
 
@@ -21,7 +22,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public static int       anvilMaxLevel       = 40;
     public static boolean   betterAchievements  = true;
     public static boolean   allowCropRC         = true;
-    public static int       textureErrorRemover = 1;
+    public static int       textureErrorRemover = 0;
     
     public static int       enchantIDXPBoost    = 43;
     public static boolean   allowXPBoost        = true;
@@ -53,8 +54,15 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         anvilMaxLevel = getValue("anvilMaxLevel", "The max amount of XP levels an anvil recipe can use", anvilMaxLevel);
         betterAchievements = getValue("superDuperFunMode", "The way the game should have been made.", betterAchievements);
         allowCropRC = getValue("allowCropRC", "Disabling this option will prevent any crops added to the config json from being right clickable.", allowCropRC);
-        textureErrorRemover = getValue("textureErrorRemover", "0 - Do nothing\n1 - Remove stacktraces, leave 1-line missing texture errors\n2 - Remove all missing texture errors completely", textureErrorRemover);
+        textureErrorRemover = getValue("textureErrorRemover", 
+                  "0 - Do nothing\n"
+                + "1 - Remove stacktraces, leave 1-line missing texture errors\n"
+                + "2 - Remove all missing texture errors completely. This option is not supported outside dev environments.", textureErrorRemover);
 
+        if (!TTCorePlugin.runtimeDeobfEnabled) {
+            textureErrorRemover = Math.min(textureErrorRemover, 1);
+        }
+        
         Tweaks.loadIngameTweaks();
     }
 
