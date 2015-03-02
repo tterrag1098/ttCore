@@ -62,7 +62,8 @@ public class TTCore implements IModTT
         }
 
         ConfigHandler.configFolder = event.getModConfigurationDirectory();
-        ConfigHandler.INSTANCE.initialize(event.getSuggestedConfigurationFile());
+        ConfigHandler.configFile = event.getSuggestedConfigurationFile();
+        ConfigHandler.instance().initialize(ConfigHandler.configFile);
         Handlers.findPackages();
 
         CompatabilityRegistry.INSTANCE.handle(event);
@@ -99,7 +100,7 @@ public class TTCore implements IModTT
         }
 
         CompatabilityRegistry.INSTANCE.handle(event);
-        ConfigHandler.INSTANCE.loadRightClickCrops();
+        ConfigHandler.instance().loadRightClickCrops();
     }
 
     @EventHandler

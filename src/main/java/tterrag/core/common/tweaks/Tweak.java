@@ -12,7 +12,7 @@ public abstract class Tweak
     {
         this.name = key;
         this.comment = comment;
-        if (ConfigHandler.INSTANCE.addBooleanFor(this))
+        if (ConfigHandler.instance().addBooleanFor(this))
         {
             load();
         }

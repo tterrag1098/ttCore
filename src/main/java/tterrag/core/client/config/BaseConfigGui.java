@@ -55,7 +55,7 @@ public class BaseConfigGui extends GuiConfig
      */
     protected IConfigHandler getConfigHandler()
     {
-        return ConfigHandler.INSTANCE;
+        return ConfigHandler.instance();
     }
 
     /**
