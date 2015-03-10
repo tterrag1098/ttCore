@@ -5,11 +5,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import tterrag.core.TTCore;
 import lombok.SneakyThrows;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import tterrag.core.TTCore;
 import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.client.GuiScrollingList;
 import cpw.mods.fml.client.GuiSlotModList;
@@ -39,6 +40,43 @@ public class GuiEnhancedModList extends GuiModList
                 }
             }
             return null;
+        }
+    }
+
+    private class InfoButton extends GuiButton
+    {
+        public InfoButton()
+        {
+            super(30, GuiEnhancedModList.this.width - 22, 2, 20, 20, "?");
+        }
+
+        @Override
+        public void drawButton(Minecraft p_146112_1_, int p_146112_2_, int p_146112_3_)
+        {
+            if (this.field_146123_n)
+            {
+                ModContainer sel = GuiEnhancedModList.this.getSelectedMod();
+                if (sel != null && sel.getName().equals(TTCore.NAME))
+                {
+                    this.displayString = TTCore.lang.localize("gui.modlistinfo2");
+                }
+                else
+                {
+                    this.displayString = TTCore.lang.localize("gui.modlistinfo1");
+                }
+
+                this.width = p_146112_1_.fontRenderer.getStringWidth(this.displayString) + 10;
+                this.xPosition = GuiEnhancedModList.this.width - this.width;
+                this.xPosition -= this.xPosition % 2 == 1 ? 2 : 1;
+            }
+            else
+            {
+                this.displayString = "?";
+                this.width = 20;
+                this.xPosition = GuiEnhancedModList.this.width - this.width - 2;
+            }
+
+            super.drawButton(p_146112_1_, p_146112_2_, p_146112_3_);
         }
     }
 
@@ -119,6 +157,8 @@ public class GuiEnhancedModList extends GuiModList
         buttonList.add(new GuiButton(SortType.A_TO_Z.buttonID, x, y, width - buttonMargin, 20, "A-Z"));
         x += width + buttonMargin;
         buttonList.add(new GuiButton(SortType.Z_TO_A.buttonID, x, y, width - buttonMargin, 20, "Z-A"));
+
+        buttonList.add(new InfoButton());
     }
 
     @Override
@@ -216,6 +256,18 @@ public class GuiEnhancedModList extends GuiModList
     {
         super.actionPerformed(button);
 
+        if (button.id == 30)
+        {
+            for (ModContainer m : getMods())
+            {
+                if (m.getName().equals(TTCore.NAME))
+                {
+                    setSelectedMod(m);
+                    setMods();
+                }
+            }
+        }
+
         SortType type = SortType.getTypeForButton(button);
 
         if (type == null)
@@ -298,5 +350,11 @@ public class GuiEnhancedModList extends GuiModList
     private ModContainer getSelectedMod()
     {
         return (ModContainer) _selectedMod.get(this);
+    }
+
+    @SneakyThrows
+    private void setSelectedMod(ModContainer mod)
+    {
+        _selectedMod.set(this, mod);
     }
 }
