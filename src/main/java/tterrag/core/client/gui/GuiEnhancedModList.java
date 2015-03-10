@@ -42,7 +42,7 @@ public class GuiEnhancedModList extends GuiModList
         }
     }
 
-    private static Field _mods;
+    private static Field _mods, _selected, _selectedMod;
     private static Field _modList, _modListRight, _modListBottom, _modListMods, _listWidth;
     static
     {
@@ -50,6 +50,10 @@ public class GuiEnhancedModList extends GuiModList
         {
             _mods = GuiModList.class.getDeclaredField("mods");
             _mods.setAccessible(true);
+            _selected = GuiModList.class.getDeclaredField("selected");
+            _selected.setAccessible(true);
+            _selectedMod = GuiModList.class.getDeclaredField("selectedMod");
+            _selectedMod.setAccessible(true);
             _modList = GuiModList.class.getDeclaredField("modList");
             _modList.setAccessible(true);
             _modListRight = GuiScrollingList.class.getDeclaredField("right");
@@ -206,6 +210,7 @@ public class GuiEnhancedModList extends GuiModList
         search.drawTextBox();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void actionPerformed(GuiButton button)
     {
@@ -237,6 +242,18 @@ public class GuiEnhancedModList extends GuiModList
     @SneakyThrows
     private void setMods()
     {
+        List<ModContainer> mods = getMods();
+
+        ModContainer sel = getSelectedMod();
+        for (int i = 0; i < mods.size(); i++)
+        {
+            if (sel == mods.get(i))
+            {
+                _selected.setInt(this, i);
+                break;
+            }
+        }
+
         _mods.set(this, getMods());
     }
 
@@ -275,5 +292,11 @@ public class GuiEnhancedModList extends GuiModList
     private int getListWidth()
     {
         return _listWidth.getInt(this);
+    }
+
+    @SneakyThrows
+    private ModContainer getSelectedMod()
+    {
+        return (ModContainer) _selectedMod.get(this);
     }
 }

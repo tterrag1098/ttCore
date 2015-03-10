@@ -10,6 +10,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import tterrag.core.api.client.model.IModelTT;
 
@@ -127,7 +128,7 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
         GL11.glPushMatrix();
-
+        
         switch (type)
         {
         case ENTITY:
