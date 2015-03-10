@@ -15,7 +15,10 @@ public class TTCorePlugin implements IFMLLoadingPlugin
     @Override
     public String[] getASMTransformerClass()
     {
-        return new String[] { "tterrag.core.common.transform.TTCoreTransformer" };
+        return new String[] { 
+                "tterrag.core.common.transform.TTCoreTransformer",
+                "tterrag.core.common.transform.TTCoreTransformerClient"
+       };
     }
 
     @Override

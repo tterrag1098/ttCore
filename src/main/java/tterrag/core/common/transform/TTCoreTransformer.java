@@ -27,11 +27,11 @@ import static org.objectweb.asm.Opcodes.*;
 public class TTCoreTransformer implements IClassTransformer
 {
     @AllArgsConstructor
-    private static class ObfSafeName
+    protected static class ObfSafeName
     {
         private String deobf, srg;
 
-        private String getName()
+        public String getName()
         {
             return TTCorePlugin.runtimeDeobfEnabled ? srg : deobf;
         }
@@ -53,7 +53,7 @@ public class TTCoreTransformer implements IClassTransformer
         // no hashcode because I'm naughty
     }
 
-    private static abstract class Transform
+    protected static abstract class Transform
     {
         abstract void transform(Iterator<MethodNode> methods);
     }
@@ -279,7 +279,7 @@ public class TTCoreTransformer implements IClassTransformer
         return basicClass;
     }
 
-    private byte[] transform(byte[] classBytes, String className, ObfSafeName methodName, Transform transformer)
+    protected final byte[] transform(byte[] classBytes, String className, ObfSafeName methodName, Transform transformer)
     {
         TTCore.logger.info("Transforming Class [" + className + "], Method [" + methodName.getName() + "]");
 
