@@ -73,7 +73,7 @@ public class TTCoreTransformerClient extends TTCoreTransformer
                         if (drawBackground.equals(m.name))
                         {
                             m.instructions.clear();
-                            ObfSafeName drawBackground = new ObfSafeName("drawBackground", "func_148123_a");
+                            ObfSafeName drawBackground = new ObfSafeName("drawBackground", "func_146278_c");
                             String fieldOwner = "cpw/mods/fml/client/GuiSlotModList";
                             String fieldName = "parent";
                             String fieldType = "Lcpw/mods/fml/client/GuiModList;";
