@@ -80,8 +80,6 @@ public class GuiEnhancedModList extends GuiModList
                 this.xPosition = GuiEnhancedModList.this.width - this.width - 2;
             }
             
-            System.out.println(GuiEnhancedModList.this.width + "  " + width + "  " + this.xPosition);
-
             super.drawButton(p_146112_1_, p_146112_2_, p_146112_3_);
         }
     }
