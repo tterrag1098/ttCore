@@ -66,8 +66,7 @@ public class GuiEnhancedModList extends GuiModList
                 }
 
                 this.width = p_146112_1_.fontRenderer.getStringWidth(this.displayString) + 10;
-                this.xPosition = GuiEnhancedModList.this.width - this.width;
-                this.xPosition -= this.xPosition % 2 == 1 ? 2 : 1;
+                this.xPosition = GuiEnhancedModList.this.width - (this.width + 2);
             }
             else
             {
@@ -75,6 +74,8 @@ public class GuiEnhancedModList extends GuiModList
                 this.width = 20;
                 this.xPosition = GuiEnhancedModList.this.width - this.width - 2;
             }
+            
+            System.out.println(GuiEnhancedModList.this.width + "  " + width + "  " + this.xPosition);
 
             super.drawButton(p_146112_1_, p_146112_2_, p_146112_3_);
         }
