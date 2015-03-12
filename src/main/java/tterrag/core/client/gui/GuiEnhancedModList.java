@@ -66,7 +66,12 @@ public class GuiEnhancedModList extends GuiModList
                 }
 
                 this.width = p_146112_1_.fontRenderer.getStringWidth(this.displayString) + 10;
-                this.xPosition = GuiEnhancedModList.this.width - (this.width + 2);
+                if (this.width % 2 != 0) // Fixes the button shifting to the left
+                {
+                    this.width++;
+                }
+                
+                this.xPosition = GuiEnhancedModList.this.width - this.width - 2;
             }
             else
             {
@@ -259,6 +264,8 @@ public class GuiEnhancedModList extends GuiModList
 
         if (button.id == 30)
         {
+            search.setText("");
+            reloadMods();
             for (ModContainer m : getMods())
             {
                 if (m.getName().equals(TTCore.NAME))
