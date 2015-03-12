@@ -234,7 +234,7 @@ public class GuiEnhancedModList extends GuiModList
         mods.clear();
         for (ModContainer m : Loader.instance().getActiveModList())
         {
-            if (m.getName().toLowerCase().contains(search.getText().toLowerCase()))
+            if (m.getName().toLowerCase().contains(search.getText().toLowerCase()) && m.getMetadata().parentMod == null)
             {
                 mods.add(m);
             }
