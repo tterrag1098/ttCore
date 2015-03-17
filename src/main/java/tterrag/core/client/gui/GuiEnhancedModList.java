@@ -156,7 +156,9 @@ public class GuiEnhancedModList extends GuiModList
 
         int width = (getListWidth() / numButtons);
         int x = 10, y = 10;
-        buttonList.add(new GuiButton(SortType.NORMAL.buttonID, x, y, width - buttonMargin, 20, TTCore.lang.localize("gui.normal")));
+        GuiButton normalSort = new GuiButton(SortType.NORMAL.buttonID, x, y, width - buttonMargin, 20, TTCore.lang.localize("gui.normal"));
+        normalSort.enabled = false;
+        buttonList.add(normalSort);
         x += width + buttonMargin;
         buttonList.add(new GuiButton(SortType.A_TO_Z.buttonID, x, y, width - buttonMargin, 20, "A-Z"));
         x += width + buttonMargin;

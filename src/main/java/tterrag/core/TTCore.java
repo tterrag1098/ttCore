@@ -1,11 +1,14 @@
 package tterrag.core;
 
+import java.io.File;
 import java.util.List;
 
+import lombok.SneakyThrows;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.ClientCommandHandler;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +23,7 @@ import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
 import tterrag.core.common.enchant.EnchantXPBoost;
 import tterrag.core.common.imc.IMCRegistry;
+import tterrag.core.common.util.TTFileUtils;
 import tterrag.core.common.util.TextureErrorRemover;
 
 import com.google.common.collect.Lists;
@@ -54,6 +58,7 @@ public class TTCore implements IModTT
     public List<IConfigHandler> configs = Lists.newArrayList();
 
     @EventHandler
+    @SneakyThrows
     public void preInit(FMLPreInitializationEvent event)
     {
         if (event.getSide().isClient())
@@ -61,8 +66,14 @@ public class TTCore implements IModTT
             TextureErrorRemover.beginIntercepting();
         }
 
-        ConfigHandler.configFolder = event.getModConfigurationDirectory();
-        ConfigHandler.configFile = event.getSuggestedConfigurationFile();
+        ConfigHandler.configFolder = new File(event.getModConfigurationDirectory().getPath() + "/" + MODID);
+        ConfigHandler.configFile = new File(ConfigHandler.configFolder.getPath() + "/" + event.getSuggestedConfigurationFile().getName());
+        
+        if (!ConfigHandler.configFile.exists()) {
+            FileUtils.copyFile(event.getSuggestedConfigurationFile(), ConfigHandler.configFile);
+            TTFileUtils.safeDelete(event.getSuggestedConfigurationFile());
+        }
+        
         ConfigHandler.instance().initialize(ConfigHandler.configFile);
         Handlers.findPackages();
 
