@@ -21,6 +21,7 @@ import tterrag.core.common.command.CommandReloadConfigs;
 import tterrag.core.common.command.CommandScoreboardInfo;
 import tterrag.core.common.compat.CompatabilityRegistry;
 import tterrag.core.common.config.ConfigHandler;
+import tterrag.core.common.enchant.EnchantAutoSmelt;
 import tterrag.core.common.enchant.EnchantXPBoost;
 import tterrag.core.common.imc.IMCRegistry;
 import tterrag.core.common.util.TTFileUtils;
@@ -81,6 +82,7 @@ public class TTCore implements IModTT
         OreDict.registerVanilla();
 
         EnchantXPBoost.INSTANCE.register();
+        EnchantAutoSmelt.INSTANCE.register();
     }
 
     @EventHandler
