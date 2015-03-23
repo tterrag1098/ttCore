@@ -66,14 +66,16 @@ public class TTCore implements IModTT
             TextureErrorRemover.beginIntercepting();
         }
 
-        ConfigHandler.configFolder = new File(event.getModConfigurationDirectory().getPath() + "/" + MODID);
-        ConfigHandler.configFile = new File(ConfigHandler.configFolder.getPath() + "/" + event.getSuggestedConfigurationFile().getName());
-        
-        if (!ConfigHandler.configFile.exists()) {
+        ConfigHandler.configFolder = event.getModConfigurationDirectory();
+        ConfigHandler.ttConfigFolder = new File(ConfigHandler.configFolder.getPath() + "/" + MODID);
+        ConfigHandler.configFile = new File(ConfigHandler.ttConfigFolder.getPath() + "/" + event.getSuggestedConfigurationFile().getName());
+
+        if (!ConfigHandler.configFile.exists())
+        {
             FileUtils.copyFile(event.getSuggestedConfigurationFile(), ConfigHandler.configFile);
             TTFileUtils.safeDelete(event.getSuggestedConfigurationFile());
         }
-        
+
         ConfigHandler.instance().initialize(ConfigHandler.configFile);
         Handlers.findPackages();
 

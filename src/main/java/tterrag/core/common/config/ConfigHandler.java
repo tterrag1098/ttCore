@@ -47,7 +47,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
 
     private static ConfigHandler INSTANCE;
     
-    public static File configFolder;
+    public static File configFolder, ttConfigFolder;
     public static File configFile;
     public static ConfigProcessor processor;
     
@@ -92,7 +92,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
 
     @Override
     public void callback(ConfigProcessor inst)
-    {
+    { 
         if (!TTCorePlugin.runtimeDeobfEnabled)
         {
             textureErrorRemover = Math.min(textureErrorRemover, 1);
@@ -110,7 +110,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public void loadRightClickCrops()
     {
         JsonConfigReader<PlantInfo> reader = new JsonConfigReader<PlantInfo>(new ModToken(TTCore.class, TTCore.MODID.toLowerCase() + "/config"),
-                configFolder.getAbsolutePath() + "/cropConfig.json", PlantInfo.class);
+                ttConfigFolder.getAbsolutePath() + "/cropConfig.json", PlantInfo.class);
         for (PlantInfo i : reader)
         {
             i.init();
