@@ -43,6 +43,10 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
 
     public static int enchantIDXPBoost = 43;
     public static boolean allowXPBoost = true;
+    
+    public static int enchantIDAutoSmelt = 44;
+    public static boolean allowAutoSmelt = true;
+    public static boolean allowAutoSmeltWithFortune = true;
     // @formatter:on
 
     private static ConfigHandler INSTANCE;
@@ -86,7 +90,10 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         activateSection("enchants");
         enchantIDXPBoost = getValue("enchantIDXPBoost", "Enchant ID for the XP boost enchant.", enchantIDXPBoost);
         allowXPBoost = getValue("allowXPBoost", "Allow the XP Boost enchant to be registered.", allowXPBoost);
-
+        enchantIDAutoSmelt = getValue("enchantIDAutoSmelt", "Enchant ID for the Auto Smelt enchant.", enchantIDAutoSmelt);
+        allowAutoSmelt = getValue("allowAutoSmelt", "Allow the Auto Smelt enchant to be registered.", allowAutoSmelt);
+        allowAutoSmeltWithFortune = getValue("allowAutoSmeltWithFortune", "Allow the Auto Smelt enchant to work with Fortune.", allowAutoSmeltWithFortune);
+        
         Tweaks.loadNonIngameTweaks();
     }
 
