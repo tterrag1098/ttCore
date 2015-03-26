@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -13,7 +14,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public final class TTItemUtils
 {
     private static final Random rand = new Random();
-    
+
     /**
      * @author powercrystals
      */
@@ -43,7 +44,7 @@ public final class TTItemUtils
     public static void spawnItemInWorldWithRandomMotion(EntityItem entity)
     {
         entity.delayBeforeCanPickup = 10;
-        
+
         float f = (rand.nextFloat() * 0.1f) - 0.05f;
         float f1 = (rand.nextFloat() * 0.1f) - 0.05f;
         float f2 = (rand.nextFloat() * 0.1f) - 0.05f;
@@ -67,5 +68,14 @@ public final class TTItemUtils
             }
         }
         return false;
+    }
+
+    public static NBTTagCompound getNBTTag(ItemStack stack)
+    {
+        if (stack.stackTagCompound == null)
+        {
+            stack.stackTagCompound = new NBTTagCompound();
+        }
+        return stack.stackTagCompound;
     }
 }
