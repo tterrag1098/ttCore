@@ -50,7 +50,6 @@ public class JsonConfigReader<T> implements Iterable<T>
 
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final JsonParser parser = new JsonParser();
-    private static final String KEY = "data";
 
     private File file;
     private JsonObject root;
@@ -172,6 +171,30 @@ public class JsonConfigReader<T> implements Iterable<T>
     {
         this.root = parseFile();
     }
+    /**
+     * Reads from the cached JsonObject in this class and returns a List of all the elements
+     * contained in its array.
+     * 
+     * @return A list of the generic type of this class containing all the deserialized elements
+     *         from your JSON config.
+     */
+    @SuppressWarnings("unchecked")
+    public List<T> getElements(String str){
+    	 JsonArray elements = root.get(str).getAsJsonArray();
+         List<T> list = new ArrayList<T>();
+         for (int i = 0; i < elements.size(); i++)
+         {
+             if (type == null)
+             {
+                 list.add((T) gson.fromJson(elements.get(i), typeToken.getType()));
+             }
+             else
+             {
+                 list.add(gson.fromJson(elements.get(i), type));
+             }
+         }
+         return list;
+    }
 
     /**
      * Reads from the cached JsonObject in this class and returns a List of all the elements
@@ -183,20 +206,7 @@ public class JsonConfigReader<T> implements Iterable<T>
     @SuppressWarnings("unchecked")
     public List<T> getElements()
     {
-        JsonArray elements = root.get(KEY).getAsJsonArray();
-        List<T> list = new ArrayList<T>();
-        for (int i = 0; i < elements.size(); i++)
-        {
-            if (type == null)
-            {
-                list.add((T) gson.fromJson(elements.get(i), typeToken.getType()));
-            }
-            else
-            {
-                list.add(gson.fromJson(elements.get(i), type));
-            }
-        }
-        return list;
+       return getElements("data");
     }
 
     @Override
