@@ -1,6 +1,5 @@
 package tterrag.core.client.util;
 
-import static org.lwjgl.opengl.GL11.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.client.Minecraft;
@@ -14,6 +13,8 @@ import net.minecraftforge.client.model.obj.TextureCoordinate;
 import net.minecraftforge.client.model.obj.Vertex;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import tterrag.core.client.handlers.ClientHandler;
+
+import static org.lwjgl.opengl.GL11.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RenderingUtils
@@ -36,12 +37,12 @@ public class RenderingUtils
         }
     }
 
-    @Deprecated
-    public static void render3DItem(EntityItem item, float partialTickTime, boolean rotate)
-    {
-        render3DItem(item, rotate);
-    }
-    
+    /**
+     * Renders an item entity in 3D
+     * 
+     * @param item The item to render
+     * @param rotate Whether to "spin" the item like it would if it were a real dropped entity
+     */
     public static void render3DItem(EntityItem item, boolean rotate)
     {
         float rot = getRotation(1.0f);
@@ -61,12 +62,6 @@ public class RenderingUtils
         glPopMatrix();
     }
 
-    @Deprecated
-    public static float getRotation(float partialTick, float mult)
-    {
-        return getRotation(mult);
-    }
-    
     public static float getRotation(float mult)
     {
         return ClientHandler.getTicksElapsed() * mult;

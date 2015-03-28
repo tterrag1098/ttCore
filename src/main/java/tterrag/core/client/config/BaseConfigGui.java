@@ -19,17 +19,18 @@ public class BaseConfigGui extends GuiConfig
     @SuppressWarnings("rawtypes")
     public BaseConfigGui(GuiScreen parentScreen)
     {
-        super(parentScreen, new ArrayList<IConfigElement>(), null, false, false, null); // dummy super so we can call instance methods
-
+        // dummy super so we can call instance methods
+        super(parentScreen, new ArrayList<IConfigElement>(), null, false, false, null);
+        
         try
         {
             // pffft final, what a wimpy modifier
-            Field modID             = GuiConfig.class.getDeclaredField("modID");
-            Field configElements    = GuiConfig.class.getDeclaredField("configElements");
-            
+            Field modID = GuiConfig.class.getDeclaredField("modID");
+            Field configElements = GuiConfig.class.getDeclaredField("configElements");
+
             modID.setAccessible(true);
             configElements.setAccessible(true);
-            
+
             modID.set(this, getConfigHandler().getModID());
             configElements.set(this, getConfigElements());
         }
@@ -54,15 +55,25 @@ public class BaseConfigGui extends GuiConfig
      */
     protected IConfigHandler getConfigHandler()
     {
-        return ConfigHandler.INSTANCE;
+        return ConfigHandler.instance();
+    }
+
+    /**
+     * The lang prefix to use before your section lang keys. Default is "config.".
+     */
+    protected String getLangPrefix()
+    {
+        return "config.";
     }
 
     @SuppressWarnings("rawtypes")
     private List<IConfigElement> getConfigElements()
     {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
-        String prefix = TTCore.lang.getPrefix() + ".config.";
+        String prefix = getLangPrefix();
         IConfigHandler config = getConfigHandler();
+
+        prefix = prefix.endsWith(".") ? prefix : prefix + ".";
 
         for (Section s : config.getSections())
         {

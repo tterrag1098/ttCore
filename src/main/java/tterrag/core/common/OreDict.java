@@ -20,7 +20,7 @@ public class OreDict
         safeRegister("blockHopper", Blocks.hopper);
         safeRegister("blockObsidian", Blocks.obsidian);
         safeRegister("itemNetherStar", Items.nether_star);
-       
+
         safeRegister("itemCoal", Items.coal);
         safeRegister("itemCharcoal", new ItemStack(Items.coal, 1, 1));
         safeRegister("pearlEnder", Items.ender_pearl);
@@ -32,7 +32,7 @@ public class OreDict
         safeRegister("itemGhastTear", Items.ghast_tear);
         safeRegister("dustGunpowder", Items.gunpowder);
         safeRegister("itemLeather", Items.leather);
-		
+
         safeRegister("slabWoodOak", new ItemStack(Blocks.wooden_slab, 1, 0));
         safeRegister("slabWoodSpruce", new ItemStack(Blocks.wooden_slab, 1, 1));
         safeRegister("slabWoodBirch", new ItemStack(Blocks.wooden_slab, 1, 2));
@@ -48,7 +48,7 @@ public class OreDict
         safeRegister("slabNetherBrick", new ItemStack(Blocks.stone_slab, 1, 6));
         safeRegister("slabQuartz", new ItemStack(Blocks.stone_slab, 1, 7));
     }
-    
+
     public static void safeRegister(String name, Block block)
     {
         safeRegister(name, Item.getItemFromBlock(block));
@@ -58,13 +58,13 @@ public class OreDict
     {
         safeRegister(name, new ItemStack(item));
     }
-    
+
     public static void safeRegister(String name, ItemStack stack)
     {
         if (!isRegistered(stack, OreDictionary.getOres(name)))
             OreDictionary.registerOre(name, stack);
     }
-    
+
     private static boolean isRegistered(ItemStack stack, ArrayList<ItemStack> toCheck)
     {
         for (ItemStack check : toCheck)

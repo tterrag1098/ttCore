@@ -7,7 +7,7 @@ import net.minecraft.util.StatCollector;
 public class Lang
 {
     private String locKey;
-    
+
     public String localize(String unloc, boolean appendModid)
     {
         if (appendModid)
@@ -25,7 +25,7 @@ public class Lang
     {
         return StatCollector.translateToLocal(unloc);
     }
-    
+
     public String[] localizeList(String unloc)
     {
         return splitList(localize(unloc, true));

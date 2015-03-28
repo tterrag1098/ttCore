@@ -2,6 +2,7 @@ package tterrag.core.common.config;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.NonNull;
@@ -20,6 +21,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public abstract class AbstractConfigHandler implements IConfigHandler
 {
+    /**
+     * Represents a section in a config handler.
+     */
     public class Section
     {
         public final String name;
@@ -56,7 +60,8 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         REQUIRES_WORLD_RESTART,
 
         /**
-         * This config requires the game to be restarted to take effect. {@code REQUIRES_WORLD_RESTART} is implied when using this.
+         * This config requires the game to be restarted to take effect.
+         * {@code REQUIRES_WORLD_RESTART} is implied when using this.
          */
         REQUIRES_MC_RESTART;
 
@@ -77,16 +82,26 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     /**
      * An object to represent a bounds limit on a property.
      * 
-     * @param <T> The type of the bound. Either {@link Integer} or {@link Double}
+     * @param <T> The type of the bound. Either {@link Integer}, {@link Double}, or {@link Float}
+     *            (will be cast to double)
      */
     public static class Bound<T>
     {
         private T min, max;
 
-        public Bound(T min, T max)
+        private Bound(T min, T max)
         {
             this.min = min;
             this.max = max;
+        }
+
+        /**
+         * Static factory method that returns a {@code Bound<T>} object of the type of the params
+         * passed.
+         */
+        public static <T> Bound<T> of(T min, T max)
+        {
+            return new Bound<T>(min, max);
         }
     }
 
@@ -99,8 +114,10 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     {
         this.modid = modid;
         FMLCommonHandler.instance().bus().register(this);
+        TTCore.instance.configs.add(this);
     }
 
+    @Override
     public final void initialize(File cfg)
     {
         config = new Configuration(cfg);
@@ -163,22 +180,50 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     /**
      * Refresh all config values that can only be loaded when NOT in-game.
      * <p>
-     * {@code reloadIngameConfigs()} will be called after this, do not duplicate calls in this method and that one.
+     * {@code reloadIngameConfigs()} will be called after this, do not duplicate calls in this
+     * method and that one.
      */
     protected abstract void reloadNonIngameConfigs();
 
     /**
      * Refresh all config values that can only be loaded when in-game.
      * <p>
-     * This is separated from {@code reloadNonIngameConfigs()} because some values may not be able to be modified at runtime.
+     * This is separated from {@code reloadNonIngameConfigs()} because some values may not be able
+     * to be modified at runtime.
      */
     protected abstract void reloadIngameConfigs();
 
+    /**
+     * Adds a section to your config to be used later
+     * 
+     * @param sectionName The name of the section. Will also be used as language key.
+     * @return A {@link Section} representing your section in the config
+     */
+    protected Section addSection(String sectionName)
+    {
+        return addSection(sectionName, sectionName, null);
+    }
+
+    /**
+     * Adds a section to your config to be used later
+     * 
+     * @param sectionName The name of the section
+     * @param langKey The language key to use to display your section name in the Config GUI
+     * @return A {@link Section} representing your section in the config
+     */
     protected Section addSection(String sectionName, String langKey)
     {
         return addSection(sectionName, langKey, null);
     }
 
+    /**
+     * Adds a section to your config to be used later
+     * 
+     * @param sectionName The name of the section
+     * @param langKey The language key to use to display your section name in the Config GUI
+     * @param comment The section comment
+     * @return A {@link Section} representing your section in the config
+     */
     protected Section addSection(String sectionName, String langKey, String comment)
     {
         Section section = new Section(sectionName, langKey);
@@ -204,16 +249,44 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
     }
 
+    /**
+     * Activates a section
+     * 
+     * @param sectionName The name of the section
+     * 
+     * @throws NullPointerException if {@code sectionName} is null
+     * @throws IllegalArgumentException if {@code sectionName} is not valid
+     */
     protected void activateSection(@NonNull String sectionName)
     {
-        activateSection(getSectionByName(sectionName));
+        Section section = getSectionByName(sectionName);
+        if (section == null)
+        {
+            throw new IllegalArgumentException("Section " + sectionName + " does not exist!");
+        }
+        activateSection(section);
     }
 
-    protected void activateSection(Section section)
+    /**
+     * Activates a section
+     * 
+     * @param sectionName The section to activate
+     * 
+     * @throws NullPointerException if {@code section} is null
+     */
+    protected void activateSection(@NonNull Section section)
     {
         activeSection = section;
     }
 
+    /**
+     * Gets a {@link Section} for a name
+     * 
+     * @param sectionName The name of the section
+     * @return A section object representing the section in your config with this name
+     * 
+     * @throws NullPointerException if {@code sectionName} is null
+     */
     protected Section getSectionByName(@NonNull String sectionName)
     {
         for (Section s : sections)
@@ -256,7 +329,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     {
         return getValue(key, null, defaultVal, req);
     }
-    
+
     /**
      * Gets a value from this config handler
      * 
@@ -305,7 +378,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     {
         return getValue(key, comment, defaultVal, req, null);
     }
-    
+
     /**
      * Gets a value from this config handler
      * 
@@ -387,9 +460,18 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         if (defaultVal instanceof String[]){ return (T) prop.getStringList(); }
         //@formatter:on
 
-        if (defaultVal instanceof Float || defaultVal instanceof Double) // there is no float type...yeah idk either
+        if (defaultVal instanceof Float || defaultVal instanceof Double) // there is no float
+                                                                         // type...yeah idk either
         {
-            return (T) Double.valueOf(prop.getDouble());
+            double d = prop.getDouble();
+            if (defaultVal instanceof Float)
+            {
+                return (T) Float.valueOf((float) d);
+            }
+            else
+            {
+                return (T) Double.valueOf(d);
+            }
         }
 
         throw new IllegalArgumentException("default value is not a config value type.");
@@ -402,14 +484,27 @@ public abstract class AbstractConfigHandler implements IConfigHandler
             prop.setMinValue((Integer) bound.min);
             prop.setMaxValue((Integer) bound.max);
         }
-        else if (bound.min instanceof Double)
+        else if (bound.min instanceof Double || bound.min instanceof Float)
         {
-            prop.setMinValue((Double) bound.min);
-            prop.setMaxValue((Double) bound.max);
+            double min, max;
+            if (bound.min instanceof Float)
+            {
+                min = ((Float) bound.min).doubleValue();
+                max = ((Float) bound.max).doubleValue();
+            }
+            else
+            {
+                min = (Double) bound.min;
+                max = (Double) bound.max;
+            }
+
+            prop.setMinValue(min);
+            prop.setMaxValue(max);
         }
         else
         {
             TTCore.logger.warn("A mod tried to set bounds on a property that was not either of Integer of Double type.");
+            TTCore.logger.warn("Trace :" + Arrays.toString(Thread.currentThread().getStackTrace()));
         }
     }
 
@@ -446,11 +541,11 @@ public abstract class AbstractConfigHandler implements IConfigHandler
 
         // @formatter:off
         // same logic as above method, mostly
-        if (defaultVal instanceof Integer) { prop = config.get(section.name, key, (Integer)  defaultVal); }
-        if (defaultVal instanceof Boolean) { prop = config.get(section.name, key, (Boolean)  defaultVal); }
-        if (defaultVal instanceof int[])   { prop = config.get(section.name, key, (int[])    defaultVal); }
-        if (defaultVal instanceof String)  { prop = config.get(section.name, key, (String )  defaultVal); }
-        if (defaultVal instanceof String[]){ prop = config.get(section.name, key, (String[]) defaultVal); }
+        if (defaultVal instanceof Integer)  { prop = config.get(section.name, key, (Integer)  defaultVal); }
+        if (defaultVal instanceof Boolean)  { prop = config.get(section.name, key, (Boolean)  defaultVal); }
+        if (defaultVal instanceof int[])    { prop = config.get(section.name, key, (int[])    defaultVal); }
+        if (defaultVal instanceof String)   { prop = config.get(section.name, key, (String )  defaultVal); }
+        if (defaultVal instanceof String[]) { prop = config.get(section.name, key, (String[]) defaultVal); }
         // @formatter:on
 
         if (defaultVal instanceof Float || defaultVal instanceof Double)
@@ -467,7 +562,27 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         throw new IllegalArgumentException("default value is not a config value type.");
     }
 
+    /**
+     * @return If this config handler should recieve {@link #initHook()} and {@link #postInitHook()}
+     *         during config reload events. If this returns false, these methods will only be called
+     *         on load.
+     *         <p>
+     *         Defaults to false.
+     */
+    protected boolean shouldHookOnReload()
+    {
+        return true;
+    }
+
     /* IConfigHandler impl */
+
+    @Override
+    public void initHook()
+    {}
+
+    @Override
+    public void postInitHook()
+    {}
 
     // no need to override these, they are merely utilities, and reference private fields anyways
 

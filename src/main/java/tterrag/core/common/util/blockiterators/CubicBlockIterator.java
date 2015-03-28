@@ -8,21 +8,21 @@ public class CubicBlockIterator extends AbstractBlockIterator
     protected int minX, minY, minZ;
     protected int curX, curY, curZ;
     protected int maxX, maxY, maxZ;
-    
+
     public CubicBlockIterator(BlockCoord base, int radius)
     {
         super(base);
         this.radius = radius;
-        
+
         curX = minX = base.x - radius;
         curY = minY = base.y - radius;
         curZ = minZ = base.z - radius;
-        
+
         maxX = base.x + radius;
         maxY = base.y + radius;
         maxZ = base.z + radius;
     }
-    
+
     @Override
     public BlockCoord next()
     {
@@ -32,7 +32,7 @@ public class CubicBlockIterator extends AbstractBlockIterator
         curZ = curY == minY && curX == minX ? curZ + 1 : curZ;
         return ret;
     }
-    
+
     @Override
     public boolean hasNext()
     {

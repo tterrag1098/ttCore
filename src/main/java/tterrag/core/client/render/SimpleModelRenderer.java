@@ -17,7 +17,7 @@ public class SimpleModelRenderer implements ISimpleBlockRenderingHandler
     private final Tessellator tes = Tessellator.instance;
 
     private final WavefrontObject model;
-    
+
     @Getter
     private final int renderId;
 

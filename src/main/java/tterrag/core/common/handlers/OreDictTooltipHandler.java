@@ -20,7 +20,7 @@ public class OreDictTooltipHandler
         {
             event.toolTip.add(Item.itemRegistry.getNameForObject(event.itemStack.getItem()));
         }
-     
+
         if (ConfigHandler.showOredictTooltips)
         {
             int[] ids = OreDictionary.getOreIDs(event.itemStack);

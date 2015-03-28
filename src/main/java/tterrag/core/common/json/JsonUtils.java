@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 public class JsonUtils
 {
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    
+
     public static Object parseStringIntoRecipeItem(String string)
     {
         return parseStringIntoRecipeItem(string, false);
@@ -20,7 +20,11 @@ public class JsonUtils
 
     public static Object parseStringIntoRecipeItem(String string, boolean forceItemStack)
     {
-        if (OreDictionary.getOres(string).isEmpty())
+        if ("null".equals(string))
+        {
+            return null;
+        }
+        else if (OreDictionary.getOres(string).isEmpty())
         {
             ItemStack stack = null;
 
@@ -43,7 +47,8 @@ public class JsonUtils
             }
             else if (temp instanceof ItemStack)
             {
-                ((ItemStack) temp).setItemDamage(damage);
+                stack = ((ItemStack) temp).copy();
+                stack.setItemDamage(damage);
             }
             else
             {
@@ -55,23 +60,23 @@ public class JsonUtils
         }
         else if (forceItemStack)
         {
-            return OreDictionary.getOres(string).get(0);
+            return OreDictionary.getOres(string).get(0).copy();
         }
         else
         {
             return string;
         }
     }
-    
+
     public static ItemStack parseStringIntoItemStack(String string)
     {
         int size = 1;
         int idx = string.indexOf('#');
-       
+
         if (idx != -1)
         {
             String num = string.substring(idx + 1);
-            
+
             try
             {
                 size = Integer.parseInt(num);
@@ -80,12 +85,45 @@ public class JsonUtils
             {
                 throw new IllegalArgumentException(num + " is not a valid stack size");
             }
-         
+
             string = string.substring(0, idx);
         }
-        
+
         ItemStack stack = (ItemStack) parseStringIntoRecipeItem(string, true);
         stack.stackSize = MathHelper.clamp_int(size, 1, stack.getMaxStackSize());
         return stack;
+    }
+
+    /**
+     * Returns the appropriate config string for the given {@link ItemStack}
+     * <p>
+     * This does not take into account ore dict.
+     * 
+     * @param stack The {@link ItemStack} to serialize
+     * @param damage If damage should be taken into account
+     * @param size If stack size should be taken into account
+     * @return A string that will be the equivalent of if {@link ItemStack stack} was constructed
+     *         from it using {@link #parseStringIntoItemStack(String)}
+     */
+    public static String getStringForItemStack(ItemStack stack, boolean damage, boolean size)
+    {
+        if (stack == null)
+        {
+            return null;
+        }
+
+        String base = Item.itemRegistry.getNameForObject(stack.getItem());
+
+        if (damage)
+        {
+            base += ";" + stack.getItemDamage();
+        }
+
+        if (size)
+        {
+            base += "#" + stack.stackSize;
+        }
+
+        return base;
     }
 }

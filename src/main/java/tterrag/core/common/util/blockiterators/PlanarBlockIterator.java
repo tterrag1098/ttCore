@@ -8,10 +8,10 @@ public class PlanarBlockIterator extends CubicBlockIterator
     public static enum Orientation
     {
         EAST_WEST, NORTH_SOUTH, HORIZONTAL;
-        
+
         public static Orientation perpendicular(ForgeDirection dir)
         {
-            switch(dir)
+            switch (dir)
             {
             case DOWN:
             case UP:
@@ -27,13 +27,13 @@ public class PlanarBlockIterator extends CubicBlockIterator
             }
         }
     }
- 
+
     private Orientation orientation;
-    
+
     public PlanarBlockIterator(BlockCoord base, Orientation orientation, int radius)
     {
         super(base, radius);
-        
+
         this.orientation = orientation;
     }
 

@@ -10,6 +10,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import tterrag.core.api.client.model.IModelTT;
 
@@ -23,7 +24,7 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
     private IModelCustom model;
     private ResourceLocation texture;
     private IModelTT modelSMT;
-    
+
     public DirectionalModelRenderer(ResourceLocation model, ResourceLocation texture)
     {
         this.model = AdvancedModelLoader.loadModel(model);
@@ -35,7 +36,7 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
         this.modelSMT = model;
         this.texture = texture;
     }
-    
+
     private void renderDirectionalTileEntityAt(T tile, double x, double y, double z, int metaOverride)
     {
         int meta = getMetadata(tile, metaOverride);
@@ -43,24 +44,24 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
         rotate(getRotation(tile, metaOverride));
         renderModel(tile, meta);
     }
-    
+
     protected final int getMetadata(T tile, int metaOverride)
     {
         return metaOverride >= 0 ? metaOverride : tile.getBlockMetadata();
     }
-    
+
     protected void setup(double x, double y, double z, int metaOverride)
     {
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5f, (float) y - (metaOverride >= 0 ? 0.1f : 0), (float) z + 0.5f);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
     }
-    
+
     protected int getRotation(T tile, int metaOverride)
     {
         return getMetadata(tile, metaOverride);
     }
-    
+
     protected void rotate(int rotation)
     {
         switch (rotation)
@@ -87,7 +88,7 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
             break;
         }
     }
-    
+
     protected void renderModel(T tile, int meta)
     {
         if (model != null)
@@ -127,7 +128,7 @@ public class DirectionalModelRenderer<T extends TileEntity> extends TileEntitySp
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
         GL11.glPushMatrix();
-
+        
         switch (type)
         {
         case ENTITY:
