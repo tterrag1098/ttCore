@@ -71,7 +71,7 @@ public class TTCore implements IModTT
         ConfigHandler.ttConfigFolder = new File(ConfigHandler.configFolder.getPath() + "/" + MODID);
         ConfigHandler.configFile = new File(ConfigHandler.ttConfigFolder.getPath() + "/" + event.getSuggestedConfigurationFile().getName());
 
-        if (!ConfigHandler.configFile.exists())
+        if (!ConfigHandler.configFile.exists() && event.getSuggestedConfigurationFile().exists())
         {
             FileUtils.copyFile(event.getSuggestedConfigurationFile(), ConfigHandler.configFile);
             TTFileUtils.safeDelete(event.getSuggestedConfigurationFile());
