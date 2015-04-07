@@ -105,8 +105,9 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
     }
 
-    private String modid;
-    private Configuration config;
+    String modid;
+    Configuration config;
+    
     private List<Section> sections = new ArrayList<Section>();
     private Section activeSection = null;
 
@@ -133,10 +134,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
 
     protected void saveConfigFile()
     {
-        if (config.hasChanged())
-        {
-            config.save();
-        }
+        config.save();
     }
 
     @SubscribeEvent

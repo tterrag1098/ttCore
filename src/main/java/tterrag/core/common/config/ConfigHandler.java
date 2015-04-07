@@ -67,7 +67,6 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     protected ConfigHandler()
     {
         super(TTCore.MODID);
-        processor = new ConfigProcessor(getClass(), configFile, TTCore.MODID, this);
     }
 
     @Override
@@ -76,6 +75,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         addSection("general");
         addSection("enchants");
         addSection("tweaks");
+        processor = new ConfigProcessor(getClass(), this, this);
         processor.process(true);
     }
 

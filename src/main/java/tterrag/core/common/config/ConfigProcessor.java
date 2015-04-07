@@ -21,6 +21,10 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 
+/**
+ * This class can be used to automatically process {@link Config} annotations on fields, and sync the data in those fields to clients. It will also
+ * automatically respond to all config changed events and handle them appropriately.
+ */
 public class ConfigProcessor
 {
     public interface IReloadCallback
@@ -59,13 +63,47 @@ public class ConfigProcessor
      * @param modid
      *            The modid of the owner mod
      * @param callback
-     *            an {@link IReloadCallback} object which will be called
-     *            whenever config values are edited.
+     *            an {@link IReloadCallback} object which will be called whenever config values are edited.
      */
     public ConfigProcessor(Class<?> configs, File configFile, String modid, IReloadCallback callback)
     {
+        this(configs, new Configuration(configFile), modid, callback);
+    }
+
+    /**
+     * Use this constructor if you are using a {@code ConfigProcessor} alongside an {@link AbstractConfigHandler}. Do not pass a handler that has not
+     * been {@link AbstractConfigHandler#initialize(File) initialized}!
+     * 
+     * @param configs
+     *            The class which contains your {@link Config} annotations (typically same class as your {@link AbstractConfigHandler handler})
+     * @param handler
+     *            Your {@link AbstractConfigHandler}
+     */
+    public ConfigProcessor(Class<?> configs, AbstractConfigHandler handler)
+    {
+        this(configs, handler, null);
+    }
+
+    /**
+     * Use this constructor if you are using a {@code ConfigProcessor} alongside an {@link AbstractConfigHandler}. Do not pass a handler that has not
+     * been {@link AbstractConfigHandler#initialize(File) initialized}!
+     * 
+     * @param configs
+     *            The class which contains your {@link Config} annotations (typically same class as your {@link AbstractConfigHandler handler})
+     * @param handler
+     *            Your {@link AbstractConfigHandler}
+     * @param callback
+     *            an {@link IReloadCallback} object which will be called whenever config values are edited.
+     */
+    public ConfigProcessor(Class<?> configs, AbstractConfigHandler handler, IReloadCallback callback)
+    {
+        this(configs, handler.config, handler.modid, callback);
+    }
+
+    private ConfigProcessor(Class<?> configs, Configuration configFile, String modid, IReloadCallback callback)
+    {
         this.configs = configs;
-        this.configFile = new Configuration(configFile);
+        this.configFile = configFile;
         this.modid = modid;
         this.callback = callback;
         processorMap.put(modid, this);
@@ -81,12 +119,11 @@ public class ConfigProcessor
 
         try
         {
-            boolean fieldsChanged = false;
             for (Field f : configs.getDeclaredFields())
             {
-                fieldsChanged |= processField(f);
+                processField(f);
             }
-            if (fieldsChanged && callback != null)
+            if (callback != null)
             {
                 callback.callback(this);
             }
@@ -96,10 +133,7 @@ public class ConfigProcessor
             throw new RuntimeException(e);
         }
 
-        if (configFile.hasChanged())
-        {
-            configFile.save();
-        }
+        configFile.save();
     }
 
     // returns true if the config value changed
@@ -127,27 +161,27 @@ public class ConfigProcessor
         Object ret = null;
         if (defVal instanceof Boolean)
         {
-            prop = configFile.get(cfg.section(), f.getName(), (Boolean) defVal);
+            prop = configFile.get(cfg.section(), f.getName(), (Boolean) defVal, cfg.comment());
             ret = prop.getBoolean();
         }
         else if (defVal instanceof Integer)
         {
-            prop = configFile.get(cfg.section(), f.getName(), (Integer) defVal);
+            prop = configFile.get(cfg.section(), f.getName(), (Integer) defVal, cfg.comment());
             ret = prop.getInt();
         }
         else if (defVal instanceof Double)
         {
-            prop = configFile.get(cfg.section(), f.getName(), (Double) defVal);
+            prop = configFile.get(cfg.section(), f.getName(), (Double) defVal, cfg.comment());
             ret = prop.getDouble();
         }
         else if (defVal instanceof String)
         {
-            prop = configFile.get(cfg.section(), f.getName(), (String) defVal);
+            prop = configFile.get(cfg.section(), f.getName(), (String) defVal, cfg.comment());
             ret = prop.getString();
         }
         else if (defVal instanceof String[])
         {
-            prop = configFile.get(cfg.section(), f.getName(), (String[]) defVal);
+            prop = configFile.get(cfg.section(), f.getName(), (String[]) defVal, cfg.comment());
             ret = prop.getStringList();
         }
         if (cfg.min() > Integer.MIN_VALUE)
