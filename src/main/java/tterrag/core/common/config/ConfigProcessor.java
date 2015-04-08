@@ -31,6 +31,8 @@ import cpw.mods.fml.common.gameevent.PlayerEvent;
 /**
  * This class can be used to automatically process {@link Config} annotations on fields, and sync the data in those fields to clients. It will also
  * automatically respond to all config changed events and handle them appropriately.
+ * 
+ * @see #process(boolean)
  */
 public class ConfigProcessor
 {
@@ -117,6 +119,12 @@ public class ConfigProcessor
         FMLCommonHandler.instance().bus().register(this);
     }
 
+    /**
+     * Processes all the configs in this processors class, optionally loading them from file first.
+     * 
+     * @param load
+     *            If true, the values from the file will be loaded. Otherwise, the values existing in memory will be used.
+     */
     public void process(boolean load)
     {
         if (load)
@@ -254,7 +262,7 @@ public class ConfigProcessor
     {
         return f.getAnnotation(NoSync.class) != null;
     }
-    
+
     private RestartReqs getRestartReq(Field f)
     {
         RestartReq r = f.getAnnotation(RestartReq.class);
