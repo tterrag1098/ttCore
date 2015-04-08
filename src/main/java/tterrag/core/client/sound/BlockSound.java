@@ -1,13 +1,17 @@
 package tterrag.core.client.sound;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.util.ResourceLocation;
 
+@Accessors(chain = true)
 public class BlockSound extends PositionedSound implements ITickableSound
 {
     @Getter
+    @Setter
     private boolean donePlaying = false;
 
     public BlockSound(ResourceLocation p_i45103_1_)
@@ -24,12 +28,6 @@ public class BlockSound extends PositionedSound implements ITickableSound
     public BlockSound setPitch(float pitch)
     {
         this.field_147663_c = pitch;
-        return this;
-    }
-
-    public BlockSound setDonePlaying(boolean bool)
-    {
-        this.donePlaying = bool;
         return this;
     }
 

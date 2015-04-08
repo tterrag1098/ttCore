@@ -2,6 +2,7 @@ package tterrag.core.common.util;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Wither;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +14,7 @@ import net.minecraft.world.World;
 @EqualsAndHashCode
 public class BlockCoord
 {
+    @Wither
     public int x, y, z;
 
     public BlockCoord(Entity e)

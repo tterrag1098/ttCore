@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -15,6 +14,7 @@ import net.minecraftforge.common.config.Property.Type;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.config.IConfigHandler;
 import tterrag.core.common.event.ConfigFileChangedEvent;
+import tterrag.core.common.util.Bound;
 
 import com.google.common.collect.ImmutableList;
 
@@ -78,39 +78,6 @@ public abstract class AbstractConfigHandler implements IConfigHandler
                 prop.setRequiresWorldRestart(true);
             }
             return prop;
-        }
-    }
-
-    /**
-     * An object to represent a bounds limit on a property.
-     * 
-     * @param <T>
-     *            The type of the bound. Either {@link Integer}, {@link Double}, or {@link Float} (will be cast to double)
-     */
-    @EqualsAndHashCode
-    public static class Bound<T extends Number>
-    {
-        public static final Bound<Double> MAX_BOUND = Bound.of(Double.MIN_VALUE, Double.MAX_VALUE);
-
-        public final T min, max;
-
-        private Bound(T min, T max)
-        {
-            this.min = min;
-            this.max = max;
-        }
-
-        /**
-         * Static factory method that returns a {@code Bound<T>} object of the type of the params passed.
-         */
-        public static <T extends Number> Bound<T> of(T min, T max)
-        {
-            return new Bound<T>(min, max);
-        }
-
-        public T bound(T val)
-        {
-            return val.doubleValue() < min.doubleValue() ? min : val.doubleValue() > max.doubleValue() ? max : val;
         }
     }
 
@@ -521,7 +488,6 @@ public abstract class AbstractConfigHandler implements IConfigHandler
             bound = Bound.MAX_BOUND;
         }
 
-        // @formatter:off
         if (defaultVal instanceof Integer)
         {
             Bound<Integer> b = Bound.of(bound.min.intValue(), bound.max.intValue());
@@ -553,12 +519,6 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         {
             return (T) prop.getStringList();
         }
-        // @formatter:on
-
-        if (defaultVal instanceof Float || defaultVal instanceof Double) // there is no float type...yeah idk either
-        {
-
-        }
 
         throw new IllegalArgumentException("default value is not a config value type.");
     }
@@ -587,21 +547,21 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     }
 
     @SuppressWarnings("unchecked")
-    static <T extends Number> T boundValue(Property prop, Bound<T> bound, T defVal)
+    static <T extends Number & Comparable<T>> T boundValue(Property prop, Bound<T> bound, T defVal)
     {
         if (defVal instanceof Integer)
         {
-            prop.set(((Bound<Integer>) bound).bound(prop.getInt()));
+            prop.set(((Bound<Integer>) bound).clamp(prop.getInt()));
             return (T) Integer.valueOf(prop.getInt());
         }
         if (defVal instanceof Double)
         {
-            prop.set(((Bound<Double>) bound).bound(prop.getDouble()));
+            prop.set(((Bound<Double>) bound).clamp(prop.getDouble()));
             return (T) Double.valueOf(prop.getDouble());
         }
         if (defVal instanceof Float)
         {
-            prop.set(((Bound<Float>) bound).bound(Double.valueOf(prop.getDouble()).floatValue()));
+            prop.set(((Bound<Float>) bound).clamp(Double.valueOf(prop.getDouble()).floatValue()));
             return (T) Float.valueOf(Double.valueOf(prop.getDouble()).floatValue());
         }
         throw new IllegalArgumentException(bound.min.getClass().getName() + " is not a valid config type.");

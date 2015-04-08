@@ -1,25 +1,29 @@
 package tterrag.core.common.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
 import tterrag.core.TTCore;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TTStringUtils
+@UtilityClass
+public class TTStringUtils
 {
     /**
      * Formats a string and number for use in GUIs and tooltips
      * 
-     * @param prefix - The string to put before the formatted number
-     * @param suffix - The string to put after the formatted number
-     * @param amnt - The number to be formatted
-     * @param useDecimals - Whether or not to use decimals in the representation
-     * @param formatK - Whether or not to format the thousands
+     * @param prefix
+     *            - The string to put before the formatted number
+     * @param suffix
+     *            - The string to put after the formatted number
+     * @param amnt
+     *            - The number to be formatted
+     * @param useDecimals
+     *            - Whether or not to use decimals in the representation
+     * @param formatK
+     *            - Whether or not to format the thousands
      * @return
      */
-    public static String formatString(String prefix, String suffix, long amnt, boolean useDecimals, boolean formatK)
+    public String formatString(String prefix, String suffix, long amnt, boolean useDecimals, boolean formatK)
     {
         if (formatK && Long.toString(amnt).length() < 7 && Long.toString(amnt).length() > 3)
         {
@@ -54,22 +58,26 @@ public final class TTStringUtils
             return prefix;
         }
     }
-    
+
     /**
      * Formats a string and number for use in GUIs and tooltips
      * 
-     * @param prefix - The string to put before the formatted number
-     * @param suffix - The string to put after the formatted number
-     * @param amnt - The number to be formatted
-     * @param useDecimals - Whether or not to use decimals in the representation
+     * @param prefix
+     *            - The string to put before the formatted number
+     * @param suffix
+     *            - The string to put after the formatted number
+     * @param amnt
+     *            - The number to be formatted
+     * @param useDecimals
+     *            - Whether or not to use decimals in the representation
      * @return
      */
-    public static String formatString(String prefix, String suffix, long amnt, boolean useDecimals)
+    public String formatString(String prefix, String suffix, long amnt, boolean useDecimals)
     {
         return formatString(prefix, suffix, amnt, useDecimals, false);
     }
 
-    private static String formatSmallerNumber(String prefix, String suffix, long amnt, boolean useDecimals)
+    private String formatSmallerNumber(String prefix, String suffix, long amnt, boolean useDecimals)
     {
         switch (Long.toString(amnt).length())
         {
@@ -85,16 +93,20 @@ public final class TTStringUtils
         }
         return "";
     }
-    
+
     /**
      * Returns a color for the number passed, based on its percentage of the max
      * 
-     * @param num The number to compare
-     * @param max The max number
+     * @param num
+     *            The number to compare
+     * @param max
+     *            The max number
      * 
-     * @return if num <= 10% of max : RED<br>if 10% < num <= 25% of max: GOLD (orange-ish)<br>if num > 25% of max: GREEN
+     * @return if num <= 10% of max : RED<br>
+     *         if 10% < num <= 25% of max: GOLD (orange-ish)<br>
+     *         if num > 25% of max: GREEN
      */
-    public static EnumChatFormatting getColorFor(double num, double max)
+    public EnumChatFormatting getColorFor(double num, double max)
     {
         if (num / max <= .1)
             return EnumChatFormatting.RED;
@@ -103,16 +115,16 @@ public final class TTStringUtils
         else
             return EnumChatFormatting.GREEN;
     }
-    
-    public static String getEffectNameWithLevel(PotionEffect effect)
+
+    public String getEffectNameWithLevel(PotionEffect effect)
     {
         String name = TTCore.lang.localize(effect.getEffectName(), false);
-        
+
         if (effect.getAmplifier() > 0)
         {
             name += " " + TTCore.lang.localize("enchantment.level." + (effect.getAmplifier() + 1), false);
         }
-        
+
         return name;
     }
 }

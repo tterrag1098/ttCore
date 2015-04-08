@@ -24,7 +24,7 @@ minecraft {
 }
 
 dependencies {
-    compile "org.projectlombok:lombok:1.14.8"
+    compile "org.projectlombok:lombok:1.16.2"
 }
 
 processResources {

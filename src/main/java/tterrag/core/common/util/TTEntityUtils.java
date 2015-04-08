@@ -2,8 +2,7 @@ package tterrag.core.common.util;
 
 import java.util.Random;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.init.Items;
@@ -14,24 +13,24 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TTEntityUtils
+@UtilityClass
+public class TTEntityUtils
 {
-    private static final Random rand = new Random();
+    private final Random rand = new Random();
 
-    public static void setEntityVelocity(Entity entity, double velX, double velY, double velZ)
+    public void setEntityVelocity(Entity entity, double velX, double velY, double velZ)
     {
         entity.motionX = velX;
         entity.motionY = velY;
         entity.motionZ = velZ;
     }
 
-    public static EntityFireworkRocket getRandomFirework(World world)
+    public EntityFireworkRocket getRandomFirework(World world)
     {
         return getRandomFirework(world, new BlockCoord(0, 0, 0));
     }
-    
-    public static EntityFireworkRocket getRandomFirework(World world, BlockCoord pos)
+
+    public EntityFireworkRocket getRandomFirework(World world, BlockCoord pos)
     {
         ItemStack firework = new ItemStack(Items.fireworks);
         firework.stackTagCompound = new NBTTagCompound();
@@ -60,19 +59,19 @@ public final class TTEntityUtils
         EntityFireworkRocket e = new EntityFireworkRocket(world, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, firework);
         return e;
     }
-    
-    public static void spawnFirework(BlockCoord block, int dimID)
+
+    public void spawnFirework(BlockCoord block, int dimID)
     {
         spawnFirework(block, dimID, 0);
     }
 
-    public static void spawnFirework(BlockCoord block, int dimID, int range)
+    public void spawnFirework(BlockCoord block, int dimID, int range)
     {
         World world = DimensionManager.getWorld(dimID);
 
         BlockCoord pos = new BlockCoord(0, 0, 0);
         pos.setPosition(block.x, block.y, block.z);
-        
+
         // don't bother if there's no randomness at all
         if (range > 0)
         {
@@ -92,7 +91,7 @@ public final class TTEntityUtils
         world.spawnEntityInWorld(getRandomFirework(world, pos));
     }
 
-    private static double moveRandomly(double base, double range)
+    private double moveRandomly(double base, double range)
     {
         return base + 0.5 + rand.nextDouble() * range - (range / 2);
     }

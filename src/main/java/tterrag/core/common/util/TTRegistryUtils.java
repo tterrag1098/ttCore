@@ -3,14 +3,16 @@ package tterrag.core.common.util;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+
 import org.apache.logging.log4j.Level;
 
 import com.google.common.collect.ObjectArrays;
 
-import lombok.SneakyThrows;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderException;
@@ -18,16 +20,15 @@ import cpw.mods.fml.common.LoaderState;
 import cpw.mods.fml.common.registry.GameData;
 
 /**
- * This class provides a few utility methods to regain the ability to register
- * items/blocks to a modid other than the active mod's. This is useful when
- * registering items/blocks inside Compat classes (as the active mod at that
- * time is always ttCore).
+ * This class provides a few utility methods to regain the ability to register items/blocks to a modid other than the active mod's. This is useful
+ * when registering items/blocks inside Compat classes (as the active mod at that time is always ttCore).
  */
+@UtilityClass
 public class TTRegistryUtils
 {
-    private static Method getMain;
-    private static Method registerItem;
-    private static Method registerBlock;
+    private Method getMain;
+    private Method registerItem;
+    private Method registerBlock;
 
     static
     {
@@ -47,8 +48,7 @@ public class TTRegistryUtils
     }
 
     /**
-     * Registers an item with a custom modid prefix. This method exists due to
-     * the fact that FML dropped support for registering items to modids other
+     * Registers an item with a custom modid prefix. This method exists due to the fact that FML dropped support for registering items to modids other
      * than the currently active container.
      * 
      * @param item
@@ -59,15 +59,14 @@ public class TTRegistryUtils
      *            The name of the item
      */
     @SneakyThrows
-    public static void registerItem(Item item, String modid, String name)
+    public void registerItem(Item item, String modid, String name)
     {
         registerItem.invoke(getMain.invoke(null), item, modid + ":" + name, -1);
     }
 
     /**
-     * Registers a block with a custom modid prefix. This method exists due to
-     * the fact that FML dropped support for registering blocks to modids other
-     * than the currently active container.
+     * Registers a block with a custom modid prefix. This method exists due to the fact that FML dropped support for registering blocks to modids
+     * other than the currently active container.
      * 
      * @param block
      *            The block to register
@@ -76,15 +75,14 @@ public class TTRegistryUtils
      * @param name
      *            The name of the block
      */
-    public static void registerBlock(Block block, String modid, String name)
+    public void registerBlock(Block block, String modid, String name)
     {
         registerBlock(block, null, modid, name);
     }
 
     /**
-     * Registers a block with a custom modid prefix. This method exists due to
-     * the fact that FML dropped support for registering blocks to modids other
-     * than the currently active container.
+     * Registers a block with a custom modid prefix. This method exists due to the fact that FML dropped support for registering blocks to modids
+     * other than the currently active container.
      * 
      * @param block
      *            The block to register
@@ -98,7 +96,7 @@ public class TTRegistryUtils
      *            Objects to pass as arguments to the ItemBlock.
      */
     @SneakyThrows
-    public static void registerBlock(Block block, Class<? extends ItemBlock> itemclass, String modid, String name, Object... itemCtorArgs)
+    public void registerBlock(Block block, Class<? extends ItemBlock> itemclass, String modid, String name, Object... itemCtorArgs)
     {
         if (Loader.instance().isInState(LoaderState.CONSTRUCTING))
         {

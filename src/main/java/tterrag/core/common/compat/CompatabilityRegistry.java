@@ -8,6 +8,7 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -19,10 +20,11 @@ import cpw.mods.fml.common.event.FMLStateEvent;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompatabilityRegistry
 {
+    @Value
     private static class Registration
     {
-        private final String[] modids;
-        private final RegisterTime[] times;
+        String[] modids;
+        RegisterTime[] times;
 
         private Registration(RegisterTime time, String... modids)
         {

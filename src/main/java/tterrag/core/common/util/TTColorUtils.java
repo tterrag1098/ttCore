@@ -1,19 +1,18 @@
 package tterrag.core.common.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 
 import org.lwjgl.opengl.GL11;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TTColorUtils
+@UtilityClass
+public class TTColorUtils
 {
     /**
      * Turns an int into a glColor4f function
      * 
      * @author Buildcraft team
      */
-    public static void setGLColorFromInt(int color)
+    public void setGLColorFromInt(int color)
     {
         float red = (color >> 16 & 255) / 255.0F;
         float green = (color >> 8 & 255) / 255.0F;
@@ -21,7 +20,7 @@ public final class TTColorUtils
         GL11.glColor4f(red, green, blue, 1.0F);
     }
 
-    public static int toHex(int r, int g, int b)
+    public int toHex(int r, int g, int b)
     {
         int hex = 0;
         hex = hex | ((r) << 16);

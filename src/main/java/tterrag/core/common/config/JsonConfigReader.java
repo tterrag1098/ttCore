@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 import tterrag.core.common.util.TTFileUtils;
 
 import com.google.gson.Gson;
@@ -40,8 +39,7 @@ public class JsonConfigReader<T> implements Iterable<T>
      * <b>mainClass</b> is a class in your mod so that files can be copied out of your jar.<br>
      * <b>assetPath</b> is the path to your default json file. This includes the /modid part and whatever subfolders follow.
      */
-    @AllArgsConstructor
-    @Getter
+    @Value
     public static class ModToken
     {
         private Class<?> mainClass;

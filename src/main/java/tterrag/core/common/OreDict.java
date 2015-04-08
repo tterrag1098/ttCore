@@ -2,8 +2,7 @@ package tterrag.core.common;
 
 import java.util.ArrayList;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -11,10 +10,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class OreDict
 {
-    public static void registerVanilla()
+    public void registerVanilla()
     {
         safeRegister("barsIron", Blocks.iron_bars);
         safeRegister("blockHopper", Blocks.hopper);
@@ -49,27 +48,28 @@ public class OreDict
         safeRegister("slabQuartz", new ItemStack(Blocks.stone_slab, 1, 7));
     }
 
-    public static void safeRegister(String name, Block block)
+    public void safeRegister(String name, Block block)
     {
         safeRegister(name, Item.getItemFromBlock(block));
     }
 
-    public static void safeRegister(String name, Item item)
+    public void safeRegister(String name, Item item)
     {
         safeRegister(name, new ItemStack(item));
     }
 
-    public static void safeRegister(String name, ItemStack stack)
+    public void safeRegister(String name, ItemStack stack)
     {
         if (!isRegistered(stack, OreDictionary.getOres(name)))
             OreDictionary.registerOre(name, stack);
     }
 
-    private static boolean isRegistered(ItemStack stack, ArrayList<ItemStack> toCheck)
+    private boolean isRegistered(ItemStack stack, ArrayList<ItemStack> toCheck)
     {
         for (ItemStack check : toCheck)
         {
-            if (stack != null && stack.getItem() == check.getItem() && (stack.getItemDamage() == check.getItemDamage() || stack.getItemDamage() == OreDictionary.WILDCARD_VALUE))
+            if (stack != null && stack.getItem() == check.getItem()
+                    && (stack.getItemDamage() == check.getItemDamage() || stack.getItemDamage() == OreDictionary.WILDCARD_VALUE))
             {
                 return true;
             }

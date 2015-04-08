@@ -1,7 +1,6 @@
 package tterrag.core.common.transform;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.Container;
@@ -18,10 +17,10 @@ import tterrag.core.common.event.ArrowUpdateEvent;
 import tterrag.core.common.event.ItemStackEvent.ItemEnchantabilityEvent;
 import tterrag.core.common.event.ItemStackEvent.ItemRarityEvent;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class TTCoreMethods
 {
-    public static boolean hasVoidParticles(WorldType type, boolean hasSky)
+    public boolean hasVoidParticles(WorldType type, boolean hasSky)
     {
         if (ConfigHandler.disableVoidFog == 0)
         {
@@ -37,32 +36,32 @@ public class TTCoreMethods
         }
     }
 
-    public static int getMaxAnvilCost()
+    public int getMaxAnvilCost()
     {
         return ConfigHandler.anvilMaxLevel;
     }
 
-    public static int getItemEnchantability(ItemStack stack, int base)
+    public int getItemEnchantability(ItemStack stack, int base)
     {
         ItemEnchantabilityEvent event = new ItemEnchantabilityEvent(stack, base);
         MinecraftForge.EVENT_BUS.post(event);
         return event.enchantability;
     }
 
-    public static EnumRarity getItemRarity(ItemStack stack)
+    public EnumRarity getItemRarity(ItemStack stack)
     {
         ItemRarityEvent event = new ItemRarityEvent(stack, stack.getItem().getRarity(stack));
         MinecraftForge.EVENT_BUS.post(event);
         return event.rarity;
     }
 
-    public static void onArrowUpdate(EntityArrow entity)
+    public void onArrowUpdate(EntityArrow entity)
     {
         MinecraftForge.EVENT_BUS.post(new ArrowUpdateEvent(entity));
     }
 
     // mostly copied from ContainerFurnace
-    public static ItemStack transferStackInSlot(ContainerFurnace inv, EntityPlayer p_82846_1_, int p_82846_2_)
+    public ItemStack transferStackInSlot(ContainerFurnace inv, EntityPlayer p_82846_1_, int p_82846_2_)
     {
         ItemStack itemstack = null;
         Slot slot = (Slot) inv.inventorySlots.get(p_82846_2_);
@@ -144,7 +143,7 @@ public class TTCoreMethods
     }
 
     // copied from Container
-    private static boolean mergeItemStack(Container inv, ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
+    private boolean mergeItemStack(Container inv, ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
     {
         boolean flag1 = false;
         int k = p_75135_2_;

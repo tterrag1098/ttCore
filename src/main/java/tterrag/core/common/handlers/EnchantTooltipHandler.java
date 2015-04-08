@@ -19,7 +19,7 @@ public class EnchantTooltipHandler
     @SubscribeEvent
     public void handleTooltip(ItemTooltipEvent event)
     {
-        if (event.itemStack.stackTagCompound != null)
+        if (event.itemStack.hasTagCompound())
         {
             Map<Integer, Integer> enchantments = EnchantmentHelper.getEnchantments(event.itemStack);
 

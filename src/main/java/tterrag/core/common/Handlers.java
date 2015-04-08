@@ -12,8 +12,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -33,13 +33,12 @@ import cpw.mods.fml.common.ModContainer;
 
 import static tterrag.core.common.Handlers.Handler.Inst.*;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class Handlers
 {
     /**
-     * To be put on classes that are Forge/FML event handlers. If you are using this from another
-     * mod, be sure to implement {@link IModTT} on your {@code @Mod} class, or call
-     * {@code Handlers.addPackage("your.base.package")} so that this class can search your classes
+     * To be put on classes that are Forge/FML event handlers. If you are using this from another mod, be sure to implement {@link IModTT} on your
+     * {@code @Mod} class, or call {@code Handlers.addPackage("your.base.package")} so that this class can search your classes
      * <p>
      * Class must have either:<br>
      * A public no args constructor (or lombok {@link NoArgsConstructor}) <b>OR</b><br>
@@ -66,8 +65,7 @@ public class Handlers
         public enum Inst
         {
             /**
-             * The default, will try all three methods, in the order {@link Inst#CONSTRUCTOR},
-             * {@link Inst#FIELD}, {@link Inst#METHOD}
+             * The default, will try all three methods, in the order {@link Inst#CONSTRUCTOR}, {@link Inst#FIELD}, {@link Inst#METHOD}
              */
             AUTO,
 
@@ -103,9 +101,9 @@ public class Handlers
         Inst getInstFrom() default AUTO;
     }
 
-    private static Set<String> packageSet = new HashSet<String>();
+    private Set<String> packageSet = new HashSet<String>();
 
-    public static void findPackages()
+    public void findPackages()
     {
         for (ModContainer mod : Loader.instance().getActiveModList())
         {
@@ -116,7 +114,7 @@ public class Handlers
         }
     }
 
-    private static String getEnclosingPackage(Object obj)
+    private String getEnclosingPackage(Object obj)
     {
         Class<?> modClass = obj.getClass();
 
@@ -132,17 +130,16 @@ public class Handlers
 
         String name = modClass.getName();
         int lastDot = name.lastIndexOf('.');
-        
+
         return lastDot == -1 ? name : name.substring(0, lastDot);
     }
 
     /**
-     * Registers a top level package to be searched for {@link Handler} classes. Not needed if your
-     * {@code @Mod} class implements {@link IModTT}
+     * Registers a top level package to be searched for {@link Handler} classes. Not needed if your {@code @Mod} class implements {@link IModTT}
      * 
      * @param packageName
      */
-    public static void addPackage(String packageName)
+    public void addPackage(String packageName)
     {
         if (Loader.instance().hasReachedState(LoaderState.INITIALIZATION))
         {
@@ -153,12 +150,12 @@ public class Handlers
         packageSet.add(packageName);
     }
 
-    private static boolean registered = false;
+    private boolean registered = false;
 
     /**
      * For internal use only. Do not call. Callers will be sacked.
      */
-    public static void register()
+    public void register()
     {
         if (registered)
         {
@@ -211,7 +208,7 @@ public class Handlers
         registered = true;
     }
 
-    private static void registerHandler(Class<?> c, Handler handler) throws InstantiationException, IllegalAccessException
+    private void registerHandler(Class<?> c, Handler handler) throws InstantiationException, IllegalAccessException
     {
         TTCore.logger.info(String.format("[Handlers] Registering handler %s to busses: %s", c.getSimpleName(), Arrays.deepToString(handler.value())));
 
@@ -225,11 +222,11 @@ public class Handlers
             FMLCommonHandler.instance().bus().register(inst);
     }
 
-    private static Object tryInit(Handler annot, Class<?> c)
+    private Object tryInit(Handler annot, Class<?> c)
     {
         Inst pref = annot.getInstFrom();
 
-        // Silence all exceptions to trickle down to next if statement. 
+        // Silence all exceptions to trickle down to next if statement.
         // If all three fail, RuntimeException is thrown.
         if (pref.matches(CONSTRUCTOR))
         {

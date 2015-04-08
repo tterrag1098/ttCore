@@ -26,10 +26,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import net.minecraft.util.StringTranslate;
 
 import org.apache.commons.io.FileUtils;
@@ -38,22 +37,21 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import tterrag.core.TTCore;
 import tterrag.core.common.config.ConfigHandler;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TTFileUtils
+@UtilityClass
+public class TTFileUtils
 {
-    public static final FileFilter pngFilter = FileFilterUtils.suffixFileFilter(".png");
-    public static final FileFilter langFilter = FileFilterUtils.suffixFileFilter(".lang");
+    public final FileFilter pngFilter = FileFilterUtils.suffixFileFilter(".png");
+    public final FileFilter langFilter = FileFilterUtils.suffixFileFilter(".lang");
 
     /**
      * @param jarClass
      *            - A class from the jar in question
      * @param filename
-     *            - Name of the file to copy, automatically prepended with
-     *            "/assets/"
+     *            - Name of the file to copy, automatically prepended with "/assets/"
      * @param to
      *            - File to copy to
      */
-    public static void copyFromJar(Class<?> jarClass, String filename, File to)
+    public void copyFromJar(Class<?> jarClass, String filename, File to)
     {
         TTCore.logger.info("Copying file " + filename + " from jar");
         URL url = jarClass.getResource("/assets/" + filename);
@@ -71,9 +69,7 @@ public final class TTFileUtils
     /**
      * @author Ilias Tsagklis
      *         <p>
-     *         From <a href=
-     *         "http://examples.javacodegeeks.com/core-java/util/zip/extract-zip-file-with-subdirectories/"
-     *         > this site.</a>
+     *         From <a href= "http://examples.javacodegeeks.com/core-java/util/zip/extract-zip-file-with-subdirectories/" > this site.</a>
      * 
      * @param zip
      *            - The zip file to extract
@@ -81,7 +77,7 @@ public final class TTFileUtils
      * @return The folder extracted to
      */
     @NonNull
-    public static File extractZip(File zip)
+    public File extractZip(File zip)
     {
         String zipPath = zip.getParent() + "/extracted";
         File temp = new File(zipPath);
@@ -156,19 +152,16 @@ public final class TTFileUtils
     }
 
     /**
-     * @author McDowell -
-     *         http://stackoverflow.com/questions/1399126/java-util-zip
-     *         -recreating-directory-structure
+     * @author McDowell - http://stackoverflow.com/questions/1399126/java-util-zip -recreating-directory-structure
      * 
      * @param directory
-     *            The directory to zip the contents of. Content structure will
-     *            be preserved.
+     *            The directory to zip the contents of. Content structure will be preserved.
      * @param zipfile
      *            The zip file to output to.
      * @throws IOException
      */
     @SuppressWarnings("resource")
-    public static void zipFolderContents(File directory, File zipfile) throws IOException
+    public void zipFolderContents(File directory, File zipfile) throws IOException
     {
         URI base = directory.toURI();
         Deque<File> queue = new LinkedList<File>();
@@ -207,7 +200,7 @@ public final class TTFileUtils
     }
 
     /** @see #zipFolderContents(File, File) */
-    private static void copy(InputStream in, OutputStream out) throws IOException
+    private void copy(InputStream in, OutputStream out) throws IOException
     {
         byte[] buffer = new byte[1024];
         while (true)
@@ -222,7 +215,7 @@ public final class TTFileUtils
     }
 
     /** @see #zipFolderContents(File, File) */
-    private static void copy(File file, OutputStream out) throws IOException
+    private void copy(File file, OutputStream out) throws IOException
     {
         InputStream in = new FileInputStream(file);
         try
@@ -236,7 +229,7 @@ public final class TTFileUtils
     }
 
     @NonNull
-    public static File writeToFile(String filepath, String json)
+    public File writeToFile(String filepath, String json)
     {
         File file = new File(filepath);
 
@@ -256,7 +249,7 @@ public final class TTFileUtils
     }
 
     @NonNull
-    public static void safeDelete(File file)
+    public void safeDelete(File file)
     {
         try
         {
@@ -269,7 +262,7 @@ public final class TTFileUtils
     }
 
     @NonNull
-    public static void safeDeleteDirectory(File file)
+    public void safeDeleteDirectory(File file)
     {
         try
         {
@@ -283,7 +276,7 @@ public final class TTFileUtils
 
     @SneakyThrows
     @NonNull
-    public static void loadLangFiles(File directory)
+    public void loadLangFiles(File directory)
     {
         for (File file : directory.listFiles(langFilter))
         {
@@ -292,22 +285,19 @@ public final class TTFileUtils
     }
 
     /**
-     * Same as <code>manuallyChangeConfigValue(String, String, String)</code>,
-     * but with an additional parameter for <i>what</i> config file to edit
+     * Same as <code>manuallyChangeConfigValue(String, String, String)</code>, but with an additional parameter for <i>what</i> config file to edit
      * 
      * @param filePathFromConfigFolder
-     *            - the full path to the files, including extensions, from
-     *            inside config/
+     *            - the full path to the files, including extensions, from inside config/
      * @param prefix
-     *            - The prefix of the config option (anything before '='), must
-     *            match exactly.
+     *            - The prefix of the config option (anything before '='), must match exactly.
      * @param from
      *            - The setting to change it from
      * @param to
      *            - The setting to change it to
      * @return whether anything changed
      */
-    public static boolean manuallyChangeConfigValue(String filePathFromConfigFolder, String prefix, String from, String to)
+    public boolean manuallyChangeConfigValue(String filePathFromConfigFolder, String prefix, String from, String to)
     {
         File config = new File(ConfigHandler.configFolder.getAbsolutePath() + "/" + filePathFromConfigFolder);
         boolean found = false;
@@ -354,19 +344,16 @@ public final class TTFileUtils
     }
 
     /**
-     * Finds the config value in the file specified (path starting after
-     * config/), and for the key specified
+     * Finds the config value in the file specified (path starting after config/), and for the key specified
      * 
      * @param filePathFromConfigFolder
-     *            - The path to the file, everything up to config/ is calculated
-     *            for you
+     *            - The path to the file, everything up to config/ is calculated for you
      * @param key
      *            - A key to find the value by, does not need to match exactly
-     * @return A parseable string that can be transformed into any of the types
-     *         of config values, for instance using
+     * @return A parseable string that can be transformed into any of the types of config values, for instance using
      *         <code>Boolean.parseBoolean(String)</code>
      */
-    public static String manuallyGetConfigValue(String filePathFromConfigFolder, String key)
+    public String manuallyGetConfigValue(String filePathFromConfigFolder, String key)
     {
         File config = new File(ConfigHandler.configFolder.getAbsolutePath() + "/" + filePathFromConfigFolder);
         Scanner scan = null;

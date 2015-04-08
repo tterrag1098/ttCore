@@ -2,8 +2,7 @@ package tterrag.core.common.util;
 
 import java.util.Random;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
@@ -15,10 +14,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TTItemUtils
+@UtilityClass
+public class TTItemUtils
 {
-    private static final Random rand = new Random();
+    private final Random rand = new Random();
 
     /**
      * Turns a String into an item that can be used in a recipe. This is one of:
@@ -35,7 +34,7 @@ public final class TTItemUtils
      *            The String to parse.
      * @return An object for use in recipes.
      */
-    public static Object parseStringIntoRecipeItem(String string)
+    public Object parseStringIntoRecipeItem(String string)
     {
         return parseStringIntoRecipeItem(string, false);
     }
@@ -58,7 +57,7 @@ public final class TTItemUtils
      *            True if the result should be forced to be an ItemStack.
      * @return AN object for use in recipes.
      */
-    public static Object parseStringIntoRecipeItem(String string, boolean forceItemStack)
+    public Object parseStringIntoRecipeItem(String string, boolean forceItemStack)
     {
         if ("null".equals(string))
         {
@@ -122,7 +121,7 @@ public final class TTItemUtils
      *            The String to parse.
      * @return An ItemStack the string represents.
      */
-    public static ItemStack parseStringIntoItemStack(String string)
+    public ItemStack parseStringIntoItemStack(String string)
     {
         int size = 1;
         int idx = string.indexOf('#');
@@ -162,7 +161,7 @@ public final class TTItemUtils
      * @return A string that will be the equivalent of if {@link ItemStack stack} was constructed from it using
      *         {@link #parseStringIntoItemStack(String)}
      */
-    public static String getStringForItemStack(ItemStack stack, boolean damage, boolean size)
+    public String getStringForItemStack(ItemStack stack, boolean damage, boolean size)
     {
         if (stack == null)
         {
@@ -194,7 +193,7 @@ public final class TTItemUtils
      *            The second ItemStack to compare.
      * @author powercrystals
      */
-    public static boolean stacksEqual(ItemStack s1, ItemStack s2)
+    public boolean stacksEqual(ItemStack s1, ItemStack s2)
     {
         if (s1 == null && s2 == null)
             return true;
@@ -223,7 +222,7 @@ public final class TTItemUtils
      * @param z
      *            Z coordinate of the block in which to spawn the entity.
      */
-    public static void spawnItemInWorldWithRandomMotion(World world, ItemStack item, int x, int y, int z)
+    public void spawnItemInWorldWithRandomMotion(World world, ItemStack item, int x, int y, int z)
     {
         if (item != null)
         {
@@ -237,7 +236,7 @@ public final class TTItemUtils
      * @param entity
      *            The entity to spawn.
      */
-    public static void spawnItemInWorldWithRandomMotion(EntityItem entity)
+    public void spawnItemInWorldWithRandomMotion(EntityItem entity)
     {
         entity.delayBeforeCanPickup = 10;
 
@@ -261,7 +260,7 @@ public final class TTItemUtils
      *            The oredict name.
      * @return True if the ItemStack matches the name passed.
      */
-    public static boolean itemStackMatchesOredict(ItemStack stack, String oredict)
+    public boolean itemStackMatchesOredict(ItemStack stack, String oredict)
     {
         int[] ids = OreDictionary.getOreIDs(stack);
         for (int i : ids)
@@ -282,7 +281,7 @@ public final class TTItemUtils
      *            The ItemStack to get the tag from.
      * @return An NBTTagCompound from the stack.
      */
-    public static NBTTagCompound getNBTTag(ItemStack stack)
+    public NBTTagCompound getNBTTag(ItemStack stack)
     {
         if (!stack.hasTagCompound())
         {

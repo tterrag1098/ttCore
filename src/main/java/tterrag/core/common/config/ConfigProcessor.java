@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import tterrag.core.common.config.AbstractConfigHandler.Bound;
 import tterrag.core.common.config.AbstractConfigHandler.RestartReqs;
 import tterrag.core.common.config.annot.Comment;
 import tterrag.core.common.config.annot.Config;
@@ -18,6 +17,7 @@ import tterrag.core.common.config.annot.Range;
 import tterrag.core.common.config.annot.RestartReq;
 import tterrag.core.common.event.ConfigFileChangedEvent;
 import tterrag.core.common.network.TTPacketHandler;
+import tterrag.core.common.util.Bound;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;

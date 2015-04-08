@@ -29,7 +29,7 @@ public class RightClickCropHandler
         public String block;
         public int meta = 7;
         public int resetMeta = 0;
-        
+
         private transient ItemStack seedStack;
         private transient Block blockInst;
 
@@ -56,7 +56,8 @@ public class RightClickCropHandler
     public static final RightClickCropHandler INSTANCE = new RightClickCropHandler();
 
     private RightClickCropHandler()
-    {}
+    {
+    }
 
     public void addCrop(PlantInfo info)
     {
@@ -101,7 +102,9 @@ public class RightClickCropHandler
             for (int i = 0; i < event.drops.size(); i++)
             {
                 ItemStack stack = event.drops.get(i);
-                if (stack.getItem() == currentPlant.seedStack.getItem() && (currentPlant.seedStack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == currentPlant.seedStack.getItemDamage()))
+                if (stack.getItem() == currentPlant.seedStack.getItem()
+                        && (currentPlant.seedStack.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack.getItemDamage() == currentPlant.seedStack
+                                .getItemDamage()))
                 {
                     event.drops.remove(i);
                     break;

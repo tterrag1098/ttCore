@@ -1,7 +1,6 @@
 package tterrag.core.client.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -16,10 +15,10 @@ import tterrag.core.client.handlers.ClientHandler;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class RenderingUtils
 {
-    public static void renderWithIcon(WavefrontObject model, IIcon icon, Tessellator tes)
+    public void renderWithIcon(WavefrontObject model, IIcon icon, Tessellator tes)
     {
         for (GroupObject go : model.groupObjects)
         {
@@ -40,10 +39,12 @@ public class RenderingUtils
     /**
      * Renders an item entity in 3D
      * 
-     * @param item The item to render
-     * @param rotate Whether to "spin" the item like it would if it were a real dropped entity
+     * @param item
+     *            The item to render
+     * @param rotate
+     *            Whether to "spin" the item like it would if it were a real dropped entity
      */
-    public static void render3DItem(EntityItem item, boolean rotate)
+    public void render3DItem(EntityItem item, boolean rotate)
     {
         float rot = getRotation(1.0f);
 
@@ -62,12 +63,12 @@ public class RenderingUtils
         glPopMatrix();
     }
 
-    public static float getRotation(float mult)
+    public float getRotation(float mult)
     {
         return ClientHandler.getTicksElapsed() * mult;
     }
 
-    public static void renderBillboardQuad(float rot, double scale)
+    public void renderBillboardQuad(float rot, double scale)
     {
         glPushMatrix();
 
@@ -91,7 +92,7 @@ public class RenderingUtils
         glPopMatrix();
     }
 
-    public static void rotateToPlayer()
+    public void rotateToPlayer()
     {
         glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
         glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
