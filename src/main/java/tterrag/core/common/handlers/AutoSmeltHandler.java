@@ -2,10 +2,6 @@ package tterrag.core.common.handlers;
 
 import java.util.Map;
 
-import tterrag.core.common.Handlers.Handler;
-import tterrag.core.common.Handlers.Handler.HandlerType;
-import tterrag.core.common.config.ConfigHandler;
-import tterrag.core.common.enchant.EnchantAutoSmelt;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -13,6 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.world.BlockEvent;
+import tterrag.core.common.Handlers.Handler;
+import tterrag.core.common.Handlers.Handler.HandlerType;
+import tterrag.core.common.config.ConfigHandler;
+import tterrag.core.common.enchant.EnchantAutoSmelt;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 @Handler(HandlerType.FORGE)

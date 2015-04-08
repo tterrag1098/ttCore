@@ -12,7 +12,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import tterrag.core.common.Handlers.Handler;
 import tterrag.core.common.Handlers.Handler.HandlerType;
 import tterrag.core.common.config.ConfigHandler;
-import tterrag.core.common.json.JsonUtils;
+import tterrag.core.common.util.TTItemUtils;
 
 import com.google.common.collect.Lists;
 
@@ -43,7 +43,7 @@ public class RightClickCropHandler
 
         public void init()
         {
-            seedStack = JsonUtils.parseStringIntoItemStack(seed);
+            seedStack = TTItemUtils.parseStringIntoItemStack(seed);
             String[] blockinfo = block.split(":");
             blockInst = GameRegistry.findBlock(blockinfo[0], blockinfo[1]);
         }
