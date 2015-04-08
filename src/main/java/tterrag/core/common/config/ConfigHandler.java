@@ -26,7 +26,6 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     private static final String sectionGeneral = Configuration.CATEGORY_GENERAL;
     private static final String sectionEnchants = "enchants";
 
-    // @formatter:off
     @Config
     @Comment("Show oredictionary names of every item in its tooltip.")
     @NoSync
@@ -93,7 +92,6 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     @Config(sectionEnchants)
     @Comment("Allow the Auto Smelt enchant to work with Fortune.")
     public static boolean allowAutoSmeltWithFortune = true;
-    // @formatter:on
 
     private static ConfigHandler INSTANCE;
 
@@ -121,7 +119,6 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
         addSection(sectionGeneral);
         addSection(sectionEnchants);
         addSection("tweaks");
-        addSection("dummy");
         processor = new ConfigProcessor(getClass(), this, this);
         processor.process(true);
     }
@@ -134,8 +131,6 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     @Override
     protected void reloadNonIngameConfigs()
     {
-        activateSection("dummy");
-        getValue("dummyVal", 0, Bound.of(0, 1));
         Tweaks.loadNonIngameTweaks();
     }
 
