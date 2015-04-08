@@ -52,7 +52,6 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
 
     @Config
     @Comment("Disabling this option will prevent any crops added to the config json from being right clickable.")
-    @RestartReq(RestartReqs.REQUIRES_WORLD_RESTART)
     public static boolean allowCropRC = true;
 
     @Config
