@@ -50,7 +50,11 @@ public class XPBoostHandler
                 if (tag.hasKey(NBT_KEY) && tag.getInteger(NBT_KEY) >= 0)
                 {
                     int level = tag.getInteger(NBT_KEY);
-                    scheduleXP(entity, getXPBoost(entity, (EntityPlayer) ((EntityArrow) killer).shootingEntity, level));
+                    EntityArrow arrow = (EntityArrow) killer;
+                    if (arrow.shootingEntity != null)
+                    {
+                        scheduleXP(entity, getXPBoost(entity, (EntityPlayer) arrow.shootingEntity, level));
+                    }
                 }
             }
         }

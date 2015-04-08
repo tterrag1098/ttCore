@@ -9,6 +9,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import tterrag.core.common.config.AbstractConfigHandler.Bound;
+import tterrag.core.common.config.AbstractConfigHandler.RestartReqs;
+import tterrag.core.common.config.annot.Comment;
+import tterrag.core.common.config.annot.Config;
+import tterrag.core.common.config.annot.NoSync;
+import tterrag.core.common.config.annot.Range;
+import tterrag.core.common.config.annot.RestartReq;
 import tterrag.core.common.event.ConfigFileChangedEvent;
 import tterrag.core.common.network.TTPacketHandler;
 
@@ -145,53 +152,48 @@ public class ConfigProcessor
             return false;
         }
         Object value = f.get(null);
-        Object newValue = getConfigValue(cfg, f, value);
+        Object newValue = getConfigValue(cfg.value(), getComment(f), f, value);
 
         configValues.put(f.getName(), newValue);
         f.set(null, newValue);
 
-        sections.add(cfg.section());
+        sections.add(cfg.value());
 
         return !value.equals(newValue);
     }
 
-    private Object getConfigValue(Config cfg, Field f, Object defVal)
+    private Object getConfigValue(String section, String comment, Field f, Object defVal)
     {
         Property prop = null;
         Object ret = null;
+        Bound<Double> bound = getBound(f);
         if (defVal instanceof Boolean)
         {
-            prop = configFile.get(cfg.section(), f.getName(), (Boolean) defVal, cfg.comment());
+            prop = configFile.get(section, f.getName(), (Boolean) defVal, comment);
             ret = prop.getBoolean();
         }
         else if (defVal instanceof Integer)
         {
-            prop = configFile.get(cfg.section(), f.getName(), (Integer) defVal, cfg.comment());
-            ret = prop.getInt();
+            prop = configFile.get(section, f.getName(), (Integer) defVal, comment);
+            ret = AbstractConfigHandler.boundValue(prop, Bound.of(bound.min.intValue(), bound.max.intValue()), (Integer) defVal);
         }
         else if (defVal instanceof Double)
         {
-            prop = configFile.get(cfg.section(), f.getName(), (Double) defVal, cfg.comment());
-            ret = prop.getDouble();
+            prop = configFile.get(section, f.getName(), (Double) defVal, comment);
+            ret = AbstractConfigHandler.boundValue(prop, Bound.of(bound.min.doubleValue(), bound.max.doubleValue()), (Double) defVal);
         }
         else if (defVal instanceof String)
         {
-            prop = configFile.get(cfg.section(), f.getName(), (String) defVal, cfg.comment());
+            prop = configFile.get(section, f.getName(), (String) defVal, comment);
             ret = prop.getString();
         }
         else if (defVal instanceof String[])
         {
-            prop = configFile.get(cfg.section(), f.getName(), (String[]) defVal, cfg.comment());
+            prop = configFile.get(section, f.getName(), (String[]) defVal, comment);
             ret = prop.getStringList();
         }
-        if (cfg.min() > Integer.MIN_VALUE)
-        {
-            prop.setMinValue((defVal instanceof Integer) ? (int) cfg.min() : cfg.min());
-        }
-        if (cfg.max() < Integer.MAX_VALUE)
-        {
-            prop.setMinValue((defVal instanceof Integer) ? (int) cfg.max() : cfg.max());
-        }
+        AbstractConfigHandler.setBounds(prop, bound);
+        getRestartReq(f).apply(prop);
         return ret;
     }
 
@@ -214,7 +216,7 @@ public class ConfigProcessor
             {
                 Field f = configs.getDeclaredField(s);
                 Config annot = f.getAnnotation(Config.class);
-                if (annot != null && !annot.noSync())
+                if (annot != null && !getNoSync(f))
                 {
                     Object newVal = configValues.get(s);
                     boolean changed = false;
@@ -234,6 +236,29 @@ public class ConfigProcessor
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private String getComment(Field f)
+    {
+        Comment c = f.getAnnotation(Comment.class);
+        return c == null ? "" : c.value();
+    }
+
+    private Bound<Double> getBound(Field f)
+    {
+        Range r = f.getAnnotation(Range.class);
+        return r == null ? Bound.MAX_BOUND : Bound.of(r.min(), r.max());
+    }
+
+    private boolean getNoSync(Field f)
+    {
+        return f.getAnnotation(NoSync.class) != null;
+    }
+    
+    private RestartReqs getRestartReq(Field f)
+    {
+        RestartReq r = f.getAnnotation(RestartReq.class);
+        return r == null ? RestartReqs.NONE : r.value();
     }
 
     /* Event Handling */

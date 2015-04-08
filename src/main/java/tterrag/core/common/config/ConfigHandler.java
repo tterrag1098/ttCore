@@ -2,12 +2,18 @@ package tterrag.core.common.config;
 
 import java.io.File;
 
+import net.minecraftforge.common.config.Configuration;
 import tterrag.core.TTCore;
 import tterrag.core.common.Handlers.Handler;
 import tterrag.core.common.Handlers.Handler.HandlerType;
 import tterrag.core.common.Handlers.Handler.Inst;
 import tterrag.core.common.config.ConfigProcessor.IReloadCallback;
 import tterrag.core.common.config.JsonConfigReader.ModToken;
+import tterrag.core.common.config.annot.Comment;
+import tterrag.core.common.config.annot.Config;
+import tterrag.core.common.config.annot.NoSync;
+import tterrag.core.common.config.annot.Range;
+import tterrag.core.common.config.annot.RestartReq;
 import tterrag.core.common.handlers.RightClickCropHandler;
 import tterrag.core.common.handlers.RightClickCropHandler.PlantInfo;
 import tterrag.core.common.transform.TTCorePlugin;
@@ -17,44 +23,84 @@ import tterrag.core.common.tweaks.Tweaks;
 @Handler(value = HandlerType.FML, getInstFrom = Inst.METHOD)
 public class ConfigHandler extends AbstractConfigHandler implements ITweakConfigHandler, IReloadCallback
 {
-    private static final String sectionGeneral = "general";
+    private static final String sectionGeneral = Configuration.CATEGORY_GENERAL;
+    private static final String sectionEnchants = "enchants";
 
     // @formatter:off
-    @Config(section = sectionGeneral, comment = "Show oredictionary names of every item in its tooltip.", noSync = true)
+    @Config
+    @Comment("Show oredictionary names of every item in its tooltip.")
+    @NoSync
     public static boolean showOredictTooltips = false;
 
-    @Config(section = sectionGeneral, comment = "Show item registry names and other things in debug mode (f3+h)", noSync = true)
+    @Config
+    @Comment("Show item registry names and other things in debug mode (f3+h)")
+    @NoSync
     public static boolean extraDebugStuff = true;
 
-    @Config(section = sectionGeneral, comment = "Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types", noSync = true)
+    @Config
+    @Comment("Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types")
+    @NoSync
+    @Range(min = 0, max = 2)
     public static int disableVoidFog = 1;
 
-    @Config(section = sectionGeneral, comment = "The max amount of XP levels an anvil recipe can use.")
+    @Config
+    @Comment("The max amount of XP levels an anvil recipe can use.")
     public static int anvilMaxLevel = 40;
 
-    @Config(section = sectionGeneral, comment = "The way the game should have been made (Yes this is the fireworks thing).")
+    @Config
+    @Comment("The way the game should have been made (Yes this is the fireworks thing).")
     public static boolean betterAchievements = true;
 
-    @Config(section = sectionGeneral, comment = "Disabling this option will prevent any crops added to the config json from being right clickable.")
+    @Config
+    @Comment("Disabling this option will prevent any crops added to the config json from being right clickable.")
+    @RestartReq(RestartReqs.REQUIRES_WORLD_RESTART)
     public static boolean allowCropRC = true;
 
-    @Config(section = sectionGeneral, comment = "0 - Do nothing\n1 - Remove stacktraces, leave 1-line missing texture errors\n2 - Remove all missing texture errors completely. This option is not supported outside dev environments.", noSync = true)
+    @Config
+    @Comment("0 - Do nothing\n1 - Remove stacktraces, leave 1-line missing texture errors\n2 - Remove all missing texture errors completely. This option is not supported outside dev environments.")
+    @NoSync
+    @Range(min = 0, max = 2)
     public static int textureErrorRemover = 0;
 
+    @Config
+    @Comment("Controls the default sorting on the mod list GUI.\n\n0 - Default sort (load order)\n1 - A to Z sort\n2 - Z to A sort")
+    @NoSync
+    @Range(min = 0, max = 2)
+    public static int defaultModSort = 1;
+
+    @Config(sectionEnchants)
+    @Comment("Enchant ID for the XP boost enchant.")
+    @RestartReq(RestartReqs.REQUIRES_MC_RESTART)
+    @Range(min = 0, max = 255)
     public static int enchantIDXPBoost = 43;
+
+    @Config(sectionEnchants)
+    @Comment("Allow the XP Boost enchant to be registered.")
+    @RestartReq(RestartReqs.REQUIRES_MC_RESTART)
     public static boolean allowXPBoost = true;
-    
+
+    @Config(sectionEnchants)
+    @Comment("Enchant ID for the Auto Smelt enchant.")
+    @RestartReq(RestartReqs.REQUIRES_MC_RESTART)
+    @Range(min = 0, max = 255)
     public static int enchantIDAutoSmelt = 44;
+
+    @Config(sectionEnchants)
+    @Comment("Allow the Auto Smelt enchant to be registered.")
+    @RestartReq(RestartReqs.REQUIRES_MC_RESTART)
     public static boolean allowAutoSmelt = true;
+
+    @Config(sectionEnchants)
+    @Comment("Allow the Auto Smelt enchant to work with Fortune.")
     public static boolean allowAutoSmeltWithFortune = true;
     // @formatter:on
 
     private static ConfigHandler INSTANCE;
-    
+
     public static File configFolder, ttConfigFolder;
     public static File configFile;
     public static ConfigProcessor processor;
-    
+
     public static ConfigHandler instance()
     {
         if (INSTANCE == null)
@@ -72,9 +118,10 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     @Override
     public void init()
     {
-        addSection("general");
-        addSection("enchants");
+        addSection(sectionGeneral);
+        addSection(sectionEnchants);
         addSection("tweaks");
+        addSection("dummy");
         processor = new ConfigProcessor(getClass(), this, this);
         processor.process(true);
     }
@@ -87,19 +134,14 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     @Override
     protected void reloadNonIngameConfigs()
     {
-        activateSection("enchants");
-        enchantIDXPBoost = getValue("enchantIDXPBoost", "Enchant ID for the XP boost enchant.", enchantIDXPBoost);
-        allowXPBoost = getValue("allowXPBoost", "Allow the XP Boost enchant to be registered.", allowXPBoost);
-        enchantIDAutoSmelt = getValue("enchantIDAutoSmelt", "Enchant ID for the Auto Smelt enchant.", enchantIDAutoSmelt);
-        allowAutoSmelt = getValue("allowAutoSmelt", "Allow the Auto Smelt enchant to be registered.", allowAutoSmelt);
-        allowAutoSmeltWithFortune = getValue("allowAutoSmeltWithFortune", "Allow the Auto Smelt enchant to work with Fortune.", allowAutoSmeltWithFortune);
-        
+        activateSection("dummy");
+        getValue("dummyVal", 0, Bound.of(0, 1));
         Tweaks.loadNonIngameTweaks();
     }
 
     @Override
     public void callback(ConfigProcessor inst)
-    { 
+    {
         if (!TTCorePlugin.runtimeDeobfEnabled)
         {
             textureErrorRemover = Math.min(textureErrorRemover, 1);

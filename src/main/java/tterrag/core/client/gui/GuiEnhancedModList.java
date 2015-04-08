@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import tterrag.core.TTCore;
+import tterrag.core.common.config.ConfigHandler;
 import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.client.GuiScrollingList;
 import cpw.mods.fml.client.GuiSlotModList;
@@ -120,7 +121,7 @@ public class GuiEnhancedModList extends GuiModList
 
     private GuiTextField search;
     private boolean sorted = false;
-    private SortType sortType = SortType.NORMAL;
+    private SortType sortType = SortType.values()[ConfigHandler.defaultModSort];
 
     public GuiEnhancedModList(GuiScreen mainMenu)
     {
@@ -165,6 +166,9 @@ public class GuiEnhancedModList extends GuiModList
         buttonList.add(new GuiButton(SortType.Z_TO_A.buttonID, x, y, width - buttonMargin, 20, "Z-A"));
 
         buttonList.add(new InfoButton());
+        
+        reloadMods();
+        disableButton();
     }
 
     @Override
@@ -256,7 +260,6 @@ public class GuiEnhancedModList extends GuiModList
         search.drawTextBox();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void actionPerformed(GuiButton button)
     {
@@ -284,19 +287,28 @@ public class GuiEnhancedModList extends GuiModList
         }
         else
         {
-            for (GuiButton b : (List<GuiButton>) buttonList)
-            {
-                if (SortType.getTypeForButton(b) != null)
-                {
-                    b.enabled = true;
-                }
-            }
-            button.enabled = false;
             sorted = false;
             sortType = type;
+            disableButton();
         }
 
         setMods();
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void disableButton()
+    {
+        for (GuiButton b : (List<GuiButton>) buttonList)
+        {
+            if (SortType.getTypeForButton(b) != null)
+            {
+                b.enabled = true;
+            }
+            if (b.id == sortType.buttonID)
+            {
+                b.enabled = false;
+            }
+        }
     }
 
     @SneakyThrows
@@ -305,13 +317,19 @@ public class GuiEnhancedModList extends GuiModList
         List<ModContainer> mods = getMods();
 
         ModContainer sel = getSelectedMod();
-        for (int i = 0; i < mods.size(); i++)
+        boolean found = false;
+        for (int i = 0; !found && i < mods.size(); i++)
         {
             if (sel == mods.get(i))
             {
                 _selected.setInt(this, i);
-                break;
+                found = true;
             }
+        }
+        if (!found)
+        {
+            _selected.setInt(this, -1);
+            _selectedMod.set(this, null);
         }
 
         _mods.set(this, getMods());
