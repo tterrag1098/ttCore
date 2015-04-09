@@ -21,7 +21,7 @@ public class TTStringUtils
      *            - Whether or not to use decimals in the representation
      * @param formatK
      *            - Whether or not to format the thousands
-     * @return
+     * @return A string numeric formatted to use SI suffixes
      */
     public String formatString(String prefix, String suffix, long amnt, boolean useDecimals, boolean formatK)
     {
@@ -70,7 +70,7 @@ public class TTStringUtils
      *            - The number to be formatted
      * @param useDecimals
      *            - Whether or not to use decimals in the representation
-     * @return
+     * @return A string numeric formatted to use SI suffixes
      */
     public String formatString(String prefix, String suffix, long amnt, boolean useDecimals)
     {

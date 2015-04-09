@@ -52,12 +52,12 @@ public class Handlers
         public enum HandlerType
         {
             /**
-             * Represents the {@link MinecraftForge}<code>.EVENT_BUS</code>
+             * Represents the {@link MinecraftForge#EVENT_BUS}
              */
             FORGE,
 
             /**
-             * Represents the {@link FMLCommonHandler.instance().bus()}
+             * Represents the {@link FMLCommonHandler#instance()#bus()}
              */
             FML
         }
@@ -101,7 +101,7 @@ public class Handlers
         Inst getInstFrom() default AUTO;
     }
 
-    private Set<String> packageSet = new HashSet<String>();
+    private static final Set<String> packageSet = new HashSet<String>();
 
     public void findPackages()
     {

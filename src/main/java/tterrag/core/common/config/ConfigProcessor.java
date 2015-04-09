@@ -75,9 +75,7 @@ public class ConfigProcessor
      *            an {@link IReloadCallback} object which will be called whenever config values are edited.
      */
     public ConfigProcessor(Class<?> configs, File configFile, String modid, IReloadCallback callback)
-    {
-        this(configs, new Configuration(configFile), modid, callback);
-    }
+    { }
 
     /**
      * Use this constructor if you are using a {@code ConfigProcessor} alongside an {@link AbstractConfigHandler}. Do not pass a handler that has not

@@ -13,7 +13,8 @@ apply plugin: 'curseforge'
 
 group = 'tterrag.core'
 archivesBaseName = "ttCore"
-version = "MC${minecraft_version}-${mod_version}-${System.getenv().BUILD_NUMBER}"
+def buildNum = System.getenv().BUILD_NUMBER
+version = "MC${minecraft_version}-${mod_version}-${buildNum}"
 
 minecraft {
     version = "${minecraft_version}-${forge_version}"
@@ -97,6 +98,7 @@ curse {
 
     if (project.hasProperty('curseforge_key')) apiKey = project.curseforge_key
     projectId = project.curse_projectId
+    displayName = "ttCore ${mod_version}-${buildNum}"
     changelog = project.hasProperty('changelog') ? project.changelog : ''
     releaseType = project.curse_filetype
 }

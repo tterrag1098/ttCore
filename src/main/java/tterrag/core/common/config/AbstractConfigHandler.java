@@ -251,7 +251,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     /**
      * Activates a section
      * 
-     * @param sectionName
+     * @param section
      *            The section to activate
      * 
      * @throws NullPointerException
@@ -549,19 +549,20 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     @SuppressWarnings("unchecked")
     static <T extends Number & Comparable<T>> T boundValue(Property prop, Bound<T> bound, T defVal)
     {
+        Object b = (Object) bound;
         if (defVal instanceof Integer)
         {
-            prop.set(((Bound<Integer>) bound).clamp(prop.getInt()));
+            prop.set(((Bound<Integer>) b).clamp(prop.getInt()));
             return (T) Integer.valueOf(prop.getInt());
         }
         if (defVal instanceof Double)
         {
-            prop.set(((Bound<Double>) bound).clamp(prop.getDouble()));
+            prop.set(((Bound<Double>) b).clamp(prop.getDouble()));
             return (T) Double.valueOf(prop.getDouble());
         }
         if (defVal instanceof Float)
         {
-            prop.set(((Bound<Float>) bound).clamp(Double.valueOf(prop.getDouble()).floatValue()));
+            prop.set(((Bound<Float>) b).clamp(Double.valueOf(prop.getDouble()).floatValue()));
             return (T) Float.valueOf(Double.valueOf(prop.getDouble()).floatValue());
         }
         throw new IllegalArgumentException(bound.min.getClass().getName() + " is not a valid config type.");
