@@ -1,48 +1,76 @@
 package tterrag.core.common;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.minecraft.util.StatCollector;
 
 @AllArgsConstructor
+@Getter
 public class Lang
 {
+    private static final String REGEX = "\\" + '|';
+    public static final char CHAR = '|';
+
     private String locKey;
 
-    public String localize(String unloc, boolean appendModid)
+    /**
+     * Ignores the prefix stored in this instance of the class and localizes the raw string passed.
+     * 
+     * @param unloc
+     *            The unlocalized string.
+     * @param args
+     *            The args to format the localized text withi.
+     * 
+     * @return A localized string.
+     */
+    public String localizeExact(String unloc, Object... args)
     {
-        if (appendModid)
-            return translateToLocal(locKey + "." + unloc);
-        else
-            return translateToLocal(unloc);
+        return translateToLocal(unloc, args);
     }
 
-    public String localize(String unloc)
+    /**
+     * Localizes the string passed, first appending the prefix stored in this instance of the class.
+     * 
+     * @param unloc
+     *            The unlocalized string.
+     * @param args
+     *            The args to format the localized text withi.
+     * 
+     * @return A localized string.
+     */
+    public String localize(String unloc, Object... args)
     {
-        return localize(unloc, true);
+        return translateToLocal(locKey + "." + unloc, args);
     }
 
-    private String translateToLocal(String unloc)
+    private String translateToLocal(String unloc, Object... args)
     {
-        return StatCollector.translateToLocal(unloc);
+        return StatCollector.translateToLocalFormatted(unloc, args);
     }
 
-    public String[] localizeList(String unloc)
+    /**
+     * Splits the localized text on "|" into a String[].
+     * 
+     * @param unloc
+     *            The unlocalized string.
+     * @param args
+     *            The args to format the localized text withi.
+     * @return A localized list of strings.
+     */
+    public String[] localizeList(String unloc, String... args)
     {
-        return splitList(localize(unloc, true));
+        return splitList(localize(unloc, true, args));
     }
 
-    public String[] splitList(String list, String splitRegex)
-    {
-        return list.split(splitRegex);
-    }
-
+    /**
+     * Splits a list of strings based on {@value #CHAR}
+     * 
+     * @param list
+     *            The list of strings to split
+     * @return An array of strings split on {@value #CHAR}
+     */
     public String[] splitList(String list)
     {
-        return splitList(list, "\\|");
-    }
-
-    public String getPrefix()
-    {
-        return locKey;
+        return list.split(REGEX);
     }
 }
