@@ -51,10 +51,7 @@ public class XPBoostHandler
                 {
                     int level = tag.getInteger(NBT_KEY);
                     EntityArrow arrow = (EntityArrow) killer;
-                    if (arrow.shootingEntity != null)
-                    {
-                        scheduleXP(entity, getXPBoost(entity, (EntityPlayer) arrow.shootingEntity, level));
-                    }
+                    scheduleXP(entity, getXPBoost(entity, (EntityPlayer) arrow.shootingEntity, level));
                 }
             }
         }
@@ -100,17 +97,13 @@ public class XPBoostHandler
 
     @SneakyThrows
     private int getXPBoost(EntityLivingBase killed, EntityPlayer player, int level)
-    {
-        int boost = 0;
-        ItemStack weapon = player.getCurrentEquippedItem();
-        
-        if (weapon != null && level >= 0)
+    {        
+        if (level >= 0)
         {
             int xp = (Integer) getExperiencePoints.invoke(killed, player);
             return getXPBoost(xp, level);
         }
-
-        return boost;
+        return 0;
     }
     
     private int getXPBoost(int xp, int level)
