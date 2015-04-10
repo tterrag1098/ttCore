@@ -88,7 +88,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
      *            The type of the bound. Either {@link Integer}, {@link Double}, or {@link Float} (will be cast to double)
      */
     @EqualsAndHashCode
-    public static class Bound<T extends Number>
+    public static class Bound<T>
     {
         public static final Bound<Double> MAX_BOUND = Bound.of(Double.MIN_VALUE, Double.MAX_VALUE);
 
@@ -103,14 +103,15 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         /**
          * Static factory method that returns a {@code Bound<T>} object of the type of the params passed.
          */
-        public static <T extends Number> Bound<T> of(T min, T max)
+        public static <T> Bound<T> of(T min, T max)
         {
             return new Bound<T>(min, max);
         }
 
         public T bound(T val)
         {
-            return val.doubleValue() < min.doubleValue() ? min : val.doubleValue() > max.doubleValue() ? max : val;
+            Number val1 = (Number) val;
+            return val1.doubleValue() < ((Number)min).doubleValue() ? min : val1.doubleValue() > ((Number)max).doubleValue() ? max : val;
         }
     }
 
@@ -571,7 +572,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
         if (prop.getType() == Type.INTEGER)
         {
-            bound = Bound.of(bound.min.intValue(), bound.max.intValue());
+            bound = Bound.of(((Number)bound.min).intValue(), ((Number)bound.max).intValue());
         }
         else if (prop.getType() == Type.DOUBLE)
         {
