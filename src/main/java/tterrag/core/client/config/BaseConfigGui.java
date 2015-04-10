@@ -4,9 +4,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.SneakyThrows;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.common.config.Property;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.config.IConfigHandler;
 import tterrag.core.common.config.AbstractConfigHandler.Section;
@@ -21,7 +23,7 @@ public class BaseConfigGui extends GuiConfig
     {
         // dummy super so we can call instance methods
         super(parentScreen, new ArrayList<IConfigElement>(), null, false, false, null);
-        
+
         try
         {
             // pffft final, what a wimpy modifier
@@ -77,9 +79,88 @@ public class BaseConfigGui extends GuiConfig
 
         for (Section s : config.getSections())
         {
-            list.add(new ConfigElement<ConfigCategory>(config.getCategory(s.lc()).setLanguageKey(prefix + s.lang)));
+            list.add(new ConfigSection(s, prefix));
         }
 
         return list;
+    }
+
+    @SuppressWarnings("rawtypes")
+    private class ConfigSection extends ConfigElement<ConfigCategory>
+    {
+        private Section section;
+        private String prefix;
+
+        private ConfigSection(Section s, String prefix)
+        {
+            super(BaseConfigGui.this.getConfigHandler().getCategory(s.lc()).setLanguageKey(prefix + s.lang));
+            this.section = s;
+            this.prefix = prefix;
+        }
+
+        @Override
+        public List<IConfigElement> getChildElements()
+        {
+            List<IConfigElement> temp = super.getChildElements();
+            List<IConfigElement> ret = new ArrayList<IConfigElement>(temp.size());
+            for (IConfigElement e : temp)
+            {
+                if (e.isProperty())
+                {
+                    ret.add(new ConfigElementExtended(e));
+                }
+                else
+                {
+                    ret.add(new ConfigSection(section, prefix));
+                }
+            }
+            return ret;
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static class ConfigElementExtended<T> extends ConfigElement<T>
+    {
+        private static final Field _prop;
+        static
+        {
+            try
+            {
+                _prop = ConfigElement.class.getDeclaredField("prop");
+                _prop.setAccessible(true);
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private ConfigElementExtended(IConfigElement other)
+        {
+            super(getProp(other));
+        }
+
+        @SneakyThrows
+        private static Property getProp(IConfigElement other)
+        {
+            return (Property) _prop.get(other);
+        }
+
+        @Override
+        public String getComment()
+        {
+            String comment = super.getComment();
+            String range = "[range:";
+            String def = "[default:";
+            if (comment.contains(range))
+            {
+                comment = comment.substring(0, comment.indexOf(range) - 1);
+            }
+            else if (comment.contains(def))
+            {
+                comment = comment.substring(0, comment.indexOf(def) - 1);
+            }
+            return comment;
+        }
     }
 }

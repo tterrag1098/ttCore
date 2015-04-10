@@ -2,8 +2,11 @@ package tterrag.core.common.config;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -20,8 +23,10 @@ import tterrag.core.common.network.TTPacketHandler;
 import tterrag.core.common.util.Bound;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.common.reflect.TypeToken;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -41,12 +46,54 @@ public class ConfigProcessor
         void callback(ConfigProcessor inst);
     }
 
-    static final Map<String, ConfigProcessor> processorMap = Maps.newHashMap();
-    String modid;
+    /**
+     * A simple adapter for reading custom config types.
+     *
+     * @param <BASE>
+     *            Must be a possible class that can be used in configs. This consists of:
+     *            <ul>
+     *            <code>
+     * <li>Boolean</li>
+     * <li>Integer</li>
+     * <li>Double</li>
+     * <li>String</li>
+     * <li>boolean[]</li>
+     * <li>int[]</li>
+     * <li>double[]</li>
+     * <li>String[]</li>
+     * </code>
+     *            </ul>
+     * @param <ACTUAL>
+     *            The actual type of this adapter. This is what the field type must be for this adapter to be applied.
+     */
+    public interface ITypeAdapter<ACTUAL, BASE>
+    {
+        TypeToken<ACTUAL> getActualType();
 
-    private Class<?> configs;
-    private Configuration configFile;
-    private IReloadCallback callback;
+        Property.Type getType();
+
+        /**
+         * If this binds to a primitive type, return it here (e.g. int.class). Otherwise, return null.
+         * 
+         * @return The class for this ITypeAdapter's primitive type.
+         */
+        @Nullable
+        Class<?> getPrimitiveType();
+
+        ACTUAL createActualType(BASE base);
+
+        BASE createBaseType(ACTUAL actual);
+    }
+
+    static final Map<String, ConfigProcessor> processorMap = Maps.newHashMap();
+
+    private final List<ITypeAdapter<?, ?>> adapters = Lists.newArrayList();
+
+    final String modid;
+
+    private final Class<?> configs;
+    private final Configuration configFile;
+    private final IReloadCallback callback;
 
     Map<String, Object> configValues = Maps.newHashMap();
 
@@ -75,7 +122,9 @@ public class ConfigProcessor
      *            an {@link IReloadCallback} object which will be called whenever config values are edited.
      */
     public ConfigProcessor(Class<?> configs, File configFile, String modid, IReloadCallback callback)
-    { }
+    {
+        this(configs, new Configuration(configFile), modid, callback);
+    }
 
     /**
      * Use this constructor if you are using a {@code ConfigProcessor} alongside an {@link AbstractConfigHandler}. Do not pass a handler that has not
@@ -115,6 +164,22 @@ public class ConfigProcessor
         this.callback = callback;
         processorMap.put(modid, this);
         FMLCommonHandler.instance().bus().register(this);
+        adapters.addAll(TypeAdapterBase.all);
+    }
+
+    public <ACTUAL, BASE> ConfigProcessor addAdapter(ITypeAdapter<ACTUAL, BASE> adapter)
+    {
+        adapters.add(adapter);
+        return this;
+    }
+
+    public <ACTUAL, BASE> ConfigProcessor addAdapters(ITypeAdapter<ACTUAL, BASE>... adapters)
+    {
+        for (ITypeAdapter<ACTUAL, BASE> adapter : adapters)
+        {
+            addAdapter(adapter);
+        }
+        return this;
     }
 
     /**
@@ -168,39 +233,92 @@ public class ConfigProcessor
         return !value.equals(newValue);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private Object getConfigValue(String section, String comment, Field f, Object defVal)
     {
         Property prop = null;
-        Object ret = null;
+        Object res = null;
         Bound<Double> bound = getBound(f);
-        if (defVal instanceof Boolean)
+        ITypeAdapter adapter = getAdapterFor(f);
+        if (adapter != null)
         {
-            prop = configFile.get(section, f.getName(), (Boolean) defVal, comment);
-            ret = prop.getBoolean();
+            defVal = adapter.createBaseType(defVal);
+            switch (adapter.getType())
+            {
+            case BOOLEAN:
+                if (defVal.getClass().isArray())
+                {
+                    prop = configFile.get(section, f.getName(), (boolean[]) defVal, comment);
+                    res = prop.getBooleanList();
+                }
+                else
+                {
+                    prop = configFile.get(section, f.getName(), (Boolean) defVal, comment);
+                    res = prop.getBoolean();
+                }
+                break;
+            case DOUBLE:
+                if (defVal.getClass().isArray())
+                {
+                    prop = configFile.get(section, f.getName(), (double[]) defVal, comment);
+                    res = AbstractConfigHandler.boundDoubleArr(prop, Bound.of(bound.min.doubleValue(), bound.max.doubleValue()));
+                }
+                else
+                {
+                    prop = configFile.get(section, f.getName(), (Double) defVal, comment);
+                    res = AbstractConfigHandler.boundValue(prop, Bound.of(bound.min.doubleValue(), bound.max.doubleValue()), (Double) defVal);
+                }
+                break;
+            case INTEGER:
+                if (defVal.getClass().isArray())
+                {
+                    prop = configFile.get(section, f.getName(), (int[]) defVal, comment);
+                    res = AbstractConfigHandler.boundIntArr(prop, Bound.of(bound.min.intValue(), bound.max.intValue()));
+                }
+                else
+                {
+                    prop = configFile.get(section, f.getName(), (Integer) defVal, comment);
+                    res = AbstractConfigHandler.boundValue(prop, Bound.of(bound.min.intValue(), bound.max.intValue()), (Integer) defVal);
+                }
+                break;
+            case STRING:
+                if (defVal.getClass().isArray())
+                {
+                    prop = configFile.get(section, f.getName(), (String[]) defVal, comment);
+                    res = prop.getStringList();
+                }
+                else
+                {
+                    prop = configFile.get(section, f.getName(), (String) defVal, comment);
+                    res = prop.getString();
+                }
+                break;
+            default:
+                break;
+            }
+            if (res != null)
+            {
+                AbstractConfigHandler.setBounds(prop, bound);
+                getRestartReq(f).apply(prop);
+                return adapter.createActualType(res);
+            }
         }
-        else if (defVal instanceof Integer)
+        throw new IllegalArgumentException(String.format("No adapter for type %s in class %s, field %s", f.getGenericType(), configs, f));
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private ITypeAdapter getAdapterFor(Field f)
+    {
+        TypeToken<?> t = TypeToken.of(f.getGenericType());
+        Class<?> c = f.getType();
+        for (ITypeAdapter adapter : adapters)
         {
-            prop = configFile.get(section, f.getName(), (Integer) defVal, comment);
-            ret = AbstractConfigHandler.boundValue(prop, Bound.of(bound.min.intValue(), bound.max.intValue()), (Integer) defVal);
+            if ((c.isPrimitive() && c == adapter.getPrimitiveType()) || adapter.getActualType().isAssignableFrom(t))
+            {
+                return adapter;
+            }
         }
-        else if (defVal instanceof Double)
-        {
-            prop = configFile.get(section, f.getName(), (Double) defVal, comment);
-            ret = AbstractConfigHandler.boundValue(prop, Bound.of(bound.min.doubleValue(), bound.max.doubleValue()), (Double) defVal);
-        }
-        else if (defVal instanceof String)
-        {
-            prop = configFile.get(section, f.getName(), (String) defVal, comment);
-            ret = prop.getString();
-        }
-        else if (defVal instanceof String[])
-        {
-            prop = configFile.get(section, f.getName(), (String[]) defVal, comment);
-            ret = prop.getStringList();
-        }
-        AbstractConfigHandler.setBounds(prop, bound);
-        getRestartReq(f).apply(prop);
-        return ret;
+        return null;
     }
 
     public ImmutableSet<String> sections()

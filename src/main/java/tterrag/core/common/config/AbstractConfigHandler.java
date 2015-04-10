@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.NonNull;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -531,41 +530,82 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
         if (prop.getType() == Type.INTEGER)
         {
-            bound = Bound.of(bound.min.intValue(), bound.max.intValue());
+            Bound<Integer> b = Bound.of(bound.min.intValue(), bound.max.intValue());
+            prop.setMinValue(b.min);
+            prop.setMaxValue(b.max);
         }
         else if (prop.getType() == Type.DOUBLE)
         {
-            ;
+            Bound<Double> b = Bound.of(bound.min.doubleValue(), bound.max.doubleValue());
+            prop.setMinValue(b.min);
+            prop.setMaxValue(b.max);
         }
         else
         {
             TTCore.logger.warn("A mod tried to set bounds on a property that was not either of Integer of Double type.");
             TTCore.logger.warn("Trace :" + Arrays.toString(Thread.currentThread().getStackTrace()));
         }
-        prop.setLanguageKey(prop.getName());
-        prop.comment += "\n" + EnumChatFormatting.AQUA + "[range: " + bound.min + " - " + bound.max + "]";
+        prop.comment += (prop.comment.isEmpty() ? "" : "\n") + "[range: " + bound.min + " - " + bound.max + "]";
     }
-
+    
+    static int[] boundIntArr(Property prop, Bound<Integer> bound)
+    {
+        int[] prev = prop.getIntList();
+        int[] res = new int[prev.length];
+        for (int i = 0; i < prev.length; i++)
+        {
+            res[i] = bound.clamp(prev[i]);
+        }
+        prop.set(res);
+        return res;
+    }
+    
+    static double[] boundDoubleArr(Property prop, Bound<Double> bound)
+    {
+        double[] prev = prop.getDoubleList();
+        double[] res = new double[prev.length];
+        for (int i = 0; i < prev.length; i++)
+        {
+            res[i] = bound.clamp(prev[i]);
+        }
+        prop.set(res);
+        return res;
+    }
+    
     @SuppressWarnings("unchecked")
     static <T extends Number & Comparable<T>> T boundValue(Property prop, Bound<T> bound, T defVal)
     {
         Object b = (Object) bound;
         if (defVal instanceof Integer)
         {
-            prop.set(((Bound<Integer>) b).clamp(prop.getInt()));
-            return (T) Integer.valueOf(prop.getInt());
+            return (T) boundInt(prop, (Bound<Integer>) b);
         }
         if (defVal instanceof Double)
         {
-            prop.set(((Bound<Double>) b).clamp(prop.getDouble()));
-            return (T) Double.valueOf(prop.getDouble());
+            return (T) boundDouble(prop, (Bound<Double>) b);
         }
         if (defVal instanceof Float)
         {
-            prop.set(((Bound<Float>) b).clamp(Double.valueOf(prop.getDouble()).floatValue()));
-            return (T) Float.valueOf(Double.valueOf(prop.getDouble()).floatValue());
+            return (T) boundFloat(prop, (Bound<Float>) b);
         }
         throw new IllegalArgumentException(bound.min.getClass().getName() + " is not a valid config type.");
+    }
+    
+    private static Integer boundInt(Property prop, Bound<Integer> bound)
+    {
+        prop.set(bound.clamp(prop.getInt()));
+        return Integer.valueOf(prop.getInt());
+    }
+    
+    private static Double boundDouble(Property prop, Bound<Double> bound)
+    {
+        prop.set(bound.clamp(prop.getDouble()));
+        return Double.valueOf(prop.getDouble());
+    }
+
+    private static Float boundFloat(Property prop, Bound<Float> bound)
+    {
+        return boundDouble(prop, Bound.of(bound.min.doubleValue(), bound.max.doubleValue())).floatValue();
     }
 
     /**
