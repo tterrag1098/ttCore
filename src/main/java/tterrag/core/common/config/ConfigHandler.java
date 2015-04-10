@@ -1,9 +1,6 @@
 package tterrag.core.common.config;
 
 import java.io.File;
-import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import net.minecraftforge.common.config.Configuration;
 import tterrag.core.TTCore;
@@ -26,13 +23,6 @@ import tterrag.core.common.tweaks.Tweaks;
 @Handler(value = HandlerType.FML, getInstFrom = Inst.METHOD)
 public class ConfigHandler extends AbstractConfigHandler implements ITweakConfigHandler, IReloadCallback
 {
-    @Config("test_outer")
-    @Range(min = 0, max = 1)
-    public static float[] test1 = { 0.1f, 0.2f, 0.3f };
-
-    @Config("test_outer.test_inner")
-    public static List<String> test2 = Lists.newArrayList("test1", "test2", "test3");
-
     private static final String sectionGeneral = Configuration.CATEGORY_GENERAL;
     private static final String sectionEnchants = "enchants";
 
