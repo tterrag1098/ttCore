@@ -25,11 +25,13 @@ public class GuiEnhancedModList extends GuiModList
     {
         NORMAL(24), A_TO_Z(25), Z_TO_A(26);
 
-        private int buttonID;
+        private final int buttonID;
+        private final ModComparator comparator;
 
         private SortType(int buttonID)
         {
             this.buttonID = buttonID;
+            this.comparator = new ModComparator(this);
         }
 
         public static SortType getTypeForButton(GuiButton button)
@@ -42,6 +44,31 @@ public class GuiEnhancedModList extends GuiModList
                 }
             }
             return null;
+        }
+    }
+    
+    private static class ModComparator implements Comparator<ModContainer>
+    {
+        private SortType type;
+        private ModComparator(SortType type)
+        {
+            this.type = type;
+        }
+        
+        @Override
+        public int compare(ModContainer o1, ModContainer o2)
+        {
+            String name1 = StringUtils.stripControlCodes(o1.getName()).toLowerCase();
+            String name2 = StringUtils.stripControlCodes(o2.getName()).toLowerCase();
+            switch(type)
+            {
+            case A_TO_Z:
+                return name1.compareTo(name2);
+            case Z_TO_A:
+                return name2.compareTo(name1);
+            default:
+                return 0;
+            }
         }
     }
 
@@ -177,7 +204,7 @@ public class GuiEnhancedModList extends GuiModList
     {
         super.mouseClicked(x, y, button);
         search.mouseClicked(x, y, button);
-        if (button == 1 && x >= search.xPosition && x < search.xPosition + this.width && y >= search.yPosition && y < search.yPosition + this.height)
+        if (button == 1 && x >= search.xPosition && x < search.xPosition + search.width && y >= search.yPosition && y < search.yPosition + search.height)
         {
             search.setText("");
         }
@@ -204,44 +231,13 @@ public class GuiEnhancedModList extends GuiModList
 
         if (!sorted)
         {
-            switch (sortType)
-            {
-            case A_TO_Z:
-                Collections.sort(getMods(), new Comparator<ModContainer>()
-                {
-                    @Override
-                    public int compare(ModContainer o1, ModContainer o2)
-                    {
-                        return compareNames(o1, o2);
-                    }
-                });
-                break;
-            case Z_TO_A:
-                Collections.sort(getMods(), new Comparator<ModContainer>()
-                {
-                    @Override
-                    public int compare(ModContainer o1, ModContainer o2)
-                    {
-                        return compareNames(o2, o1);
-                    }
-                });
-                break;
-            default:
-                reloadMods();
-                break;
-            }
+            reloadMods();
+            Collections.sort(getMods(), sortType.comparator);
             setMods();
             sorted = true;
         }
     }
-
-    private int compareNames(ModContainer o1, ModContainer o2)
-    {
-        String name1 = StringUtils.stripControlCodes(o1.getName());
-        String name2 = StringUtils.stripControlCodes(o2.getName());
-        return name1.compareTo(name2);
-    }
-
+    
     private void reloadMods()
     {
         List<ModContainer> mods = getMods();
