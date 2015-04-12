@@ -16,7 +16,7 @@ import net.minecraftforge.common.DimensionManager;
 @UtilityClass
 public class TTEntityUtils
 {
-    private final Random rand = new Random();
+    private static final Random rand = new Random();
 
     public void setEntityVelocity(Entity entity, double velX, double velY, double velZ)
     {

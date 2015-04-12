@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.util.StringUtils;
 import tterrag.core.TTCore;
 import tterrag.core.common.config.ConfigHandler;
 import cpw.mods.fml.client.GuiModList;
@@ -211,7 +212,7 @@ public class GuiEnhancedModList extends GuiModList
                     @Override
                     public int compare(ModContainer o1, ModContainer o2)
                     {
-                        return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+                        return compareNames(o1, o1);
                     }
                 });
                 break;
@@ -221,7 +222,7 @@ public class GuiEnhancedModList extends GuiModList
                     @Override
                     public int compare(ModContainer o1, ModContainer o2)
                     {
-                        return o2.getName().toLowerCase().compareTo(o1.getName().toLowerCase());
+                        return compareNames(o2, o1);
                     }
                 });
                 break;
@@ -232,6 +233,13 @@ public class GuiEnhancedModList extends GuiModList
             setMods();
             sorted = true;
         }
+    }
+
+    private int compareNames(ModContainer o1, ModContainer o2)
+    {
+        String name1 = StringUtils.stripControlCodes(o1.getName());
+        String name2 = StringUtils.stripControlCodes(o2.getName());
+        return name1.compareTo(name2);
     }
 
     private void reloadMods()
