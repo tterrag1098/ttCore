@@ -212,7 +212,7 @@ public class GuiEnhancedModList extends GuiModList
                     @Override
                     public int compare(ModContainer o1, ModContainer o2)
                     {
-                        return compareNames(o1, o1);
+                        return compareNames(o1, o2);
                     }
                 });
                 break;
