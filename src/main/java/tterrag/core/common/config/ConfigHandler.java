@@ -27,14 +27,16 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     private static final String sectionEnchants = "enchants";
 
     @Config
-    @Comment("Show oredictionary names of every item in its tooltip.")
+    @Comment("Show oredictionary names of every item in its tooltip.\n0 - Off\n1 - Always on\n2 - Only with shift\n3 - Only in debug mode")
+    @Range(min = 0, max = 3)
     @NoSync
-    public static boolean showOredictTooltips = false;
+    public static int showOredictTooltips = 1;
 
     @Config
-    @Comment("Show item registry names and other things in debug mode (f3+h)")
+    @Comment("Show item registry names in tooltips.\n0 - Off\n1 - Always on\n2 - Only with shift\n3 - Only in debug mode")
+    @Range(min = 0, max = 3)
     @NoSync
-    public static boolean extraDebugStuff = true;
+    public static int showRegistryNameTooltips = 3;
 
     @Config
     @Comment("Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types")

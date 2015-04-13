@@ -1,4 +1,4 @@
-package tterrag.core.common.handlers;
+package tterrag.core.client.handlers;
 
 import java.util.Map;
 
