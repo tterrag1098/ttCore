@@ -299,6 +299,7 @@ public class ConfigProcessor
             if (res != null)
             {
                 AbstractConfigHandler.setBounds(prop, bound);
+                AbstractConfigHandler.addCommentDetails(prop, bound);
                 getRestartReq(f).apply(prop);
                 return adapter.createActualType(res);
             }

@@ -12,6 +12,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.config.Property.Type;
 import tterrag.core.TTCore;
 import tterrag.core.api.common.config.IConfigHandler;
+import tterrag.core.common.Lang;
 import tterrag.core.common.event.ConfigFileChangedEvent;
 import tterrag.core.common.util.Bound;
 
@@ -486,6 +487,8 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         {
             bound = Bound.MAX_BOUND;
         }
+        
+        addCommentDetails(prop, bound);
 
         if (defaultVal instanceof Integer)
         {
@@ -545,7 +548,6 @@ public abstract class AbstractConfigHandler implements IConfigHandler
             TTCore.logger.warn("A mod tried to set bounds on a property that was not either of Integer of Double type.");
             TTCore.logger.warn("Trace :" + Arrays.toString(Thread.currentThread().getStackTrace()));
         }
-        prop.comment += (prop.comment.isEmpty() ? "" : "\n") + "[range: " + bound.min + " - " + bound.max + "]";
     }
     
     static int[] boundIntArr(Property prop, Bound<Integer> bound)
@@ -606,6 +608,23 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     private static Float boundFloat(Property prop, Bound<Float> bound)
     {
         return boundDouble(prop, Bound.of(bound.min.doubleValue(), bound.max.doubleValue())).floatValue();
+    }
+    
+    private static Lang fmlLang = new Lang("fml.configgui.tooltip");
+    static void addCommentDetails(Property prop, Bound<?> bound)
+    {
+        prop.comment += (prop.comment.isEmpty() ? "" : "\n");
+        if (bound.equals(Bound.MAX_BOUND)) 
+        {
+            prop.comment += fmlLang.localize("default", prop.isList() ? prop.getDefaults() : prop.getDefault());
+        }
+        else
+        {
+            boolean minIsInt = bound.min.doubleValue() == bound.min.intValue();
+            boolean maxIsInt = bound.max.doubleValue() == bound.max.intValue();
+            prop.comment += fmlLang.localize("defaultNumeric", minIsInt ? bound.min.intValue() : bound.min, maxIsInt ? bound.max.intValue()
+                    : bound.max, prop.isList() ? prop.getDefaults() : prop.getDefault());
+        }
     }
 
     /**
