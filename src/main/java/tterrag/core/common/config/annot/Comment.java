@@ -15,9 +15,7 @@ import java.lang.annotation.Target;
 public @interface Comment
 {
     /**
-     * The comment for the config option.
-     * 
-     * @return A string comment.
+     * The comment for the config option. Multiple strings will be split into lines.
      */
-    String value() default "";
+    String[] value() default "";
 }

@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -234,12 +236,13 @@ public class ConfigProcessor
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private Object getConfigValue(String section, String comment, Field f, Object defVal)
+    private Object getConfigValue(String section, String[] commentLines, Field f, Object defVal)
     {
         Property prop = null;
         Object res = null;
         Bound<Double> bound = getBound(f);
         ITypeAdapter adapter = getAdapterFor(f);
+        String comment = StringUtils.join(commentLines, "\n");
         if (adapter != null)
         {
             defVal = adapter.createBaseType(defVal);
@@ -363,10 +366,10 @@ public class ConfigProcessor
         }
     }
 
-    private String getComment(Field f)
+    private String[] getComment(Field f)
     {
         Comment c = f.getAnnotation(Comment.class);
-        return c == null ? "" : c.value();
+        return c == null ? new String[0] : c.value();
     }
 
     private Bound<Double> getBound(Field f)

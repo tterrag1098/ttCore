@@ -16,7 +16,6 @@ import tterrag.core.common.config.annot.Range;
 import tterrag.core.common.config.annot.RestartReq;
 import tterrag.core.common.handlers.RightClickCropHandler;
 import tterrag.core.common.handlers.RightClickCropHandler.PlantInfo;
-import tterrag.core.common.transform.TTCorePlugin;
 import tterrag.core.common.tweaks.Tweak;
 import tterrag.core.common.tweaks.Tweaks;
 
@@ -27,19 +26,19 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     private static final String sectionEnchants = "enchants";
 
     @Config
-    @Comment("Show oredictionary names of every item in its tooltip.\n0 - Off\n1 - Always on\n2 - Only with shift\n3 - Only in debug mode")
+    @Comment({"Show oredictionary names of every item in its tooltip.", "0 - Off", "1 - Always on", "2 - Only with shift", "3 - Only in debug mode"})
     @Range(min = 0, max = 3)
     @NoSync
     public static int showOredictTooltips = 1;
 
     @Config
-    @Comment("Show item registry names in tooltips.\n0 - Off\n1 - Always on\n2 - Only with shift\n3 - Only in debug mode")
+    @Comment({ "Show item registry names in tooltips.", "0 - Off", "1 - Always on", "2 - Only with shift", "3 - Only in debug mode" })
     @Range(min = 0, max = 3)
     @NoSync
     public static int showRegistryNameTooltips = 3;
 
     @Config
-    @Comment("Removes all void fog.\n0 = off\n1 = DEFAULT worldtype only\n2 = all world types")
+    @Comment({ "Removes all void fog.", "0 = off", "1 = DEFAULT worldtype only", "2 = all world types" })
     @NoSync
     @Range(min = 0, max = 2)
     public static int disableVoidFog = 1;
@@ -57,13 +56,13 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     public static boolean allowCropRC = true;
 
     @Config
-    @Comment("0 - Do nothing\n1 - Remove stacktraces, leave 1-line missing texture errors\n2 - Remove all missing texture errors completely. This option is not supported outside dev environments.")
+    @Comment({ "0 - Do nothing", "1 - Remove stacktraces, leave 1-line missing texture errors", "2 - Remove all missing texture errors completely." })
     @NoSync
     @Range(min = 0, max = 2)
     public static int textureErrorRemover = 1;
 
     @Config
-    @Comment("Controls the default sorting on the mod list GUI.\n\n0 - Default sort (load order)\n1 - A to Z sort\n2 - Z to A sort")
+    @Comment({ "Controls the default sorting on the mod list GUI.", "0 - Default sort (load order)", "1 - A to Z sort", "2 - Z to A sort" })
     @NoSync
     @Range(min = 0, max = 2)
     public static int defaultModSort = 1;
@@ -127,6 +126,7 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     @Override
     protected void reloadIngameConfigs()
     {
+        Tweaks.loadIngameTweaks();
     }
 
     @Override
@@ -138,10 +138,6 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     @Override
     public void callback(ConfigProcessor inst)
     {
-        if (!TTCorePlugin.runtimeDeobfEnabled)
-        {
-            textureErrorRemover = Math.min(textureErrorRemover, 1);
-        }
         Tweaks.loadIngameTweaks();
     }
 
