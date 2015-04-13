@@ -13,19 +13,9 @@ public class Lang
 
     private String locKey;
 
-    /**
-     * Ignores the prefix stored in this instance of the class and localizes the raw string passed.
-     * 
-     * @param unloc
-     *            The unlocalized string.
-     * @param args
-     *            The args to format the localized text withi.
-     * 
-     * @return A localized string.
-     */
-    public String localizeExact(String unloc, Object... args)
+    private String prepend(String suffix)
     {
-        return translateToLocal(unloc, args);
+        return locKey + "." + suffix;
     }
 
     /**
@@ -40,10 +30,20 @@ public class Lang
      */
     public String localize(String unloc, Object... args)
     {
-        return translateToLocal(locKey + "." + unloc, args);
+        return localizeExact(prepend(unloc), args);
     }
 
-    private String translateToLocal(String unloc, Object... args)
+    /**
+     * Ignores the prefix stored in this instance of the class and localizes the raw string passed.
+     * 
+     * @param unloc
+     *            The unlocalized string.
+     * @param args
+     *            The args to format the localized text withi.
+     * 
+     * @return A localized string.
+     */
+    public String localizeExact(String unloc, Object... args)
     {
         return StatCollector.translateToLocalFormatted(unloc, args);
     }
@@ -72,5 +72,29 @@ public class Lang
     public String[] splitList(String list)
     {
         return list.split(REGEX);
+    }
+
+    /**
+     * Checks if the passed string (plus the prefix) has a localization mapped.
+     * 
+     * @param unloc
+     *            The unlocalized suffix
+     * @return True if there is a localization mapped, false otherwise.
+     */
+    public boolean canLocalize(String unloc)
+    {
+        return canLocalizeExact(prepend(unloc));
+    }
+
+    /**
+     * Checks if the passed string has a localization mapped. Does not use the prefix.
+     * 
+     * @param unloc
+     *            The unlocalized string
+     * @return True if there is a localization mapped, false otherwise.
+     */
+    public boolean canLocalizeExact(String unloc)
+    {
+        return StatCollector.canTranslate(unloc);
     }
 }
