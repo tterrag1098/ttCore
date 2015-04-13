@@ -13,7 +13,15 @@ public class Lang
 
     private String locKey;
 
-    private String prepend(String suffix)
+    /**
+     * Adds the stored prefix to this string, separating with a period. Using this method returns the string that is used for localizing if you passed
+     * this arg into {@link #localize(String, Object...)}.
+     * 
+     * @param suffix
+     *            The suffix string
+     * @return The full string
+     */
+    public String addPrefix(String suffix)
     {
         return locKey + "." + suffix;
     }
@@ -30,7 +38,7 @@ public class Lang
      */
     public String localize(String unloc, Object... args)
     {
-        return localizeExact(prepend(unloc), args);
+        return localizeExact(addPrefix(unloc), args);
     }
 
     /**
@@ -83,7 +91,7 @@ public class Lang
      */
     public boolean canLocalize(String unloc)
     {
-        return canLocalizeExact(prepend(unloc));
+        return canLocalizeExact(addPrefix(unloc));
     }
 
     /**

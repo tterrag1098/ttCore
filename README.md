@@ -2,12 +2,12 @@
 ####[Download](http://minecraft.curseforge.com/mc-mods/226082-ttcore)
 ======
 
-WIP core lib for my other mods. Name also WIP...
+A core library for mine and others' mods.
 
 ___
 ###Things this mod does on its own:
 
-* Adds a config option to enable tooltips that show all oredict registrations on an item
+* Adds a config option to enable tooltips that show all oredict registrations and/or registry name on an item
 * ~~Adds a magical crops WAILA plugin~~ (Moved to [WailaPlugins](https://github.com/tterrag1098/WAILAPlugins)!)
 * Adds a '/reloadConfigs' command to reload configs from disk of any (supported) mod
 * Adds a config to remove void fog
@@ -16,6 +16,7 @@ ___
 * Adds a config to change the max level on anvil repairs (no more "Too Expensive!")
 * Adds a command to query a scoreboard score for a player
 * Adds an "XP Boost" enchant that increases XP dropped from killed entities and broken blocks
+* Adds an "Auto Smelt" enchant that smelts mined items and blocks automatically
 * Adds a *special something* for achievements
 * Adds the ability to right click crops to harvest them. You can edit the supported blocks and change whether it's enabled at all in the config.
 
@@ -33,6 +34,7 @@ ___
 * A BlockCoord class (yes, another one)
 * Block iterators for common use cases, such as a cubic iterator and planar iterator. These are used to iterate over the blocks in an area without using nasty nested for loops.
 * An easy-to-use config system that automatically handles a lot of the "boring" stuff in most config handlers, such as responding to events and the config GUI. An example of how to use the system can be found [here](https://github.com/tterrag1098/WAILAPlugins/tree/master/src/main/java/tterrag/wailaplugins/config)
+* An even-easier-to-use annotation based config system, which automatically syncs config values to clients when they connect to a server.
 * A simple way to schedule events to happen in a certain amount of ticks
 
 ___
@@ -54,7 +56,7 @@ Next, you need to specify what mod to download from the maven. We do this in the
 
 ```
 dependencies {
-  compile "tterrag.core:ttCore:MC1.7.10-0.0.3-32:deobf"
+  compile "tterrag.core:ttCore:MC1.7.10-0.1.0-67:deobf"
 }
 ```
 
