@@ -125,6 +125,6 @@ public class CommandReloadConfigs extends CommandBase
 
     private void sendResult(ICommandSender player, String modid, String result)
     {
-        player.addChatMessage(new ChatComponentText(String.format(TTCore.lang.localize("command.config.result." + result), modid)));
+        player.addChatMessage(new ChatComponentText(TTCore.lang.localize("command.config.result." + result, modid)));
     }
 }
