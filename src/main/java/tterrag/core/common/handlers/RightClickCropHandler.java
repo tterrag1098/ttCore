@@ -70,7 +70,8 @@ public class RightClickCropHandler
         int x = event.x, y = event.y, z = event.z;
         Block block = event.world.getBlock(x, y, z);
         int meta = event.world.getBlockMetadata(x, y, z);
-        if (ConfigHandler.allowCropRC && event.action == Action.RIGHT_CLICK_BLOCK)
+        if (ConfigHandler.allowCropRC && event.action == Action.RIGHT_CLICK_BLOCK
+                && (event.entityPlayer.getHeldItem() == null || !event.entityPlayer.isSneaking()))
         {
             for (PlantInfo info : plants)
             {
