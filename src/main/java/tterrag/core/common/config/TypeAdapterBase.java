@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraftforge.common.config.Property;
@@ -110,6 +112,71 @@ public abstract class TypeAdapterBase<ACTUAL, BASE> implements ITypeAdapter<ACTU
                 }
             };
     
+    public static final TypeAdapterBase<List<Integer>, int[]> INTEGER_LIST = 
+            new TypeAdapterBase<List<Integer>, int[]>(new TypeToken<List<Integer>>(){}, Type.INTEGER)
+            {
+                @Override
+                public List<Integer> createActualType(int[] data)
+                {
+                    return Lists.newArrayList(ArrayUtils.toObject(data));
+                }
+                
+                @Override
+                public int[] createBaseType(List<Integer> actual)
+                {
+                    return ArrayUtils.toPrimitive(actual.toArray(new Integer[actual.size()]));
+                }
+            };
+            
+    public static final TypeAdapterBase<List<Double>, double[]> DOUBLE_LIST = 
+            new TypeAdapterBase<List<Double>, double[]>(new TypeToken<List<Double>>(){}, Type.DOUBLE)
+            {
+                @Override
+                public List<Double> createActualType(double[] data)
+                {
+                    return Lists.newArrayList(ArrayUtils.toObject(data));
+                }
+                
+                @Override
+                public double[] createBaseType(List<Double> actual)
+                {
+                    return ArrayUtils.toPrimitive(actual.toArray(new Double[actual.size()]));
+                }
+            };
+          
+    public static final TypeAdapterBase<List<Float>, double[]> FLOAT_LIST = 
+            new TypeAdapterBase<List<Float>, double[]>(new TypeToken<List<Float>>(){}, Type.DOUBLE)
+            {
+                @Override
+                public List<Float> createActualType(double[] data)
+                {
+                    return Lists.newArrayList(ArrayUtils.toObject(FLOAT_ARR.createActualType(data)));
+                }
+                        
+                @Override
+                public double[] createBaseType(List<Float> actual)
+                {
+                    float[] temp = ArrayUtils.toPrimitive(actual.toArray(new Float[actual.size()]));
+                    return FLOAT_ARR.createBaseType(temp);
+                }
+            };
+            
+    public static final TypeAdapterBase<List<Boolean>, boolean[]> BOOLEAN_LIST = 
+            new TypeAdapterBase<List<Boolean>, boolean[]>(new TypeToken<List<Boolean>>(){}, Type.BOOLEAN)
+            {
+                @Override
+                public List<Boolean> createActualType(boolean[] data)
+                {
+                    return Lists.newArrayList(ArrayUtils.toObject(data));
+                }
+                
+                @Override
+                public boolean[] createBaseType(List<Boolean> actual)
+                {
+                    return ArrayUtils.toPrimitive(actual.toArray(new Boolean[actual.size()]));
+                }
+            };
+ 
     public static final TypeAdapterBase<List<String>, String[]> STRING_LIST = 
             new TypeAdapterBase<List<String>, String[]>(new TypeToken<List<String>>(){}, Type.STRING)
             {
@@ -118,14 +185,14 @@ public abstract class TypeAdapterBase<ACTUAL, BASE> implements ITypeAdapter<ACTU
                 {
                     return Lists.newArrayList(data);
                 }
-                
+                        
                 @Override
                 public String[] createBaseType(List<String> actual)
                 {
                     return actual.toArray(new String[actual.size()]);
                 }
             };
-    
+            
     public static final List<TypeAdapterBase<?, ? extends Serializable>> all = Lists.newArrayList(
             INTEGER, 
             INTEGER_ARR, 
@@ -137,6 +204,10 @@ public abstract class TypeAdapterBase<ACTUAL, BASE> implements ITypeAdapter<ACTU
             STRING_ARR, 
             FLOAT, 
             FLOAT_ARR, 
+            INTEGER_LIST,
+            DOUBLE_LIST,
+            FLOAT_LIST,
+            BOOLEAN_LIST,
             STRING_LIST
     );
 }

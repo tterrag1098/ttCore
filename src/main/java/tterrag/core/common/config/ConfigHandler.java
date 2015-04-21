@@ -1,6 +1,7 @@
 package tterrag.core.common.config;
 
 import java.io.File;
+import java.util.List;
 
 import net.minecraftforge.common.config.Configuration;
 import tterrag.core.TTCore;
@@ -18,6 +19,8 @@ import tterrag.core.common.handlers.RightClickCropHandler;
 import tterrag.core.common.handlers.RightClickCropHandler.PlantInfo;
 import tterrag.core.common.tweaks.Tweak;
 import tterrag.core.common.tweaks.Tweaks;
+
+import com.google.common.collect.Lists;
 
 @Handler(value = HandlerType.FML, getInstFrom = Inst.METHOD)
 public class ConfigHandler extends AbstractConfigHandler implements ITweakConfigHandler, IReloadCallback
@@ -92,6 +95,15 @@ public class ConfigHandler extends AbstractConfigHandler implements ITweakConfig
     @Config(sectionEnchants)
     @Comment("Allow the Auto Smelt enchant to work with Fortune.")
     public static boolean allowAutoSmeltWithFortune = true;
+    
+    @Config("test")
+    public static List<Integer> test1 = Lists.newArrayList(1, 2, 3);
+    @Config("test")
+    public static List<Double> test2 = Lists.newArrayList(0.1, 0.2, 0.3);
+    @Config("test")
+    public static List<Boolean> test3 = Lists.newArrayList(true, false, true);
+    @Config("test")
+    public static List<String> test4 = Lists.newArrayList("test1", "test2", "test3");
 
     private static ConfigHandler INSTANCE;
 
