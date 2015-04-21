@@ -616,14 +616,14 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         prop.comment += (prop.comment.isEmpty() ? "" : "\n");
         if (bound.equals(Bound.MAX_BOUND)) 
         {
-            prop.comment += fmlLang.localize("default", prop.isList() ? prop.getDefaults() : prop.getDefault());
+            prop.comment += fmlLang.localize("default", prop.isList() ? Arrays.toString(prop.getDefaults()) : prop.getDefault());
         }
         else
         {
             boolean minIsInt = bound.min.doubleValue() == bound.min.intValue();
             boolean maxIsInt = bound.max.doubleValue() == bound.max.intValue();
             prop.comment += fmlLang.localize("defaultNumeric", minIsInt ? bound.min.intValue() : bound.min, maxIsInt ? bound.max.intValue()
-                    : bound.max, prop.isList() ? prop.getDefaults() : prop.getDefault());
+                    : bound.max, prop.isList() ? Arrays.toString(prop.getDefaults()) : prop.getDefault());
         }
     }
 
