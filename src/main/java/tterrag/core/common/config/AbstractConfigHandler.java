@@ -525,7 +525,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         throw new IllegalArgumentException("default value is not a config value type.");
     }
 
-    static void setBounds(Property prop, Bound<?> bound)
+    static void setBounds(Property prop, Bound<?> bound) throws IllegalArgumentException
     {
         if (bound.equals(Bound.MAX_BOUND))
         {
@@ -545,8 +545,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
         }
         else
         {
-            TTCore.logger.warn("A mod tried to set bounds on a property that was not either of Integer of Double type.");
-            TTCore.logger.warn("Trace :" + Arrays.toString(Thread.currentThread().getStackTrace()));
+            throw new IllegalArgumentException(String.format("A mod tried to set bounds %s on a property that was not either of Integer of Double type.", bound));
         }
     }
     
@@ -575,7 +574,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     }
     
     @SuppressWarnings("unchecked")
-    static <T extends Number & Comparable<T>> T boundValue(Property prop, Bound<T> bound, T defVal)
+    static <T extends Number & Comparable<T>> T boundValue(Property prop, Bound<T> bound, T defVal) throws IllegalArgumentException
     {
         Object b = (Object) bound;
         if (defVal instanceof Integer)

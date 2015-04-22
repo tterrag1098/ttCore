@@ -98,6 +98,7 @@ public class ConfigProcessor
     private final IReloadCallback callback;
 
     Map<String, Object> configValues = Maps.newHashMap();
+    Map<String, Object> defaultValues = Maps.newHashMap();
 
     private Set<String> sections = Sets.newHashSet();
 
@@ -224,7 +225,14 @@ public class ConfigProcessor
         {
             return false;
         }
-        Object value = f.get(null);
+        String name = f.getName();
+        Object value = defaultValues.get(name);
+        if (value == null)
+        {
+            value = f.get(null);
+            defaultValues.put(name, value);
+        }
+        
         Object newValue = getConfigValue(cfg.value(), getComment(f), f, value);
 
         configValues.put(f.getName(), newValue);
