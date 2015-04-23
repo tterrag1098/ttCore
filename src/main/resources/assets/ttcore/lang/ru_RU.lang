@@ -3,3 +3,19 @@ ttCore.tooltip.oreDictNames=Имена словаря руд:
 ttCore.command.config.result.success=Перезапуск конфигурации для %s успешен
 ttCore.command.config.result.fail=Перезапуск конфигурации для %s не удался
 ttCore.command.config.result.invalid=Modid %s недействителен
+
+enchantment.xpboost=Увеличение опыта
+enchantment.xpboost.tooltip=Дополнительный опыт за убитых мобов
+
+enchantment.autosmelt=Авто-плавка
+enchantment.autosmelt.tooltip=Автоматическая плавка всего, что добывается
+
+ttCore.celebrate=С Новым Годом!
+
+ttCore.resourcepack.readme=Этот файл используется для ресурсов в игре. 
+ttCore.resourcepack.readme2=Не редактируйте его, он будет создан/удалён модификацией.
+
+ttCore.gui.normal=Обычный
+ttCore.gui.search=Поиск:
+ttCore.gui.modlistinfo1=О Боже всё иное!
+ttCore.gui.modlistinfo2=Новый дизайн добавлен:
