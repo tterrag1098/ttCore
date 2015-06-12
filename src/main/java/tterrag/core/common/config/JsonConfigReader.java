@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import tterrag.core.common.util.TTFileUtils;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -47,10 +48,11 @@ public class JsonConfigReader<T> implements Iterable<T>
         private Class<?> mainClass;
         private String assetPath;
     }
-
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final JsonParser parser = new JsonParser();
+    
     private static final String DEFAULT_KEY = "data";
+    private static final JsonParser parser = new JsonParser();
+    
+    private final GsonBuilder builder = new GsonBuilder();
 
     private File file;
     private JsonObject root;
@@ -179,6 +181,26 @@ public class JsonConfigReader<T> implements Iterable<T>
     }
 
     /**
+     * If this key exists in the current JSON data.
+     * 
+     * @param key
+     *            The String key
+     * @return True if this JSON has the given key. False otherwise.
+     */
+    public boolean hasKey(String key)
+    {
+        return root.get(key) != null;
+    }
+
+    /**
+     * Gives this reader's {@link GsonBuilder} object so that you may configure type adapters and other settings.
+     */
+    public GsonBuilder getBuilder()
+    {
+        return builder;
+    }
+
+    /**
      * Reads from the {@link JsonObject} linked to the {@link String key} and returns a List of all the elements contained in its array.
      * 
      * @return A list of the generic type of this class containing the deserialized elements from the passed key.
@@ -186,6 +208,12 @@ public class JsonConfigReader<T> implements Iterable<T>
     @SuppressWarnings("unchecked")
     public List<T> getElements(String key)
     {
+        if (!hasKey(key))
+        {
+            return Lists.newArrayList();
+        }
+        
+        Gson gson = builder.create();
         JsonArray elements = root.get(key).getAsJsonArray();
         List<T> list = new ArrayList<T>();
         for (int i = 0; i < elements.size(); i++)

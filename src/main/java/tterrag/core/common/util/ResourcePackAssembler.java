@@ -3,11 +3,15 @@ package tterrag.core.common.util;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 
@@ -47,7 +51,8 @@ public class ResourcePackAssembler
     private List<CustomFile> customs = new ArrayList<CustomFile>();
 
     private static List<IResourcePack> defaultResourcePacks;
-
+    private static Field _resourcePackFile = ReflectionHelper.findField(AbstractResourcePack.class, "field_110597_b", "resourcePackFile");
+    
     private static final String MC_META_BASE = "{\"pack\":{\"pack_format\":1,\"description\":\"%s\"}}";
 
     private File dir;
@@ -57,6 +62,8 @@ public class ResourcePackAssembler
     private String modid;
     private boolean hasPackPng = false;
     private Class<?> jarClass;
+    
+    private File dest;
 
     /**
      * @param directory
@@ -77,6 +84,7 @@ public class ResourcePackAssembler
         this.name = packName;
         this.modid = modid.toLowerCase();
         this.mcmeta = String.format(MC_META_BASE, this.name);
+        this.dest = new File(dir.getParent() + "/resourcepack/" + zip.getName());
     }
 
     /**
@@ -223,12 +231,12 @@ public class ResourcePackAssembler
                             "field_110449_ao", "ap");
                 }
 
-                File dest = new File(dir.getParent() + "/resourcepack/" + zip.getName());
                 TTFileUtils.safeDelete(dest);
                 FileUtils.copyFile(zip, dest);
                 TTFileUtils.safeDelete(zip);
                 writeNewFile(new File(dest.getParent() + "/readme.txt"),
                         TTCore.lang.localize("resourcepack.readme") + "\n\n" + TTCore.lang.localize("resourcepack.readme2"));
+                removeThis(defaultResourcePacks);
                 defaultResourcePacks.add(new FileResourcePack(dest));
             }
             catch (Exception e)
@@ -239,6 +247,20 @@ public class ResourcePackAssembler
         else
         {
             TTCore.logger.info("Skipping resource pack, we are on a dedicated server.");
+        }
+    }
+
+    @SneakyThrows
+    private void removeThis(List<IResourcePack> defaultResourcePacks)
+    {
+        Iterator<IResourcePack> iter = defaultResourcePacks.iterator();
+        while (iter.hasNext())
+        {
+            IResourcePack r = iter.next();
+            if (r instanceof FileResourcePack && ((File)_resourcePackFile.get(r)).getPath().equals(dest.getPath()))
+            {
+                iter.remove();
+            }
         }
     }
 
