@@ -17,16 +17,14 @@ public interface IConfigHandler
     ConfigCategory getCategory(String name);
 
     String getModID();
-    
+
     /**
-     * A hook for the {@link FMLInitializationEvent}, also called during config reloads depending on
-     * {@link #shouldHookOnReload()}
+     * A hook for the {@link FMLInitializationEvent}
      */
     void initHook();
-    
+
     /**
-     * A hook for the {@link FMLPostInitializationEvent}, also called during config reloads
-     * depending on {@link #shouldHookOnReload()}
+     * A hook for the {@link FMLPostInitializationEvent}
      */
     void postInitHook();
 }

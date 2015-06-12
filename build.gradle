@@ -59,17 +59,20 @@ task sourceJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
 }
 
-tasks.build.dependsOn sourceJar, javadocJar, deobfJar
+javadoc {
+    if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none') 
+    }
+    options.addStringOption('-quiet')
+    include 'tterrag/core/**/*'
+}
+
+tasks.build.dependsOn sourceJar, deobfJar, javadoc
 
 publishing {
     tasks.publish.dependsOn 'build'
@@ -78,7 +81,6 @@ publishing {
             from components.java
 
             artifact sourceJar
-            artifact javadocJar
             artifact deobfJar
         }
     }

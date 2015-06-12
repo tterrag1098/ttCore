@@ -285,7 +285,7 @@ public abstract class AbstractConfigHandler implements IConfigHandler
     /**
      * Activates a section
      * 
-     * @param sectionName
+     * @param section
      *            The section to activate
      * 
      * @throws NullPointerException

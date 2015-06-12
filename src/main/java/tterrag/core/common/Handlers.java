@@ -53,12 +53,12 @@ public class Handlers
         public enum HandlerType
         {
             /**
-             * Represents the {@link MinecraftForge}<code>.EVENT_BUS</code>
+             * Represents the {@link MinecraftForge#EVENT_BUS}
              */
             FORGE,
 
             /**
-             * Represents the {@link FMLCommonHandler.instance().bus()}
+             * Represents the {@link FMLCommonHandler#bus()}
              */
             FML
         }

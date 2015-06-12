@@ -12,11 +12,16 @@ public final class TTStringUtils
     /**
      * Formats a string and number for use in GUIs and tooltips
      * 
-     * @param prefix - The string to put before the formatted number
-     * @param suffix - The string to put after the formatted number
-     * @param amnt - The number to be formatted
-     * @param useDecimals - Whether or not to use decimals in the representation
-     * @param formatK - Whether or not to format the thousands
+     * @param prefix
+     *            - The string to put before the formatted number
+     * @param suffix
+     *            - The string to put after the formatted number
+     * @param amnt
+     *            - The number to be formatted
+     * @param useDecimals
+     *            - Whether or not to use decimals in the representation
+     * @param formatK
+     *            - Whether or not to format the thousands
      * @return
      */
     public static String formatString(String prefix, String suffix, long amnt, boolean useDecimals, boolean formatK)
@@ -54,14 +59,18 @@ public final class TTStringUtils
             return prefix;
         }
     }
-    
+
     /**
      * Formats a string and number for use in GUIs and tooltips
      * 
-     * @param prefix - The string to put before the formatted number
-     * @param suffix - The string to put after the formatted number
-     * @param amnt - The number to be formatted
-     * @param useDecimals - Whether or not to use decimals in the representation
+     * @param prefix
+     *            - The string to put before the formatted number
+     * @param suffix
+     *            - The string to put after the formatted number
+     * @param amnt
+     *            - The number to be formatted
+     * @param useDecimals
+     *            - Whether or not to use decimals in the representation
      * @return
      */
     public static String formatString(String prefix, String suffix, long amnt, boolean useDecimals)
@@ -85,14 +94,18 @@ public final class TTStringUtils
         }
         return "";
     }
-    
+
     /**
      * Returns a color for the number passed, based on its percentage of the max
      * 
-     * @param num The number to compare
-     * @param max The max number
+     * @param num
+     *            The number to compare
+     * @param max
+     *            The max number
      * 
-     * @return if num <= 10% of max : RED<br>if 10% < num <= 25% of max: GOLD (orange-ish)<br>if num > 25% of max: GREEN
+     * @return if num {@literal <}= 10% of max : RED<br>
+     *         if 10% {@literal <} num {@literal <}= 25% of max: GOLD (orange-ish)<br>
+     *         if num {@literal >} 25% of max: GREEN
      */
     public static EnumChatFormatting getColorFor(double num, double max)
     {
@@ -103,16 +116,16 @@ public final class TTStringUtils
         else
             return EnumChatFormatting.GREEN;
     }
-    
+
     public static String getEffectNameWithLevel(PotionEffect effect)
     {
         String name = TTCore.lang.localize(effect.getEffectName(), false);
-        
+
         if (effect.getAmplifier() > 0)
         {
             name += " " + TTCore.lang.localize("enchantment.level." + (effect.getAmplifier() + 1), false);
         }
-        
+
         return name;
     }
 }
