@@ -64,12 +64,12 @@ task deobfJar(type: Jar) {
     classifier = 'deobf'
 }
 
-javadoc {
-    if (JavaVersion.current().isJava8Compatible()) {
-        options.addStringOption('Xdoclint:none') 
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
     }
-    options.addStringOption('-quiet')
-    include 'tterrag/core/**/*'
 }
 
 tasks.build.dependsOn sourceJar, deobfJar, javadoc
